@@ -4,6 +4,7 @@
 #include "PlayerController/NeryPlayerController.h"
 #include"EnhancedInputSubsystems.h"
 #include"EnhancedInputComponent.h"
+#include"Character/NeryCharacter.h"
 #include "GameFramework/Character.h"
 #include"InputMappingContext.h"
 #include"InputAction.h"
@@ -42,7 +43,8 @@ void ANeryPlayerController::SetupInputComponent()
 		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Started, this, &ANeryPlayerController::Jump);
 		EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &ANeryPlayerController::Move);
 		EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &ANeryPlayerController::Look);
-
+		EnhancedInputComponent->BindAction(ShiftAction,ETriggerEvent::Triggered, this, &ANeryPlayerController::Shift_Hold);
+		EnhancedInputComponent->BindAction(ShiftAction,ETriggerEvent::Completed, this, &ANeryPlayerController::Shift_Release);
 	}
 
 }
@@ -99,5 +101,21 @@ void ANeryPlayerController::Jump()
 		{
 			MyChar->Jump();
 		}
+	}
+}
+
+void ANeryPlayerController::Shift_Release()
+{
+	if (ANeryCharacter* NeryChar = Cast<ANeryCharacter>(GetPawn()))
+	{
+		NeryChar->SetMaxWalkSpeed(NeryChar->RunNormalWalkSpeed);
+	}
+}
+
+void ANeryPlayerController::Shift_Hold()
+{
+	if (ANeryCharacter* NeryChar = Cast<ANeryCharacter>(GetPawn()))
+	{
+		NeryChar->SetMaxWalkSpeed(NeryChar->RunMaxWalkSpeed);
 	}
 }
