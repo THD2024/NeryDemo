@@ -17,7 +17,16 @@ class NERY_API ANeryCharacter : public ANeryBaseCharacter
 public:
 	ANeryCharacter();
 
+	void SetMaxWalkSpeed(float NewMaxWalkSpeed);
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	float RunMaxWalkSpeed = 600.f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	float RunNormalWalkSpeed = 230.f;
+
 protected:
 	virtual void BeginPlay() override;
+	
 	
 };

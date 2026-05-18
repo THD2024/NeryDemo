@@ -14,6 +14,11 @@ ANeryCharacter::ANeryCharacter()
 	GetCharacterMovement()->bOrientRotationToMovement = true; //角色移动时旋转朝向
 }
 
+void ANeryCharacter::SetMaxWalkSpeed(float NewMaxWalkSpeed)
+{
+	GetCharacterMovement()->MaxWalkSpeed = NewMaxWalkSpeed;
+}
+
 void ANeryCharacter::BeginPlay()
 {
 	Super::BeginPlay();
