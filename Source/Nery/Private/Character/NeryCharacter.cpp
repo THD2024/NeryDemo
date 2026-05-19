@@ -2,6 +2,8 @@
 
 
 #include "Character/NeryCharacter.h"
+#include"PlayerState/NeryPlayerState.h"
+#include"AbilitySystem/NeryAbilitySystemComponent.h"
 #include"GameFramework/CharacterMovementComponent.h"
 
 ANeryCharacter::ANeryCharacter()
@@ -10,7 +12,6 @@ ANeryCharacter::ANeryCharacter()
 	bUseControllerRotationPitch = false;
 	bUseControllerRotationRoll = false;
 	bUseControllerRotationYaw = false;
-
 	GetCharacterMovement()->bOrientRotationToMovement = true; //角色移动时旋转朝向
 }
 
@@ -22,4 +23,31 @@ void ANeryCharacter::SetMaxWalkSpeed(float NewMaxWalkSpeed)
 void ANeryCharacter::BeginPlay()
 {
 	Super::BeginPlay();
+}
+
+void ANeryCharacter::PossessedBy(AController* NewController)
+{
+	Super::PossessedBy(NewController);
+	InitASCandAttribute();
+	
+}
+
+void ANeryCharacter::OnRep_PlayerState()
+{
+	Super::OnRep_PlayerState();
+	InitASCandAttribute();
+}
+
+void ANeryCharacter::InitASCandAttribute()
+{
+	ANeryPlayerState* PS = Cast<ANeryPlayerState>(GetPlayerState());
+	if (PS)
+	{
+		AbilitySystemComponent = PS->AbilitySystemComponent;
+		AttributeSet = PS->AttributeSet;
+		if (AbilitySystemComponent)
+		{
+			AbilitySystemComponent->InitAbilityActorInfo(PS, this);
+		}
+	}
 }
