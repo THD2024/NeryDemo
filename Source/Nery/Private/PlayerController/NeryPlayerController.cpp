@@ -45,6 +45,7 @@ void ANeryPlayerController::SetupInputComponent()
 		EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &ANeryPlayerController::Look);
 		EnhancedInputComponent->BindAction(ShiftAction,ETriggerEvent::Triggered, this, &ANeryPlayerController::Shift_Hold);
 		EnhancedInputComponent->BindAction(ShiftAction,ETriggerEvent::Completed, this, &ANeryPlayerController::Shift_Release);
+		//EnhancedInputComponent->BindAction(Crouch,ETriggerEvent::Triggered, this, &ANeryPlayerController::Crouch_Hold);
 	}
 
 }
@@ -111,6 +112,16 @@ void ANeryPlayerController::Shift_Release()
 		NeryChar->SetMaxWalkSpeed(NeryChar->RunNormalWalkSpeed);
 	}
 }
+
+//void ANeryPlayerController::Crouch_Hold()
+//{
+//	if (ACharacter* MyChar = GetPawn<ACharacter>())
+//	{
+//		MyChar->Crouch();
+//		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Crouch"));
+//
+//	}
+//}
 
 void ANeryPlayerController::Shift_Hold()
 {

@@ -18,6 +18,11 @@ void ANeryBaseCharacter::BeginPlay()
 	
 }
 
+UAbilitySystemComponent* ANeryBaseCharacter::GetAbilitySystemComponent() const
+{
+	return AbilitySystemComponent;
+}
+
 // Called every frame
 void ANeryBaseCharacter::Tick(float DeltaTime)
 {

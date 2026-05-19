@@ -37,6 +37,9 @@ protected:
 	TObjectPtr<UInputAction> ShiftAction;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Input")
+	TObjectPtr<UInputAction> Crouch;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Input")
 	TObjectPtr<UInputMappingContext> DefaultMappingContext;
 
 	//输入回调函数
@@ -45,4 +48,5 @@ protected:
 	void Jump();
 	void Shift_Hold();
 	void Shift_Release();
+	//	void Crouch_Hold();
 };

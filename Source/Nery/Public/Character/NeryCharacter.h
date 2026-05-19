@@ -6,6 +6,7 @@
 #include "Character/NeryBaseCharacter.h"
 #include "NeryCharacter.generated.h"
 
+class ANeryPlayerState;
 /**
  * 
  */
@@ -25,8 +26,12 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	float RunNormalWalkSpeed = 230.f;
 
+
 protected:
 	virtual void BeginPlay() override;
 	
+	void PossessedBy(AController* NewController) override;
+	void OnRep_PlayerState() override;
 	
+	void InitASCandAttribute();
 };
