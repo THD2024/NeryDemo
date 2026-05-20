@@ -31,23 +31,23 @@ public:
 	UAttributeSet* AttributeSet = nullptr;
 };
 
-UCLASS()
+UCLASS(Blueprintable,BlueprintType)
 class NERY_API UWidgetController : public UObject
 {
 	GENERATED_BODY()
 	
 public:
 	UPROPERTY()
-	APlayerState* PlayerState = nullptr;
+	TObjectPtr<APlayerState> PlayerState = nullptr;
 
 	UPROPERTY()
-	APlayerController* PlayerController = nullptr;
+	TObjectPtr<APlayerController> PlayerController = nullptr;
 
 	UPROPERTY()
-	UAbilitySystemComponent* AbilitySystemComponent = nullptr;
+	TObjectPtr<UAbilitySystemComponent> AbilitySystemComponent = nullptr;
 
 	UPROPERTY()
-	UAttributeSet* AttributeSet = nullptr;
+	TObjectPtr<UAttributeSet> AttributeSet = nullptr;
 
 	void InitWidgetController(const FWidgetControllerParams& Params);
 };
