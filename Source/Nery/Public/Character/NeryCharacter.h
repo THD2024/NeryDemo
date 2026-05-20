@@ -7,6 +7,7 @@
 #include "NeryCharacter.generated.h"
 
 class ANeryPlayerState;
+
 /**
  * 
  */
@@ -17,6 +18,8 @@ class NERY_API ANeryCharacter : public ANeryBaseCharacter
 
 public:
 	ANeryCharacter();
+
+	void InitHUD();
 
 	void SetMaxWalkSpeed(float NewMaxWalkSpeed);
 
@@ -31,6 +34,7 @@ protected:
 	virtual void BeginPlay() override;
 	
 	void PossessedBy(AController* NewController) override;
+
 	void OnRep_PlayerState() override;
 	
 	void InitASCandAttribute();

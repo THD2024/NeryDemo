@@ -24,13 +24,16 @@ void ANeryPlayerController::BeginPlay()
 
 	check(DefaultMappingContext);
 	//注册输入映射上下文,添加到本地输入子系统
-	UEnhancedInputLocalPlayerSubsystem* SubSystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(GetLocalPlayer());
-	if (!SubSystem)
+	if (IsLocalController()) //确保只在本地控制器上注册输入映射上下文
 	{
-		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("SubSystem is null!"));
+		UEnhancedInputLocalPlayerSubsystem* SubSystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(GetLocalPlayer());
+		if (!SubSystem)
+		{
+			GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("SubSystem is null!"));
 
+		}
+		SubSystem->AddMappingContext(DefaultMappingContext, 0);
 	}
-	SubSystem->AddMappingContext(DefaultMappingContext,0);
 }
 
 void ANeryPlayerController::SetupInputComponent()

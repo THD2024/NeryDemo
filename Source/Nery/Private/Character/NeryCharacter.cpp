@@ -5,14 +5,31 @@
 #include"PlayerState/NeryPlayerState.h"
 #include"AbilitySystem/NeryAbilitySystemComponent.h"
 #include"GameFramework/CharacterMovementComponent.h"
+#include"UI/Controller/WidgetController.h"
+#include"UI/HUD/NeryHUD.h"
 
 ANeryCharacter::ANeryCharacter()
 {
 	//防止角色跟随控制器旋转
+	bReplicates = true;
 	bUseControllerRotationPitch = false;
 	bUseControllerRotationRoll = false;
 	bUseControllerRotationYaw = false;
 	GetCharacterMovement()->bOrientRotationToMovement = true; //角色移动时旋转朝向
+}
+
+void ANeryCharacter::InitHUD()
+{
+	if (APlayerController* PC = Cast<APlayerController>(GetController()))
+	{
+		APlayerState* PS = GetPlayerState();
+		check(PS);
+		FWidgetControllerParams Params(PS,PC,AbilitySystemComponent,AttributeSet);
+		if(ANeryHUD* HUD = Cast<ANeryHUD>(PC->GetHUD()))
+		{	
+			HUD->InitWidgetAndController(Params);
+		}
+	}
 }
 
 void ANeryCharacter::SetMaxWalkSpeed(float NewMaxWalkSpeed)
@@ -29,13 +46,18 @@ void ANeryCharacter::PossessedBy(AController* NewController)
 {
 	Super::PossessedBy(NewController);
 	InitASCandAttribute();
-	
+	if (IsLocallyControlled())
+	{
+		InitHUD();
+	}
 }
 
 void ANeryCharacter::OnRep_PlayerState()
 {
 	Super::OnRep_PlayerState();
+	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, TEXT("OnRep_PlayerState called in Character"));
 	InitASCandAttribute();
+	InitHUD();//Hud属于表现层，在这里调用初始化Hud的函数，来确保在玩家状态复制到客户端后，客户端的Hud能够正确显示玩家状态的信息。
 }
 
 void ANeryCharacter::InitASCandAttribute()
