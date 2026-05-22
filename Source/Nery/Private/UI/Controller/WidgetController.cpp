@@ -14,3 +14,9 @@ void UWidgetController::InitWidgetController(const FWidgetControllerParams& Para
 	AbilitySystemComponent = Params.AbilitySystemComponent;
 	AttributeSet = Params.AttributeSet;
 }
+
+void UWidgetController::BroadInitValue()
+{}
+
+void UWidgetController::BindCallBacks()
+{}

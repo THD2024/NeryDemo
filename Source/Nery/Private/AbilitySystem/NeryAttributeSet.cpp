@@ -6,8 +6,9 @@
 
 UNeryAttributeSet::UNeryAttributeSet()
 {
-	InitHealth(100.f);
+	InitHealth(50.0);//初始化属性值
 }
+
 
 void UNeryAttributeSet::OnRep_Health(const FGameplayAttributeData& OldHealth)
 {

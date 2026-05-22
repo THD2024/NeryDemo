@@ -7,6 +7,7 @@
 #include"AbilitySystemComponent.h"//获取属性值时需要用到的头文件,被通知和注册属性复制时也需要用到
 #include "NeryAttributeSet.generated.h"
 
+
 //内置的get set函数宏，分别是获取属性的属性，获取属性值，设置属性值，初始化属性值
 #define ATTRIBUTE_ACCESSORS(ClassName, PropertyName) \
 	GAMEPLAYATTRIBUTE_PROPERTY_GETTER(ClassName, PropertyName) \
@@ -32,6 +33,8 @@ protected:
 	UPROPERTY(ReplicatedUsing = OnRep_Health)
 	FGameplayAttributeData Health;
 
+	/*Delegate Call back Function*/
+
 	UFUNCTION()
 	void OnRep_Health(const FGameplayAttributeData& OldHealth);
 
@@ -40,4 +43,5 @@ protected:
 	virtual void PreAttributeChange(const FGameplayAttribute& Attribute, float& NewValue) override;
 
 	virtual void PostGameplayEffectExecute(const struct FGameplayEffectModCallbackData& Data) override;
+
 };
