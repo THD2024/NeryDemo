@@ -50,4 +50,8 @@ public:
 	TObjectPtr<UAttributeSet> AttributeSet = nullptr;
 
 	void InitWidgetController(const FWidgetControllerParams& Params);
+
+	virtual void BroadInitValue() ;
+	
+	virtual void BindCallBacks();
 };

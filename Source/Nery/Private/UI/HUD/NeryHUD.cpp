@@ -13,6 +13,9 @@ void ANeryHUD::InitWidgetAndController(const FWidgetControllerParams& Params)
 	{
 		OverlayWidget->SetWidgetController(GetOverlayWidgetController(Params));
 		OverlayWidget->AddToViewport();
+		OverlayWidgetController->BindCallBacks();
+		OverlayWidgetController->BroadInitValue();
+
 	}
 }
 
@@ -26,8 +29,9 @@ void ANeryHUD::InitWidget()
 {
 	if (OverlayWidget == nullptr)
 	{
+		check(OverlayWidgetClass);
 		//显示到世界中，所以第一个参数是GetWorld()，第二个参数是要创建的widget的类
-		OverlayWidget = CreateWidget<UNeryUserWidget>(GetWorld(), OverlayWidgetClass);
+		OverlayWidget = CreateWidget<UNeryUserWidget>(GetOwningPlayerController(), OverlayWidgetClass);
 	}
 }
 
