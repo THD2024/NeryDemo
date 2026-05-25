@@ -38,4 +38,7 @@ protected:
 	void OnRep_PlayerState() override;
 	
 	void InitASCandAttribute();
+
+	UFUNCTION(Server, Reliable)
+	void Server_SetMaxWalkSpeed(float NewMaxWalkSpeed);
 };

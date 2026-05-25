@@ -12,6 +12,7 @@ ANeryPlayerState::ANeryPlayerState()
 	AbilitySystemComponent->SetIsReplicated(true);
 	AbilitySystemComponent->SetReplicationMode(EGameplayEffectReplicationMode::Mixed);
 	NetUpdateFrequency = 100.f;//通用
+	AbilitySystemComponent->AddAttributeSetSubobject(AttributeSet.Get());//显式添加属性集子对象到能力系统组件中
 }
 
 void ANeryPlayerState::BeginPlay()
