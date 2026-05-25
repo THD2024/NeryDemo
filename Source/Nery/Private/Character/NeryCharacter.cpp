@@ -12,6 +12,7 @@ ANeryCharacter::ANeryCharacter()
 {
 	//防止角色跟随控制器旋转
 	bReplicates = true;
+	SetReplicateMovement(true);
 	bUseControllerRotationPitch = false;
 	bUseControllerRotationRoll = false;
 	bUseControllerRotationYaw = false;
@@ -35,6 +36,10 @@ void ANeryCharacter::InitHUD()
 void ANeryCharacter::SetMaxWalkSpeed(float NewMaxWalkSpeed)
 {
 	GetCharacterMovement()->MaxWalkSpeed = NewMaxWalkSpeed;
+	if(!HasAuthority())
+	{//判断当前是客户端，就通知服务器我的速度发生了变化，服务器来设置角色的移动速度
+		Server_SetMaxWalkSpeed(NewMaxWalkSpeed);
+	}
 }
 
 void ANeryCharacter::BeginPlay()
@@ -72,4 +77,9 @@ void ANeryCharacter::InitASCandAttribute()
 			AbilitySystemComponent->InitAbilityActorInfo(PS, this);
 		}
 	}
+}
+
+void ANeryCharacter::Server_SetMaxWalkSpeed_Implementation(float NewMaxWalkSpeed)
+{
+	GetCharacterMovement()->MaxWalkSpeed = NewMaxWalkSpeed;
 }

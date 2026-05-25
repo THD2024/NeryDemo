@@ -20,6 +20,7 @@ public:
 	ANeryPlayerController();
 
 protected:
+	virtual void AcknowledgePossession(APawn* P) override;
 	virtual void BeginPlay() override;
 	virtual void SetupInputComponent() override;
 
@@ -48,5 +49,6 @@ protected:
 	void Jump();
 	void Shift_Hold();
 	void Shift_Release();
+
 	//	void Crouch_Hold();
 };

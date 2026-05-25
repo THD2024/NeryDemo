@@ -20,14 +20,17 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-	UPROPERTY(EditAnywhere, Category = "Components")
+	UPROPERTY(EditAnywhere,BlueprintReadOnly, Category = "Components")
+	TObjectPtr<class UNiagaraComponent> NiagaraComponent;
+
+	UPROPERTY(EditAnywhere,BlueprintReadOnly, Category = "Components")
 	TObjectPtr<class UStaticMeshComponent> StaticMeshComponent;
 
-	UPROPERTY(EditAnywhere, Category = "Components")
+	UPROPERTY(EditAnywhere,BlueprintReadOnly, Category = "Components")
 	TObjectPtr<class USphereComponent> SphereComponent;
 
 	UPROPERTY(EditAnywhere, Category = "Effects")
-	TObjectPtr<class UGameplayEffect> GameplayEffect;//根据当前actor的实际效果添加对应的游戏效果，但是始终保证数组中只有一个游戏效果
+	TSubclassOf<class UGameplayEffect> GameplayEffectClass;//根据当前actor的实际效果添加对应的游戏效果，但是始终保证数组中只有一个游戏效果
 
 	UFUNCTION()
 	void SphereBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);

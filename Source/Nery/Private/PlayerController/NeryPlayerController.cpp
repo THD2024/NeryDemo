@@ -10,7 +10,27 @@
 #include"InputAction.h"
 
 ANeryPlayerController::ANeryPlayerController()
-{}
+{
+	bReplicates = true;
+}
+
+void ANeryPlayerController::AcknowledgePossession(APawn* P)
+{
+	Super::AcknowledgePossession(P);
+	if (IsLocalController()) //确保只在本地控制器上注册输入映射上下文
+	{
+		check(DefaultMappingContext);
+
+		UEnhancedInputLocalPlayerSubsystem* SubSystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(GetLocalPlayer());
+		if (!SubSystem)
+		{
+			GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("SubSystem is null!"));
+
+		}
+		SubSystem->RemoveMappingContext(DefaultMappingContext);
+		SubSystem->AddMappingContext(DefaultMappingContext, 0);
+	}
+}
 
 void ANeryPlayerController::BeginPlay()
 {
@@ -22,18 +42,8 @@ void ANeryPlayerController::BeginPlay()
 		PlayerCameraManager->ViewPitchMin = -60.f;
 	}
 
-	check(DefaultMappingContext);
 	//注册输入映射上下文,添加到本地输入子系统
-	if (IsLocalController()) //确保只在本地控制器上注册输入映射上下文
-	{
-		UEnhancedInputLocalPlayerSubsystem* SubSystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(GetLocalPlayer());
-		if (!SubSystem)
-		{
-			GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("SubSystem is null!"));
-
-		}
-		SubSystem->AddMappingContext(DefaultMappingContext, 0);
-	}
+	
 }
 
 void ANeryPlayerController::SetupInputComponent()
@@ -55,12 +65,6 @@ void ANeryPlayerController::SetupInputComponent()
 
 void ANeryPlayerController::Move(const FInputActionValue& Value)
 {
-	if (!GetPawn())
-	{
-		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("GetPawn is null!"));
-		return;
-	}
-
 	//获取当前实际的输入值
 	const FVector2D MoveVector = Value.Get<FVector2D>();
 	//获取到当前控制器的旋转值,只保留Yaw旋转
@@ -83,12 +87,6 @@ void ANeryPlayerController::Move(const FInputActionValue& Value)
 
 void ANeryPlayerController::Look(const FInputActionValue & Value)
 {
-	if (!GetPawn())
-	{
-		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("GetPawn is null!"));
-		return;
-	}
-
 	const FVector2D LookVector = Value.Get<FVector2D>();
 
 	AddYawInput(LookVector.X);
@@ -115,6 +113,7 @@ void ANeryPlayerController::Shift_Release()
 		NeryChar->SetMaxWalkSpeed(NeryChar->RunNormalWalkSpeed);
 	}
 }
+
 
 //void ANeryPlayerController::Crouch_Hold()
 //{

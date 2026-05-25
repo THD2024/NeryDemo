@@ -5,6 +5,7 @@
 #include"Components/StaticMeshComponent.h"
 #include"Components/SphereComponent.h"
 #include"AbilitySystemComponent.h"
+#include"NiagaraComponent.h"
 #include "AbilitySystemBlueprintLibrary.h"
 
 ANeryEffectActor::ANeryEffectActor()
@@ -13,7 +14,9 @@ ANeryEffectActor::ANeryEffectActor()
 	SphereComponent = CreateDefaultSubobject<USphereComponent>(TEXT("SphereComponent"));
 	SphereComponent->SetupAttachment(RootComponent);
 	StaticMeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("StaticMeshComponent"));
-	StaticMeshComponent->SetupAttachment(RootComponent);
+	StaticMeshComponent->SetupAttachment(SphereComponent);
+	NiagaraComponent = CreateDefaultSubobject<UNiagaraComponent>(TEXT("NiagaraComponent"));
+	NiagaraComponent->SetupAttachment(SphereComponent);
 }
 
 void ANeryEffectActor::BeginPlay()
@@ -25,8 +28,10 @@ void ANeryEffectActor::BeginPlay()
 
 void ANeryEffectActor::SphereBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
+	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("碰撞开始"));
+
 	//应用游戏效果到重叠的角色上
-	if (GameplayEffect == nullptr)
+	if (GameplayEffectClass == nullptr)
 	{
 		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("检查EffecActor数组中是否添加了游戏效果"));
 		return;
@@ -38,11 +43,11 @@ void ANeryEffectActor::SphereBeginOverlap(UPrimitiveComponent* OverlappedCompone
 		bool IsInfinite = false;
 		FGameplayEffectContextHandle EffectContext = ASC->MakeEffectContext();
 		EffectContext.AddInstigator(this, this);//实际发起者和物理接触者
-		EffectContext.AddSourceObject(GameplayEffect);//实际效果来源对象
-		FGameplayEffectSpecHandle SpecHandle = ASC->MakeOutgoingSpec(GameplayEffect->GetClass(), 1, EffectContext);
+		EffectContext.AddSourceObject(GameplayEffectClass);//实际效果来源对象
+		FGameplayEffectSpecHandle SpecHandle = ASC->MakeOutgoingSpec(GameplayEffectClass, 1, EffectContext);
 		if (SpecHandle.IsValid())
 		{
-			GameplayEffect->DurationPolicy == EGameplayEffectDurationType::Infinite ? IsInfinite = true : IsInfinite = false;
+			SpecHandle.Data.Get()->Def.Get()->DurationPolicy == EGameplayEffectDurationType::Infinite ? IsInfinite = true : IsInfinite = false;
 		}
 		FActiveGameplayEffectHandle ActiveHandle = ASC->ApplyGameplayEffectSpecToSelf(*SpecHandle.Data.Get());
 		if (IsInfinite)
@@ -56,7 +61,7 @@ void ANeryEffectActor::SphereBeginOverlap(UPrimitiveComponent* OverlappedCompone
 
 void ANeryEffectActor::SphereEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
-	if (GameplayEffect == nullptr) 
+	if (GameplayEffectClass == nullptr) 
 	{
 		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("检查EffecActor数组中是否添加了游戏效果"));
 		return;
