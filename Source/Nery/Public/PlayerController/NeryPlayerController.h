@@ -9,6 +9,8 @@
 
 class UInputAction;
 class UInputMappingContext;
+struct FTimerHandle;
+DECLARE_MULTICAST_DELEGATE_OneParam(FOnSelectedChangeDelegate, bool);
 /**
  * 
  */
@@ -22,6 +24,22 @@ public:
 protected:
 	AActor* LastActor = nullptr;
 	AActor* CurrentActor = nullptr;
+	bool bTargeSelected = false;
+	FTimerHandle DetectiveTimerHandle;//用来执行检测目标被动取消选择的情况
+
+	UPROPERTY(EditDefaultsOnly, Category = "Combat")
+	float MaxDetectiveDistance = 500.f;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Combat")
+	float DetectiveFrequency = 0.2f;
+
+	FOnSelectedChangeDelegate OnSelectedChanged;
+
+	void StartDetectiveTimer();
+	void ClearDetectiveTimer();
+	void AutoStartorClearTimer(bool bTargetSelected);
+	bool IsTargetValid(AActor* InActor) const ;//集中判断边缘情况函数
+
 
 	virtual void AcknowledgePossession(APawn* P) override;
 	virtual void BeginPlay() override;

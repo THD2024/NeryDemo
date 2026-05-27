@@ -8,11 +8,108 @@
 #include "GameFramework/Character.h"
 #include"Interface/CombatInterface.h"
 #include"InputMappingContext.h"
+#include "TimerManager.h"
 #include"InputAction.h"
 
 ANeryPlayerController::ANeryPlayerController()
 {
 	bReplicates = true;
+}
+
+void ANeryPlayerController::StartDetectiveTimer()
+{
+	//边缘情况检测逻辑
+	if (!CurrentActor)return;
+	float DistancetoSelected = GetPawn()->GetDistanceTo(CurrentActor);
+	if (DistancetoSelected > 500.f)
+	{
+		if (CurrentActor->Implements<UCombatInterface>())
+		{
+			ICombatInterface::Execute_UnLockTargetFeedBack(CurrentActor);
+			CurrentActor = LastActor =  nullptr;
+			bTargeSelected = false;
+			return;
+		}
+		GEngine->AddOnScreenDebugMessage(1, 2.f, FColor::Cyan, TEXT("检查接口实现"));
+		return;
+	}
+	FVector TraceStart = GetPawn()->GetActorLocation();
+	FVector TraceEnd = CurrentActor->GetActorLocation();
+	FCollisionQueryParams LineQuery;
+	LineQuery.AddIgnoredActor(GetPawn());
+	FHitResult DetectiveResult;
+	bool bHit = GetWorld()->LineTraceSingleByChannel
+	(
+		DetectiveResult,
+		TraceStart,
+		TraceEnd,
+		ECC_Visibility,
+		LineQuery
+	);
+	if (bHit && DetectiveResult.GetActor() != CurrentActor)
+	{
+		if (CurrentActor->Implements<UCombatInterface>())
+		{
+			ICombatInterface::Execute_UnLockTargetFeedBack(CurrentActor);
+			CurrentActor = LastActor = nullptr;
+			bTargeSelected = false;
+			return;
+		}
+		GEngine->AddOnScreenDebugMessage(1, 2.f, FColor::Cyan, TEXT("检查接口实现"));
+		return;
+	}
+}
+
+void ANeryPlayerController::ClearDetectiveTimer()
+{
+	//清除当前timer
+	GetWorldTimerManager().ClearTimer(DetectiveTimerHandle);
+}
+
+void ANeryPlayerController::AutoStartorClearTimer(bool bTargetSelected)
+{
+	if (!CurrentActor)
+	{
+		GEngine->AddOnScreenDebugMessage(1, 2.f, FColor::Cyan, TEXT("是不是忘记死亡情况没有设置或者currentactor传入时机不对"));
+		return;
+	}
+	if (bTargetSelected )
+	{
+		GetWorld()->GetTimerManager().SetTimer
+		(
+			DetectiveTimerHandle,
+			this,
+			&ANeryPlayerController::StartDetectiveTimer,
+			0.5f,
+			true
+		);
+	}
+	else 
+	{
+		if (GetWorldTimerManager().TimerExists(DetectiveTimerHandle))
+		{
+			ClearDetectiveTimer();
+		}
+	}
+}
+
+bool ANeryPlayerController::IsTargetValid(AActor* InActor) const 
+{
+	if (!InActor || !GetPawn())return false;
+	if (GetPawn()->GetDistanceTo(InActor) > MaxDetectiveDistance)return false;
+	FCollisionQueryParams LineQuery;
+	LineQuery.AddIgnoredActor(GetPawn());
+	FHitResult DetectiveResult;
+	bool bHit = GetWorld()->LineTraceSingleByChannel
+	(
+		DetectiveResult,
+		GetPawn()->GetActorLocation(),
+		InActor->GetActorLocation(),
+		ECC_Visibility,
+		LineQuery
+	);
+	return (!bHit || DetectiveResult.GetActor() == CurrentActor);
+
 }
 
 void ANeryPlayerController::AcknowledgePossession(APawn* P)
@@ -31,6 +128,8 @@ void ANeryPlayerController::AcknowledgePossession(APawn* P)
 		SubSystem->RemoveMappingContext(DefaultMappingContext);
 		SubSystem->AddMappingContext(DefaultMappingContext, 0);
 	}
+	OnSelectedChanged.AddUObject(this, &ANeryPlayerController::AutoStartorClearTimer);
+	OnSelectedChanged.Broadcast(bTargeSelected);
 }
 
 void ANeryPlayerController::BeginPlay()
@@ -122,6 +221,7 @@ void ANeryPlayerController::LockTarget()
 	if (!GetPawn())
 	{
 		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Pawn is null!"));
+		return;
 	}
 	TArray<FOverlapResult> OverlapResult;
 	FCollisionObjectQueryParams CollisionParams;
@@ -168,32 +268,38 @@ void ANeryPlayerController::LockTarget()
 			}
 		}
 		if (EnableLockActors.Num() == 1 && EnableLockActors[0] == LastActor)
-		{//当敌人只有一个时
+		{//当敌人只有一个时,并且刚好是同一个敌人
 			if (LastActor && LastActor->Implements<UCombatInterface>())
 			{ 
 				ICombatInterface::Execute_UnLockTargetFeedBack(LastActor);
 				LastActor = nullptr;
+				CurrentActor = nullptr;
+				bTargeSelected = false;
+				OnSelectedChanged.Broadcast(bTargeSelected);
 				return;
 			}
 		}
+		//下面的情况只存在要么一个新敌人，要么多个敌人没有lastactor，要么多个敌人有lastactor，要么数组是空的
 		if (LastActor && LastActor->Implements<UCombatInterface>())
 		{  //先将上一个取消锁定
 			ICombatInterface::Execute_UnLockTargetFeedBack(LastActor);
+			bTargeSelected = false;
+			OnSelectedChanged.Broadcast(bTargeSelected);
 		}
-		if (EnableLockActors.Num() > 0) 
-		{
+		if (EnableLockActors.Num() > 0) //排除数组是空的情况
+		{//下面的情况只存在要么一个新敌人，要么多个敌人没有lastactor，要么多个敌人有lastactor,此时数组不可能为空
 			EnableLockActors.RemoveSwap(LastActor);//防止选中和上一次一样的，提前在数组中将上一个查找删除
-		}
-		if (EnableLockActors.Num() > 0)
-		{
+		
 			CurrentActor = EnableLockActors[FMath::RandRange(0, EnableLockActors.Num() - 1)];
 			LastActor = CurrentActor;
 			if (CurrentActor && CurrentActor->Implements<UCombatInterface>())
 			{
 				ICombatInterface::Execute_LockTargetFeedBack(CurrentActor);
+				bTargeSelected = true;
+				OnSelectedChanged.Broadcast(bTargeSelected);
+
 			}
 		}
-		
 	}
 	else
 	{
@@ -203,6 +309,9 @@ void ANeryPlayerController::LockTarget()
 			ICombatInterface::Execute_UnLockTargetFeedBack(LastActor);
 			LastActor = nullptr;
 			CurrentActor = nullptr;
+			bTargeSelected = false;
+			OnSelectedChanged.Broadcast(bTargeSelected);
+
 		}
 	}
 }
