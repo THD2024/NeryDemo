@@ -10,7 +10,7 @@
 class UInputAction;
 class UInputMappingContext;
 struct FTimerHandle;
-DECLARE_MULTICAST_DELEGATE_OneParam(FOnSelectedChangeDelegate, bool);
+DECLARE_DELEGATE(FOnSelectedChangeDelegate);
 /**
  * 
  */
@@ -24,7 +24,6 @@ public:
 protected:
 	AActor* LastActor = nullptr;
 	AActor* CurrentActor = nullptr;
-	bool bTargeSelected = false;
 	FTimerHandle DetectiveTimerHandle;//用来执行检测目标被动取消选择的情况
 
 	UPROPERTY(EditDefaultsOnly, Category = "Combat")
@@ -37,8 +36,14 @@ protected:
 
 	void StartDetectiveTimer();
 	void ClearDetectiveTimer();
-	void AutoStartorClearTimer(bool bTargetSelected);
-	bool IsTargetValid(AActor* InActor) const ;//集中判断边缘情况函数
+	void AutoStartorClearTimer();
+	void UnLock(AActor* InActor);//启动锁定特效
+	void Lock(AActor* InActor);//取消锁定特效
+	bool IsTargetValid(AActor* InActor) const ;//判断当前检测到的对象是否有效，是否超出距离，是否中间有阻挡
+
+	//根据对象类型来检测一定范围内的目标,忽略目标自动设置为当前本身
+	void FindTargetInRadiusByObjectType(TArray<FOverlapResult>& OverlapResult, ECollisionChannel ObjectType, const float& Radius);
+
 
 
 	virtual void AcknowledgePossession(APawn* P) override;
@@ -76,6 +81,7 @@ protected:
 	void LockTarget();
 
 	//	void Crouch_Hold();
+
 
 
 };

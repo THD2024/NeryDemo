@@ -19,83 +19,71 @@ ANeryPlayerController::ANeryPlayerController()
 void ANeryPlayerController::StartDetectiveTimer()
 {
 	//边缘情况检测逻辑
-	if (!CurrentActor)return;
-	float DistancetoSelected = GetPawn()->GetDistanceTo(CurrentActor);
-	if (DistancetoSelected > 500.f)
+	if (!IsTargetValid(CurrentActor))//判断在选中过程中，敌人是否失效
 	{
-		if (CurrentActor->Implements<UCombatInterface>())
-		{
-			ICombatInterface::Execute_UnLockTargetFeedBack(CurrentActor);
-			CurrentActor = LastActor =  nullptr;
-			bTargeSelected = false;
-			return;
-		}
-		GEngine->AddOnScreenDebugMessage(1, 2.f, FColor::Cyan, TEXT("检查接口实现"));
-		return;
-	}
-	FVector TraceStart = GetPawn()->GetActorLocation();
-	FVector TraceEnd = CurrentActor->GetActorLocation();
-	FCollisionQueryParams LineQuery;
-	LineQuery.AddIgnoredActor(GetPawn());
-	FHitResult DetectiveResult;
-	bool bHit = GetWorld()->LineTraceSingleByChannel
-	(
-		DetectiveResult,
-		TraceStart,
-		TraceEnd,
-		ECC_Visibility,
-		LineQuery
-	);
-	if (bHit && DetectiveResult.GetActor() != CurrentActor)
-	{
-		if (CurrentActor->Implements<UCombatInterface>())
-		{
-			ICombatInterface::Execute_UnLockTargetFeedBack(CurrentActor);
-			CurrentActor = LastActor = nullptr;
-			bTargeSelected = false;
-			return;
-		}
-		GEngine->AddOnScreenDebugMessage(1, 2.f, FColor::Cyan, TEXT("检查接口实现"));
-		return;
-	}
+		UnLock(CurrentActor);
+		LastActor = CurrentActor = nullptr;
+		OnSelectedChanged.Execute();
+	} 
 }
 
 void ANeryPlayerController::ClearDetectiveTimer()
 {
 	//清除当前timer
-	GetWorldTimerManager().ClearTimer(DetectiveTimerHandle);
+	if (GetWorldTimerManager().TimerExists(DetectiveTimerHandle))
+	{
+		GetWorldTimerManager().ClearTimer(DetectiveTimerHandle);
+	}
 }
 
-void ANeryPlayerController::AutoStartorClearTimer(bool bTargetSelected)
+void ANeryPlayerController::AutoStartorClearTimer()
 {
 	if (!CurrentActor)
-	{
-		GEngine->AddOnScreenDebugMessage(1, 2.f, FColor::Cyan, TEXT("是不是忘记死亡情况没有设置或者currentactor传入时机不对"));
+	{	//表示当前没有锁定目标，则需要清空之前的启动的计时器
+		ClearDetectiveTimer();
+		GEngine->AddOnScreenDebugMessage(1, 2.f, FColor::Cyan, TEXT("是不是忘记死亡情况没有设置或者当前处于未锁定状态"));
 		return;
 	}
-	if (bTargetSelected )
+	//表示当前锁定了目标，启动计时器
+	GetWorld()->GetTimerManager().SetTimer
+	(
+		DetectiveTimerHandle,
+		this,
+		&ANeryPlayerController::StartDetectiveTimer,
+		DetectiveFrequency,
+		true
+	);
+	
+}
+
+void ANeryPlayerController::UnLock(AActor* InActor)
+{
+	if (InActor && InActor->Implements<UCombatInterface>())
 	{
-		GetWorld()->GetTimerManager().SetTimer
-		(
-			DetectiveTimerHandle,
-			this,
-			&ANeryPlayerController::StartDetectiveTimer,
-			0.5f,
-			true
-		);
+		ICombatInterface::Execute_UnLockTargetFeedBack(InActor);
 	}
-	else 
+	else
 	{
-		if (GetWorldTimerManager().TimerExists(DetectiveTimerHandle))
-		{
-			ClearDetectiveTimer();
-		}
+		GEngine->AddOnScreenDebugMessage(1, 2.f, FColor::Cyan, TEXT("检查接口实现"));
 	}
 }
 
-bool ANeryPlayerController::IsTargetValid(AActor* InActor) const 
+void ANeryPlayerController::Lock(AActor* InActor)
+{
+	if (InActor && InActor->Implements<UCombatInterface>())
+	{
+		ICombatInterface::Execute_LockTargetFeedBack(InActor);
+	}
+	else
+	{
+		GEngine->AddOnScreenDebugMessage(1, 2.f, FColor::Cyan, TEXT("检查接口实现"));
+	}
+}
+
+bool ANeryPlayerController::IsTargetValid(AActor* InActor) const
 {
 	if (!InActor || !GetPawn())return false;
+	//检查有没有超出范围
 	if (GetPawn()->GetDistanceTo(InActor) > MaxDetectiveDistance)return false;
 	FCollisionQueryParams LineQuery;
 	LineQuery.AddIgnoredActor(GetPawn());
@@ -108,7 +96,28 @@ bool ANeryPlayerController::IsTargetValid(AActor* InActor) const
 		ECC_Visibility,
 		LineQuery
 	);
-	return (!bHit || DetectiveResult.GetActor() == CurrentActor);
+	//没有阻隔或者最终碰撞目标是需要的target
+	return (!bHit || DetectiveResult.GetActor() == InActor);
+
+}
+
+void ANeryPlayerController::FindTargetInRadiusByObjectType(TArray<FOverlapResult>& OverlapResult, ECollisionChannel ObjectType, const float& Radius)
+{
+	FCollisionObjectQueryParams CollisionParams;
+	CollisionParams.AddObjectTypesToQuery(ObjectType);
+	FCollisionShape CollisionShape = FCollisionShape::MakeSphere(Radius);
+	FCollisionQueryParams QueryParams;
+	QueryParams.AddIgnoredActor(GetPawn());
+
+	GetWorld()->OverlapMultiByObjectType
+	(
+		OverlapResult,
+		GetPawn()->GetActorLocation(),
+		FQuat::Identity,
+		CollisionParams,
+		CollisionShape,
+		QueryParams
+	);
 
 }
 
@@ -128,8 +137,7 @@ void ANeryPlayerController::AcknowledgePossession(APawn* P)
 		SubSystem->RemoveMappingContext(DefaultMappingContext);
 		SubSystem->AddMappingContext(DefaultMappingContext, 0);
 	}
-	OnSelectedChanged.AddUObject(this, &ANeryPlayerController::AutoStartorClearTimer);
-	OnSelectedChanged.Broadcast(bTargeSelected);
+	OnSelectedChanged.BindUObject(this,&ANeryPlayerController::AutoStartorClearTimer);
 }
 
 void ANeryPlayerController::BeginPlay()
@@ -224,95 +232,46 @@ void ANeryPlayerController::LockTarget()
 		return;
 	}
 	TArray<FOverlapResult> OverlapResult;
-	FCollisionObjectQueryParams CollisionParams;
-	CollisionParams.AddObjectTypesToQuery(ECC_Pawn);
-	FCollisionShape CollisionShape = FCollisionShape::MakeSphere(500.f);
-	FCollisionQueryParams QueryParams;
-	QueryParams.AddIgnoredActor(GetPawn());
-
-	GetWorld()->OverlapMultiByObjectType
-	(
-		OverlapResult,
-		GetPawn()->GetActorLocation(),
-		FQuat::Identity,
-		CollisionParams,
-		CollisionShape,
-		QueryParams
-	);
-
-	TArray<AActor*> EnableLockActors;
+	//查找范围内的敌人
+	FindTargetInRadiusByObjectType(OverlapResult, ECC_Pawn, MaxDetectiveDistance);
+	TArray<AActor*> ValidTarget;
 	if (OverlapResult.Num() > 0)
 	{
-		FVector TraceStart = GetPawn()->GetActorLocation();
-		FCollisionQueryParams LineQuery;
-		LineQuery.AddIgnoredActor(GetPawn());
 		for (int32 i = 0; i < OverlapResult.Num(); ++i)
 		{	
-			AActor* TargetActor = OverlapResult[i].GetActor();
-			FVector TraceEnd = TargetActor->GetActorLocation();
-			//筛选出没有被阻隔的敌人
-			FHitResult HitResult;
-
-			bool bHit = GetWorld()->LineTraceSingleByChannel
-			(
-				HitResult,
-				TraceStart,
-				TraceEnd,
-				ECC_Visibility,
-				LineQuery
-			);
-			if (!bHit || HitResult.GetActor() == TargetActor)
+			if (IsTargetValid(OverlapResult[i].GetActor()))
 			{
-				//没有发生阻挡
-				EnableLockActors.AddUnique(OverlapResult[i].GetActor());
+				//目标有效的话,就添加到有效数组中去
+				ValidTarget.AddUnique(OverlapResult[i].GetActor());
 			}
 		}
-		if (EnableLockActors.Num() == 1 && EnableLockActors[0] == LastActor)
-		{//当敌人只有一个时,并且刚好是同一个敌人
-			if (LastActor && LastActor->Implements<UCombatInterface>())
-			{ 
-				ICombatInterface::Execute_UnLockTargetFeedBack(LastActor);
-				LastActor = nullptr;
-				CurrentActor = nullptr;
-				bTargeSelected = false;
-				OnSelectedChanged.Broadcast(bTargeSelected);
-				return;
-			}
-		}
-		//下面的情况只存在要么一个新敌人，要么多个敌人没有lastactor，要么多个敌人有lastactor，要么数组是空的
-		if (LastActor && LastActor->Implements<UCombatInterface>())
-		{  //先将上一个取消锁定
-			ICombatInterface::Execute_UnLockTargetFeedBack(LastActor);
-			bTargeSelected = false;
-			OnSelectedChanged.Broadcast(bTargeSelected);
-		}
-		if (EnableLockActors.Num() > 0) //排除数组是空的情况
-		{//下面的情况只存在要么一个新敌人，要么多个敌人没有lastactor，要么多个敌人有lastactor,此时数组不可能为空
-			EnableLockActors.RemoveSwap(LastActor);//防止选中和上一次一样的，提前在数组中将上一个查找删除
-		
-			CurrentActor = EnableLockActors[FMath::RandRange(0, EnableLockActors.Num() - 1)];
-			LastActor = CurrentActor;
-			if (CurrentActor && CurrentActor->Implements<UCombatInterface>())
+		if (ValidTarget.Num() > 0) //排除数组是空的情况
+		{
+			ValidTarget.RemoveSwap(LastActor);//防止选中和上一次一样的，提前在数组中将上一个查找删除
+			//要么数组中啥都没有要么数组中有其他不是lastactor的validtarget
+			if (ValidTarget.Num() > 0) 
 			{
-				ICombatInterface::Execute_LockTargetFeedBack(CurrentActor);
-				bTargeSelected = true;
-				OnSelectedChanged.Broadcast(bTargeSelected);
-
+				CurrentActor = ValidTarget[FMath::RandRange(0, ValidTarget.Num() - 1)];
+				UnLock(LastActor);
+				LastActor = CurrentActor;
+				Lock(CurrentActor);
+				OnSelectedChanged.Execute();
+			}
+			else 
+			{
+				UnLock(LastActor);
+				LastActor = CurrentActor = nullptr;
+				OnSelectedChanged.Execute();
+				ClearDetectiveTimer();//在当前没有锁定后在显示调用清除定时器函数保证定时器及时停止
 			}
 		}
 	}
 	else
 	{
+		UnLock(LastActor);
+		LastActor = CurrentActor = nullptr;
+		OnSelectedChanged.Execute();
 		GEngine->AddOnScreenDebugMessage(1, 3.f, FColor::Blue, TEXT("没有可以被锁定的敌人"));
-		if (LastActor&&LastActor->Implements<UCombatInterface>())
-		{
-			ICombatInterface::Execute_UnLockTargetFeedBack(LastActor);
-			LastActor = nullptr;
-			CurrentActor = nullptr;
-			bTargeSelected = false;
-			OnSelectedChanged.Broadcast(bTargeSelected);
-
-		}
 	}
 }
 
