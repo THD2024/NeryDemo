@@ -4,6 +4,7 @@
 #include "Character/NeryCharacter.h"
 #include"PlayerState/NeryPlayerState.h"
 #include"AbilitySystem/NeryAbilitySystemComponent.h"
+#include"PlayerController/NeryPlayerController.h"
 #include"GameFramework/CharacterMovementComponent.h"
 #include"UI/Controller/WidgetController.h"
 #include"UI/HUD/NeryHUD.h"
@@ -45,6 +46,14 @@ void ANeryCharacter::SetMaxWalkSpeed(float NewMaxWalkSpeed)
 void ANeryCharacter::BeginPlay()
 {
 	Super::BeginPlay();
+	if (ANeryPlayerController* PC = Cast<ANeryPlayerController>(GetController()))
+	{
+		PC->OnLinkAnimTiminig.AddLambda([this](bool IsLockOn) {
+			LinkAnimTiming(IsLockOn);
+			});
+		GEngine->AddOnScreenDebugMessage(1, 2.f, FColor::Cyan, TEXT("Timing"));
+
+	}
 }
 
 void ANeryCharacter::PossessedBy(AController* NewController)
@@ -60,9 +69,9 @@ void ANeryCharacter::PossessedBy(AController* NewController)
 void ANeryCharacter::OnRep_PlayerState()
 {
 	Super::OnRep_PlayerState();
-	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, TEXT("OnRep_PlayerState called in Character"));
 	InitASCandAttribute();
 	InitHUD();//Hud属于表现层，在这里调用初始化Hud的函数，来确保在玩家状态复制到客户端后，客户端的Hud能够正确显示玩家状态的信息。
+	
 }
 
 void ANeryCharacter::InitASCandAttribute()
@@ -77,6 +86,15 @@ void ANeryCharacter::InitASCandAttribute()
 			AbilitySystemComponent->InitAbilityActorInfo(PS, this);
 		}
 	}
+}
+
+bool ANeryCharacter::GetIsLockOn()
+{
+	if (ANeryPlayerController* PC = Cast<ANeryPlayerController>(GetController()))
+	{
+		return PC->IsLocked();
+	}
+	return false;
 }
 
 void ANeryCharacter::Server_SetMaxWalkSpeed_Implementation(float NewMaxWalkSpeed)

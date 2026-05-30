@@ -11,6 +11,7 @@ class UInputAction;
 class UInputMappingContext;
 struct FTimerHandle;
 DECLARE_DELEGATE(FOnSelectedChangeDelegate);
+DECLARE_MULTICAST_DELEGATE_OneParam(FOnLinkAnimTiming, bool);
 /**
  * 
  */
@@ -20,12 +21,12 @@ class NERY_API ANeryPlayerController : public APlayerController
 	GENERATED_BODY()
 public:
 	ANeryPlayerController();
-
+	bool IsLocked() { return IsValid(CurrentActor); }
+	FOnLinkAnimTiming OnLinkAnimTiminig;
 protected:
 	AActor* LastActor = nullptr;
 	AActor* CurrentActor = nullptr;
 	FTimerHandle DetectiveTimerHandle;//用来执行检测目标被动取消选择的情况
-
 	UPROPERTY(EditDefaultsOnly, Category = "Combat")
 	float MaxDetectiveDistance = 500.f;
 
@@ -33,7 +34,6 @@ protected:
 	float DetectiveFrequency = 0.2f;
 
 	FOnSelectedChangeDelegate OnSelectedChanged;
-
 	void StartDetectiveTimer();
 	void ClearDetectiveTimer();
 	void AutoStartorClearTimer();
@@ -81,7 +81,7 @@ protected:
 	void LockTarget();
 
 	//	void Crouch_Hold();
-
+	
 
 
 };
