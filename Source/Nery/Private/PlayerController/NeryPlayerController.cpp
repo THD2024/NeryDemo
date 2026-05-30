@@ -38,6 +38,7 @@ void ANeryPlayerController::ClearDetectiveTimer()
 
 void ANeryPlayerController::AutoStartorClearTimer()
 {
+	OnLinkAnimTiminig.Broadcast(IsValid(CurrentActor));
 	if (!CurrentActor)
 	{	//表示当前没有锁定目标，则需要清空之前的启动的计时器
 		ClearDetectiveTimer();
