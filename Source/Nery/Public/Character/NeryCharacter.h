@@ -23,6 +23,7 @@ public:
 
 	void SetMaxWalkSpeed(float NewMaxWalkSpeed);
 
+
 	UFUNCTION(BlueprintImplementableEvent)
 	void LinkAnimTiming(bool IsLockOn);
 
@@ -33,11 +34,13 @@ public:
 	float RunMaxWalkSpeed = 600.f;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	float RunNormalWalkSpeed = 300.f;
+	float RunNormalWalkSpeed = 230.f;
 
 protected:
 	virtual void BeginPlay() override;
-	
+
+	void SetLockMode(bool bIsLockOn);
+
 	void PossessedBy(AController* NewController) override;
 
 	void OnRep_PlayerState() override;

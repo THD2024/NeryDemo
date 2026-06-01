@@ -17,6 +17,7 @@ ANeryCharacter::ANeryCharacter()
 	bUseControllerRotationPitch = false;
 	bUseControllerRotationRoll = false;
 	bUseControllerRotationYaw = false;
+	GetCharacterMovement()->MaxWalkSpeed = RunNormalWalkSpeed;
 	GetCharacterMovement()->bOrientRotationToMovement = true; //角色移动时旋转朝向
 }
 
@@ -43,17 +44,27 @@ void ANeryCharacter::SetMaxWalkSpeed(float NewMaxWalkSpeed)
 	}
 }
 
+
+
 void ANeryCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 	if (ANeryPlayerController* PC = Cast<ANeryPlayerController>(GetController()))
 	{
 		PC->OnLinkAnimTiminig.AddLambda([this](bool IsLockOn) {
-			LinkAnimTiming(IsLockOn);
+			LinkAnimTiming(IsLockOn);//判断当前的锁定状态，来通知character来Linkanim，来实现不同的动画表现
+			SetLockMode(IsLockOn);//根据当前的锁定状态来设置锁定模式
 			});
 		GEngine->AddOnScreenDebugMessage(1, 2.f, FColor::Cyan, TEXT("Timing"));
 
 	}
+}
+
+void ANeryCharacter::SetLockMode(bool bIsLockOn)
+{
+	GetCharacterMovement()->bOrientRotationToMovement = !bIsLockOn; //角色移动时旋转朝向
+	bUseControllerRotationYaw = bIsLockOn; //根据锁定状态来设置是否使用控制器的旋转来控制角色的旋转
+
 }
 
 void ANeryCharacter::PossessedBy(AController* NewController)

@@ -14,19 +14,20 @@ class NERY_API UNeryAnimInstance : public UAnimInstance
 {
 	GENERATED_BODY()
 public:
-	virtual void NativeUpdateAnimation(float DeltaSeconds) override;
+	//线程安全的动画更新函数，适用于多线程动画更新的情况,代替NativeUpdateAnimation函数
+	virtual void NativeThreadSafeUpdateAnimation(float DeltaSeconds) override;
 
 	//暴露给蓝图的变量
 	UPROPERTY(VisibleAnywhere,BlueprintReadOnly, Category = "Combat")
-	float MovementSpeed;
+	float MovementSpeed = 0.f;
 
 	UPROPERTY(VisibleAnywhere,BlueprintReadOnly, Category = "Combat")
-	float MovementRotation;
+	float MovementRotation = 0.f;
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Combat")
-	bool bIsLockOn;
+	bool bIsLockOn = false;
 
-private:
-	UPROPERTY()
-	class ANeryCharacter* OwingCharacter;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Combat")
+	bool bFalling = false;
+
 };
