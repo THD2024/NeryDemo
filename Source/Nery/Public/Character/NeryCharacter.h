@@ -70,9 +70,9 @@ protected:
 	UFUNCTION(Server, Reliable)
 	void Server_SetMaxWalkSpeed(float NewMaxWalkSpeed);
 
-	int ClickTime = 0;//表示当前的攻击次数
+	int32 ClickTime = 0;//表示当前的攻击次数
 
 	bool bAnimNotified = false;
-
+	bool bInputBuffered = false;//这个变量用来表示当前是否有输入被缓冲了，如果有输入被缓冲了，就说明在当前攻击动画播放的过程中，玩家又按了一次攻击输入，这时就可以在动画蒙太奇的Notify节点中通过判断这个变量来播放下一个攻击动画，实现连续攻击的逻辑
 	
 };
