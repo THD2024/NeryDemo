@@ -9,6 +9,15 @@
 
 class UAbilitySystemComponent;
 class UAttributeSet;
+class UStaticMeshComponent;
+
+UENUM(BlueprintType)
+enum class ECharacterState: uint8
+{
+	LockOn,
+	Free,
+	Attack
+};
 
 UCLASS()
 class NERY_API ANeryBaseCharacter : public ACharacter, public IAbilitySystemInterface
@@ -24,6 +33,11 @@ public:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	TObjectPtr<UAttributeSet> AttributeSet;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Weapons")
+	TObjectPtr<UStaticMeshComponent> WeaponMesh;
+
+
 
 protected:
 	// Called when the game starts or when spawned

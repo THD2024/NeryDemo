@@ -8,6 +8,13 @@
 
 class ANeryPlayerState;
 
+UENUM(BlueprintType)
+enum class ECharacterAttackState : uint8
+{
+	Attacking,
+	None
+};
+
 /**
  * 
  */
@@ -23,18 +30,31 @@ public:
 
 	void SetMaxWalkSpeed(float NewMaxWalkSpeed);
 
-
 	UFUNCTION(BlueprintImplementableEvent)
 	void LinkAnimTiming(bool IsLockOn);
 
 	UFUNCTION(BlueprintCallable)
 	bool GetIsLockOn();
 
+	UFUNCTION(BlueprintCallable)
+	void SaveNotify();
+
+	UFUNCTION(BlueprintCallable)
+	void ResetNotify();
+
+	void ReceiveAttackInput();
+
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	float RunMaxWalkSpeed = 600.f;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	float RunNormalWalkSpeed = 230.f;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "State")
+	ECharacterAttackState AttackState = ECharacterAttackState::None;//在none状态下，可以播放攻击动画
+
+	UPROPERTY(EditAnywhere,BlueprintReadOnly,Category = "Data")
+	TObjectPtr<class UCharacterDataAsset> CharacterDataAsset;//通过DataAsset存储角色的攻击动画，受击动画，Ability等数据，将角色属性和本身的表现分离开来，方便后续的调整和扩展
 
 protected:
 	virtual void BeginPlay() override;
@@ -49,5 +69,10 @@ protected:
 
 	UFUNCTION(Server, Reliable)
 	void Server_SetMaxWalkSpeed(float NewMaxWalkSpeed);
+
+	int ClickTime = 0;//表示当前的攻击次数
+
+	bool bAnimNotified = false;
+
 	
 };

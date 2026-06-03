@@ -12,6 +12,7 @@ class UInputMappingContext;
 struct FTimerHandle;
 DECLARE_DELEGATE(FOnSelectedChangeDelegate);
 DECLARE_MULTICAST_DELEGATE_OneParam(FOnLinkAnimTiming, bool);
+DECLARE_MULTICAST_DELEGATE(FOnAttackInputDelegate);
 /**
  * 
  */
@@ -23,6 +24,8 @@ public:
 	ANeryPlayerController();
 	bool IsLocked() { return IsValid(CurrentActor); }
 	FOnLinkAnimTiming OnLinkAnimTiminig;
+	FOnAttackInputDelegate OnAttackInput;
+
 protected:
 	void PlayerTick(float DeltaTime) override;
 	void UpdateCurrentRotation(float DeltaTime);//更新当前锁定目标的旋转
@@ -78,6 +81,9 @@ protected:
 	TObjectPtr<UInputAction> LockAction;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Input")
+	TObjectPtr<UInputAction> AttackAction;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Input")
 	TObjectPtr<UInputMappingContext> DefaultMappingContext;
 
 	//输入回调函数
@@ -87,7 +93,7 @@ protected:
 	void Shift_Hold();
 	void Shift_Release();
 	void LockTarget();
-
+	void Attack();
 	//	void Crouch_Hold();
 	
 

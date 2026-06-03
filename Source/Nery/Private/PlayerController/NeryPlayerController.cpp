@@ -194,6 +194,7 @@ void ANeryPlayerController::SetupInputComponent()
 		EnhancedInputComponent->BindAction(ShiftAction,ETriggerEvent::Completed, this, &ANeryPlayerController::Shift_Release);
 		//EnhancedInputComponent->BindAction(Crouch,ETriggerEvent::Triggered, this, &ANeryPlayerController::Crouch_Hold);
 		EnhancedInputComponent->BindAction(LockAction, ETriggerEvent::Started, this, &ANeryPlayerController::LockTarget);
+		EnhancedInputComponent->BindAction(AttackAction, ETriggerEvent::Started, this, &ANeryPlayerController::Attack);
 	}
 
 }
@@ -298,6 +299,15 @@ void ANeryPlayerController::LockTarget()
 		LastActor = CurrentActor = nullptr;
 		OnSelectedChanged.Execute();
 		GEngine->AddOnScreenDebugMessage(1, 3.f, FColor::Blue, TEXT("没有可以被锁定的敌人"));
+	}
+}
+
+void ANeryPlayerController::Attack()
+{
+	//传递当前输入了攻击指令
+	if (CurrentActor)
+	{
+		OnAttackInput.Broadcast();
 	}
 }
 
