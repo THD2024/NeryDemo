@@ -25,14 +25,17 @@ public:
 	bool IsLocked() { return IsValid(CurrentActor); }
 	AActor* GetLockedActor();
 
+	//广播
 	FOnLinkAnimTiming OnLinkAnimTiminig;
 	FOnAttackInputDelegate OnAttackInput;
 
 protected:
 	void PlayerTick(float DeltaTime) override;
 	void UpdateCurrentRotation(float DeltaTime);//更新当前锁定目标的旋转
+
 	AActor* LastActor = nullptr;
 	AActor* CurrentActor = nullptr;
+
 	FTimerHandle DetectiveTimerHandle;//用来执行检测目标被动取消选择的情况
 
 	UPROPERTY(EditDefaultsOnly, Category = "Combat")
@@ -54,12 +57,9 @@ protected:
 	
 	bool IsTargetValid(AActor* InActor) const ;//判断当前检测到的对象是否有效，是否超出距离，是否中间有阻挡
 
-
 	//根据对象类型来检测一定范围内的目标,忽略目标自动设置为当前本身
 	void FindTargetInRadiusByObjectType(TArray<FOverlapResult>& OverlapResult, ECollisionChannel ObjectType, const float& Radius);
-
-
-
+	
 	virtual void AcknowledgePossession(APawn* P) override;
 	virtual void BeginPlay() override;
 	virtual void SetupInputComponent() override;

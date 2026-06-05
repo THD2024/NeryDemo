@@ -160,7 +160,7 @@ void ANeryCharacter::SaveNotify()//动画通知的函数
 		//播放下一个动画，这样既不会重复播放第一个动画，也能实现连续攻击的逻辑
 		AttackState = ECharacterAttackState::None;
 		//判断玩家是否提前就按下了攻击输入，并且缓存到了bInputBuffered中，如果是的话，就直接调用ReceiveAttackInput来播放下一个攻击动画
-		if (bInputBuffered == true)
+		if (bInputBuffered == true )
 		{
 			bInputBuffered = false;
 			ReceiveAttackInput();
@@ -172,12 +172,10 @@ void ANeryCharacter::SaveNotify()//动画通知的函数
 void ANeryCharacter::ResetNotify()
 {//这个通知放到动画的最后，只要触发了这个通知，就说明当前攻击动画播放完了
 	//这里不考虑在该通知下还按下攻击输入的情况，这个就单纯的用来重置攻击次数和攻击状态。
-	if (ClickTime >= CharacterDataAsset->AttackMontages.Num() || AttackState == ECharacterAttackState::None)
-	{
-		ClickTime = 0;
-		AttackState = ECharacterAttackState::None;
-	}
+	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Click time = 0"));
 
+	ClickTime = 0;
+	AttackState = ECharacterAttackState::None;
 }
 
 void ANeryCharacter::ReceiveAttackInput()//接收到攻击输入的回调函数
@@ -187,33 +185,29 @@ void ANeryCharacter::ReceiveAttackInput()//接收到攻击输入的回调函数
 		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("没有设置攻击动画蒙太奇"));
 		return;
 	}
-	if(AttackState == ECharacterAttackState::None)
+	if(AttackState == ECharacterAttackState::None && ClickTime < CharacterDataAsset->AttackMontages.Num())
 	{//在没有攻击状态的时候才可以播放攻击动画
 		AttackState = ECharacterAttackState::Attacking;
-		if (ClickTime == 0) 
-		{
-			PlayAnimMontage(CharacterDataAsset->AttackMontages[ClickTime]);
-			ClickTime++;
-		}
-		else 
-		{
-			if (ClickTime < CharacterDataAsset->AttackMontages.Num())//防止播放到最后一段动画后，触发了连续点击逻辑
-			{
-				PlayAnimMontage(CharacterDataAsset->AttackMontages[ClickTime]);
-				ClickTime++;
-			}
-		}
+		
+		PlayAnimMontage(CharacterDataAsset->AttackMontages[ClickTime]);
+		ClickTime++;
 	} 
 	else
 	{
 		//在attacking的状态下按下攻击键，表示当前玩家需要继续连招.
-		if(bInputBuffered == false)
+		if(bInputBuffered == false && ClickTime < CharacterDataAsset->AttackMontages.Num())
 		{
 			bInputBuffered = true;
 		}
+
+		if(AttackState == ECharacterAttackState::Attacking && ClickTime >= CharacterDataAsset->AttackMontages.Num())
+		{
+			AttackState = ECharacterAttackState::None;
+			ClickTime = 0;
+			bInputBuffered = false;
+		}
 	}
-	//处理连续攻击的逻辑
-	/**/
+	
 }
 
 void ANeryCharacter::Server_SetMaxWalkSpeed_Implementation(float NewMaxWalkSpeed)
