@@ -23,6 +23,8 @@ class NERY_API ANeryPlayerController : public APlayerController
 public:
 	ANeryPlayerController();
 	bool IsLocked() { return IsValid(CurrentActor); }
+	AActor* GetLockedActor();
+
 	FOnLinkAnimTiming OnLinkAnimTiminig;
 	FOnAttackInputDelegate OnAttackInput;
 
@@ -43,6 +45,7 @@ protected:
 	float DetectiveFrequency = 0.2f;
 
 	FOnSelectedChangeDelegate OnSelectedChanged;
+
 	void StartDetectiveTimer();
 	void ClearDetectiveTimer();
 	void AutoStartorClearTimer();

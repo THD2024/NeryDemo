@@ -37,6 +37,9 @@ public:
 	bool GetIsLockOn();
 
 	UFUNCTION(BlueprintCallable)
+	AActor* GetLockOnTarget();
+
+	UFUNCTION(BlueprintCallable)
 	void SaveNotify();
 
 	UFUNCTION(BlueprintCallable)
@@ -59,6 +62,10 @@ public:
 protected:
 	virtual void BeginPlay() override;
 
+	virtual void Tick(float DeltaTime) override;
+
+	void SmoothRotateToTarget(AActor* TargetActor, float DeltaTime);
+
 	void SetLockMode(bool bIsLockOn);
 
 	void PossessedBy(AController* NewController) override;
@@ -69,6 +76,8 @@ protected:
 
 	UFUNCTION(Server, Reliable)
 	void Server_SetMaxWalkSpeed(float NewMaxWalkSpeed);
+
+	float RotateSpeed = 10.f;//角色旋转的速度
 
 	int32 ClickTime = 0;//表示当前的攻击次数
 

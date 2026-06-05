@@ -67,10 +67,36 @@ void ANeryCharacter::BeginPlay()
 	}
 }
 
+void ANeryCharacter::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+	if (GetIsLockOn())
+	{
+		SmoothRotateToTarget(GetLockOnTarget(), DeltaTime);
+	}
+}
+
+void ANeryCharacter::SmoothRotateToTarget(AActor* TargetActor, float DeltaTime)
+{
+	//这里通过插值的方式来实现角色平滑旋转到目标身上，这样在锁定敌人的时候，角色的旋转就不会太生硬了。
+	if (!TargetActor)return;
+	FRotator CurrentRotation = GetActorRotation();
+	FVector DirectionToTarget = TargetActor->GetActorLocation() - GetActorLocation();
+	DirectionToTarget.Z = 0; //只考虑水平旋转,避免角色在锁定目标时出现抬头或者低头的情况
+	FRotator TargetRotation = DirectionToTarget.Rotation();
+
+	FRotator NewRotation = FMath::RInterpTo(CurrentRotation, TargetRotation, DeltaTime, RotateSpeed);
+	//只对yaw进行旋转
+	NewRotation.Pitch = 0.f;
+	NewRotation.Roll = 0.f;
+	SetActorRotation(NewRotation);
+}
+
 void ANeryCharacter::SetLockMode(bool bIsLockOn)
 {
 	GetCharacterMovement()->bOrientRotationToMovement = !bIsLockOn; //角色移动时旋转朝向
-	bUseControllerRotationYaw = bIsLockOn; //根据锁定状态来设置是否使用控制器的旋转来控制角色的旋转
+	//这里更改，不再硬编码设置角色旋转，这样会导致太生硬，在锁定敌人的瞬间，角色会立马转向敌人，不够自然。
+	bUseControllerRotationYaw = false; //根据锁定状态来设置是否使用控制器的旋转来控制角色的旋转
 
 }
 
@@ -113,6 +139,15 @@ bool ANeryCharacter::GetIsLockOn()
 		return PC->IsLocked();
 	}
 	return false;
+}
+
+AActor* ANeryCharacter::GetLockOnTarget()
+{
+	if (ANeryPlayerController* PC = Cast<ANeryPlayerController>(GetController()))
+	{
+		return PC->GetLockedActor();
+	}
+	return nullptr;
 }
 
 void ANeryCharacter::SaveNotify()//动画通知的函数

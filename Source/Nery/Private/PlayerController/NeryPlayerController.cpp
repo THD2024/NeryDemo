@@ -17,6 +17,12 @@ ANeryPlayerController::ANeryPlayerController()
 	bReplicates = true;
 }
 
+AActor* ANeryPlayerController::GetLockedActor()
+{
+	if(CurrentActor)return CurrentActor;
+	return nullptr;
+}
+
 void ANeryPlayerController::PlayerTick(float DeltaTime)
 {
 	Super::PlayerTick(DeltaTime);
@@ -29,7 +35,7 @@ void ANeryPlayerController::UpdateCurrentRotation(float DeltaTime)
 	if (!CurrentActor || !GetPawn())return;//避免当前没有锁定目标或者角色不存在时，执行旋转更新逻辑
 	//获取到目标的位置
 	FVector TargetLocation = CurrentActor->GetActorLocation();
-	TargetLocation.Z += 50.f;
+	TargetLocation.Z += 75.0;
 	//获取到角色到目标的旋转
 	FVector CurrentLocation = GetPawn()->GetActorLocation();
 	CurrentLocation.Z += 200.f;//适当提升角色位置，避免过于贴地的旋转
