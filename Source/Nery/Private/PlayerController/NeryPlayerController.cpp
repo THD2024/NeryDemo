@@ -10,6 +10,8 @@
 #include"InputMappingContext.h"
 #include "TimerManager.h"
 #include"InputAction.h"
+#include "Net/UnrealNetwork.h"
+
 #include"Kismet/KismetMathLibrary.h"
 
 ANeryPlayerController::ANeryPlayerController()
@@ -26,7 +28,6 @@ AActor* ANeryPlayerController::GetLockedActor()
 void ANeryPlayerController::PlayerTick(float DeltaTime)
 {
 	Super::PlayerTick(DeltaTime);
-
 	UpdateCurrentRotation(DeltaTime);//实时更新当前锁定目标的旋转
 }
 
@@ -316,6 +317,12 @@ void ANeryPlayerController::Attack()
 		OnAttackInput.Broadcast();
 	}
 }
+
+
+
+
+
+
 
 
 //void ANeryPlayerController::Crouch_Hold()

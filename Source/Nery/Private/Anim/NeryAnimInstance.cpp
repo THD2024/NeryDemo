@@ -24,7 +24,7 @@ void UNeryAnimInstance::NativeThreadSafeUpdateAnimation(float DeltaSeconds)
 	}
 	if(ANeryCharacter* NeryCharacter = Cast<ANeryCharacter>(OwningPawn))
 	{
-		bIsLockOn = NeryCharacter->GetIsLockOn();
+		bIsLockOn = NeryCharacter->bIsLockOn_NetWorked;
 		bFalling = NeryCharacter->GetCharacterMovement()->IsFalling();
 	}
 }

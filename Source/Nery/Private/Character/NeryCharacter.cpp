@@ -8,6 +8,7 @@
 #include"GameFramework/CharacterMovementComponent.h"
 #include"UI/Controller/WidgetController.h"
 #include"Data/CharacterDataAsset.h"
+#include "Net/UnrealNetwork.h"
 #include"UI/HUD/NeryHUD.h"
 
 ANeryCharacter::ANeryCharacter()
@@ -55,7 +56,7 @@ void ANeryCharacter::BeginPlay()
 	if (ANeryPlayerController* PC = Cast<ANeryPlayerController>(GetController()))
 	{
 		PC->OnLinkAnimTiminig.AddLambda([this](bool IsLockOn) {
-			LinkAnimTiming(IsLockOn);//判断当前的锁定状态，来通知character来Linkanim，来实现不同的动画表现
+			//LinkAnimTiming(IsLockOn);//判断当前的锁定状态，来通知character来Linkanim，来实现不同的动画表现
 			SetLockMode(IsLockOn);//根据当前的锁定状态来设置锁定模式
 			});
 		
@@ -70,9 +71,16 @@ void ANeryCharacter::BeginPlay()
 void ANeryCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	if (GetIsLockOn())
+	if (IsLocallyControlled())
 	{
-		SmoothRotateToTarget(GetLockOnTarget(), DeltaTime);
+		if (bIsLockOn_NetWorked && NetLockedTarget)
+		{
+			SmoothRotateToTarget(NetLockedTarget, DeltaTime);//锁定目标的状态下，角色平滑转向到敌人
+		}
+	}
+	if (!HasAuthority())
+	{
+		Server_UpdateRotation(DeltaTime);
 	}
 }
 
@@ -96,8 +104,17 @@ void ANeryCharacter::SetLockMode(bool bIsLockOn)
 {
 	GetCharacterMovement()->bOrientRotationToMovement = !bIsLockOn; //角色移动时旋转朝向
 	//这里更改，不再硬编码设置角色旋转，这样会导致太生硬，在锁定敌人的瞬间，角色会立马转向敌人，不够自然。
-	bUseControllerRotationYaw = false; //根据锁定状态来设置是否使用控制器的旋转来控制角色的旋转
-
+	if (IsLocallyControlled())
+	{
+		 bIsLockOn_NetWorked = bIsLockOn;
+		 OnRep_LockOn();//本地调用，消除延迟
+		 NetLockedTarget = GetLockOnTarget();
+		 if(!HasAuthority())
+		 {
+			 Server_SetLockStatus(bIsLockOn);
+			 Server_SetLockTarget(GetLockOnTarget());
+		 }
+	}
 }
 
 void ANeryCharacter::PossessedBy(AController* NewController)
@@ -132,6 +149,77 @@ void ANeryCharacter::InitASCandAttribute()
 	}
 }
 
+
+
+void ANeryCharacter::Server_SetLockTarget_Implementation(AActor* NewTarget)
+{
+	NetLockedTarget = NewTarget;
+}
+
+
+void ANeryCharacter::Server_SetLockStatus_Implementation(bool bIsLockOn)
+{
+	bIsLockOn_NetWorked = bIsLockOn;//锁定状态更新后就调用这个onrep_lockon
+}
+
+void ANeryCharacter::Multicast_PlayAttackMontage_Implementation(const int32 Index)
+{
+	if (!IsLocallyControlled())
+	{
+		if (CharacterDataAsset->AttackMontages.IsValidIndex(Index))
+		{
+			PlayAnimMontage(CharacterDataAsset->AttackMontages[Index]);
+		}
+	}
+}
+
+void ANeryCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+	//将当前的锁定状态进行网络复制
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+	DOREPLIFETIME(ANeryCharacter, bIsLockOn_NetWorked);
+	DOREPLIFETIME(ANeryCharacter, AttackState);
+	DOREPLIFETIME(ANeryCharacter, NetLockedTarget);
+}
+
+void ANeryCharacter::OnRep_LockOn()
+{
+	LinkAnimTiming(bIsLockOn_NetWorked);
+	// 同时更新移动组件旋转设置，确保视觉表现一致
+	GetCharacterMovement()->bOrientRotationToMovement = !bIsLockOn_NetWorked;
+}
+
+void ANeryCharacter::Server_UpdateRotation_Implementation(float DeltaTime)
+{
+	SmoothRotateToTarget(NetLockedTarget, DeltaTime);
+}
+
+
+void ANeryCharacter::Server_ReceiveAttackInput_Implementation()
+{
+	if (AttackState == ECharacterAttackState::None && ClickTime < CharacterDataAsset->AttackMontages.Num())
+	{//在没有攻击状态的时候才可以播放攻击动画
+		AttackState = ECharacterAttackState::Attacking;
+		Multicast_PlayAttackMontage(ClickTime);
+		ClickTime++;
+	}
+	else
+	{
+		//在attacking的状态下按下攻击键，表示当前玩家需要继续连招.
+		//if(bInputBuffered == false && ClickTime < CharacterDataAsset->AttackMontages.Num())
+		//{
+		//	bInputBuffered = true;
+		//}
+
+		if (AttackState == ECharacterAttackState::Attacking && ClickTime >= CharacterDataAsset->AttackMontages.Num())
+		{//保底逻辑
+			AttackState = ECharacterAttackState::None;
+			ClickTime = 0;
+			//bInputBuffered = false;
+		}
+	}
+}
+
 bool ANeryCharacter::GetIsLockOn()
 {
 	if (ANeryPlayerController* PC = Cast<ANeryPlayerController>(GetController()))
@@ -160,11 +248,11 @@ void ANeryCharacter::SaveNotify()//动画通知的函数
 		//播放下一个动画，这样既不会重复播放第一个动画，也能实现连续攻击的逻辑
 		AttackState = ECharacterAttackState::None;
 		//判断玩家是否提前就按下了攻击输入，并且缓存到了bInputBuffered中，如果是的话，就直接调用ReceiveAttackInput来播放下一个攻击动画
-		if (bInputBuffered == true )
-		{
-			bInputBuffered = false;
-			ReceiveAttackInput();
-		}
+		//if (bInputBuffered == true )
+		//{
+		//	bInputBuffered = false;
+		//	ReceiveAttackInput();
+		//}
 		return;
 	}
 }
@@ -172,10 +260,10 @@ void ANeryCharacter::SaveNotify()//动画通知的函数
 void ANeryCharacter::ResetNotify()
 {//这个通知放到动画的最后，只要触发了这个通知，就说明当前攻击动画播放完了
 	//这里不考虑在该通知下还按下攻击输入的情况，这个就单纯的用来重置攻击次数和攻击状态。
-	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Click time = 0"));
-
 	ClickTime = 0;
 	AttackState = ECharacterAttackState::None;
+	GetCharacterMovement()->bAllowPhysicsRotationDuringAnimRootMotion = true;
+
 }
 
 void ANeryCharacter::ReceiveAttackInput()//接收到攻击输入的回调函数
@@ -185,29 +273,45 @@ void ANeryCharacter::ReceiveAttackInput()//接收到攻击输入的回调函数
 		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("没有设置攻击动画蒙太奇"));
 		return;
 	}
-	if(AttackState == ECharacterAttackState::None && ClickTime < CharacterDataAsset->AttackMontages.Num())
+
+	if (IsLocallyControlled())
+	{//本地
+		HandleAttackLogic();
+	}
+	if (!HasAuthority())
+	{//服务器
+		Server_ReceiveAttackInput();//在本地调用完攻击逻辑后，就通知服务器来处理攻击逻辑，这样服务器就能知道当前玩家的攻击状态和攻击次数，从而来决定是否可以播放下一个攻击动画，实现连招的逻辑。
+
+	}
+	
+}
+
+void ANeryCharacter::HandleAttackLogic()
+{
+	//本地播放逻辑
+	if (AttackState == ECharacterAttackState::None && ClickTime < CharacterDataAsset->AttackMontages.Num())
 	{//在没有攻击状态的时候才可以播放攻击动画
 		AttackState = ECharacterAttackState::Attacking;
-		
+		//在根动画蒙太奇动画播放时，禁止物理旋转
+		GetCharacterMovement()->bAllowPhysicsRotationDuringAnimRootMotion = false;
 		PlayAnimMontage(CharacterDataAsset->AttackMontages[ClickTime]);
 		ClickTime++;
-	} 
+	}
 	else
 	{
 		//在attacking的状态下按下攻击键，表示当前玩家需要继续连招.
-		if(bInputBuffered == false && ClickTime < CharacterDataAsset->AttackMontages.Num())
-		{
-			bInputBuffered = true;
-		}
+		//if(bInputBuffered == false && ClickTime < CharacterDataAsset->AttackMontages.Num())
+		//{
+		//	bInputBuffered = true;
+		//}
 
-		if(AttackState == ECharacterAttackState::Attacking && ClickTime >= CharacterDataAsset->AttackMontages.Num())
-		{
+		if (AttackState == ECharacterAttackState::Attacking && ClickTime >= CharacterDataAsset->AttackMontages.Num())
+		{//保底逻辑
 			AttackState = ECharacterAttackState::None;
 			ClickTime = 0;
-			bInputBuffered = false;
+			//bInputBuffered = false;
 		}
 	}
-	
 }
 
 void ANeryCharacter::Server_SetMaxWalkSpeed_Implementation(float NewMaxWalkSpeed)
