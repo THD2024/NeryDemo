@@ -5,22 +5,18 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include"AbilitySystemInterface.h"
+#include"NeryType.h"
+#include"Interface/CombatInterface.h"
 #include "NeryBaseCharacter.generated.h"
 
 class UAbilitySystemComponent;
 class UAttributeSet;
 class UStaticMeshComponent;
+class AWeapon;
 
-UENUM(BlueprintType)
-enum class ECharacterState: uint8
-{
-	LockOn,
-	Free,
-	Attack
-};
 
 UCLASS()
-class NERY_API ANeryBaseCharacter : public ACharacter, public IAbilitySystemInterface
+class NERY_API ANeryBaseCharacter : public ACharacter, public IAbilitySystemInterface,public ICombatInterface
 {
 	GENERATED_BODY()
 
@@ -34,9 +30,11 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	TObjectPtr<UAttributeSet> AttributeSet;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Weapons")
-	TObjectPtr<UStaticMeshComponent> WeaponMesh;
+	UPROPERTY(EditAnywhere, Category = "Weapon")
+	TSubclassOf<AWeapon> WeaponClass;
 
+	UPROPERTY(EditAnywhere, Category = "Weapon")
+	TObjectPtr<AWeapon> Weapon;
 
 
 protected:
@@ -44,6 +42,9 @@ protected:
 	virtual void BeginPlay() override;
 	//等待子类调用
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
+
+	void SpawnWeapon();
+
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;

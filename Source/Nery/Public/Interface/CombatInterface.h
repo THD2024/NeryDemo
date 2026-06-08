@@ -7,6 +7,8 @@
 #include "CombatInterface.generated.h"
 
 // This class does not need to be modified.
+enum class ECharacterAttackState : uint8;
+
 UINTERFACE(MinimalAPI)
 class UCombatInterface : public UInterface
 {
@@ -27,4 +29,7 @@ public:
 
 	UFUNCTION(BlueprintNativeEvent)
 	void UnLockTargetFeedBack();
+
+	UFUNCTION(BlueprintNativeEvent)
+	ECharacterAttackState GetAttackState();
 };

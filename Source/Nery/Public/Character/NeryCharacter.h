@@ -7,13 +7,7 @@
 #include "NeryCharacter.generated.h"
 
 class ANeryPlayerState;
-
-UENUM(BlueprintType)
-enum class ECharacterAttackState : uint8
-{
-	Attacking,
-	None
-};
+class UActorComponent;
 
 /**
  * 
@@ -64,6 +58,8 @@ public:
 	UPROPERTY(EditAnywhere,BlueprintReadOnly,Category = "Data")
 	TObjectPtr<class UCharacterDataAsset> CharacterDataAsset;//通过DataAsset存储角色的攻击动画，受击动画，Ability等数据，将角色属性和本身的表现分离开来，方便后续的调整和扩展
 
+	
+
 protected:
 	virtual void BeginPlay() override;
 
@@ -109,12 +105,17 @@ protected:
 
 	/*网络复制*/
 
+	/*Interface*/
+	virtual ECharacterAttackState GetAttackState_Implementation() override;
+
+	/*Interface*/
+
 
 	float RotateSpeed = 10.f;//角色旋转的速度
 
 	int32 ClickTime = 0;//表示当前的攻击次数
 
 	bool bAnimNotified = false;
-	//bool bInputBuffered = false;//这个变量用来表示当前是否有输入被缓冲了，如果有输入被缓冲了，就说明在当前攻击动画播放的过程中，玩家又按了一次攻击输入，这时就可以在动画蒙太奇的Notify节点中通过判断这个变量来播放下一个攻击动画，实现连续攻击的逻辑
+	bool bInputBuffered = false;//这个变量用来表示当前是否有输入被缓冲了，如果有输入被缓冲了，就说明在当前攻击动画播放的过程中，玩家又按了一次攻击输入，这时就可以在动画蒙太奇的Notify节点中通过判断这个变量来播放下一个攻击动画，实现连续攻击的逻辑
 	
 };

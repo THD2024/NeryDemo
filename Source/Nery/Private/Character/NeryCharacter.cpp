@@ -9,13 +9,13 @@
 #include"UI/Controller/WidgetController.h"
 #include"Data/CharacterDataAsset.h"
 #include "Net/UnrealNetwork.h"
+#include"EffectActor/Weapon.h"
+#include"Components/ActorComponent.h"
 #include"UI/HUD/NeryHUD.h"
 
 ANeryCharacter::ANeryCharacter()
 {
-	//防止角色跟随控制器旋转
-	WeaponMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("WeaponMesh"));
-	WeaponMesh->SetupAttachment(GetMesh(),FName("WeaponSocket"));
+	//防止角色跟随控制器旋转	
 	bReplicates = true;
 	SetReplicateMovement(true);
 	bUseControllerRotationPitch = false;
@@ -66,6 +66,7 @@ void ANeryCharacter::BeginPlay()
 		//接收到攻击按键输入事件
 		PC->OnAttackInput.AddUObject(this, &ANeryCharacter::ReceiveAttackInput);
 	}
+	SpawnWeapon();
 }
 
 void ANeryCharacter::Tick(float DeltaTime)
@@ -83,6 +84,9 @@ void ANeryCharacter::Tick(float DeltaTime)
 		Server_UpdateRotation(DeltaTime);
 	}
 }
+
+
+
 
 void ANeryCharacter::SmoothRotateToTarget(AActor* TargetActor, float DeltaTime)
 {
@@ -169,6 +173,7 @@ void ANeryCharacter::Multicast_PlayAttackMontage_Implementation(const int32 Inde
 		if (CharacterDataAsset->AttackMontages.IsValidIndex(Index))
 		{
 			PlayAnimMontage(CharacterDataAsset->AttackMontages[Index]);
+			
 		}
 	}
 }
@@ -189,6 +194,11 @@ void ANeryCharacter::OnRep_LockOn()
 	GetCharacterMovement()->bOrientRotationToMovement = !bIsLockOn_NetWorked;
 }
 
+ECharacterAttackState ANeryCharacter::GetAttackState_Implementation()
+{
+	return AttackState;
+}
+
 void ANeryCharacter::Server_UpdateRotation_Implementation(float DeltaTime)
 {
 	SmoothRotateToTarget(NetLockedTarget, DeltaTime);
@@ -206,16 +216,16 @@ void ANeryCharacter::Server_ReceiveAttackInput_Implementation()
 	else
 	{
 		//在attacking的状态下按下攻击键，表示当前玩家需要继续连招.
-		//if(bInputBuffered == false && ClickTime < CharacterDataAsset->AttackMontages.Num())
-		//{
-		//	bInputBuffered = true;
-		//}
+		if(bInputBuffered == false && ClickTime < CharacterDataAsset->AttackMontages.Num())
+		{
+			bInputBuffered = true;
+		}
 
 		if (AttackState == ECharacterAttackState::Attacking && ClickTime >= CharacterDataAsset->AttackMontages.Num())
 		{//保底逻辑
 			AttackState = ECharacterAttackState::None;
 			ClickTime = 0;
-			//bInputBuffered = false;
+			bInputBuffered = false;
 		}
 	}
 }
@@ -248,11 +258,12 @@ void ANeryCharacter::SaveNotify()//动画通知的函数
 		//播放下一个动画，这样既不会重复播放第一个动画，也能实现连续攻击的逻辑
 		AttackState = ECharacterAttackState::None;
 		//判断玩家是否提前就按下了攻击输入，并且缓存到了bInputBuffered中，如果是的话，就直接调用ReceiveAttackInput来播放下一个攻击动画
-		//if (bInputBuffered == true )
-		//{
-		//	bInputBuffered = false;
-		//	ReceiveAttackInput();
-		//}
+		if (bInputBuffered == true )
+		{
+			bInputBuffered = false;
+			ReceiveAttackInput();
+		}
+		Weapon->IgnoreActors.Empty();
 		return;
 	}
 }
@@ -263,7 +274,8 @@ void ANeryCharacter::ResetNotify()
 	ClickTime = 0;
 	AttackState = ECharacterAttackState::None;
 	GetCharacterMovement()->bAllowPhysicsRotationDuringAnimRootMotion = true;
-
+	Weapon->IgnoreActors.Empty();
+	
 }
 
 void ANeryCharacter::ReceiveAttackInput()//接收到攻击输入的回调函数
@@ -296,20 +308,21 @@ void ANeryCharacter::HandleAttackLogic()
 		GetCharacterMovement()->bAllowPhysicsRotationDuringAnimRootMotion = false;
 		PlayAnimMontage(CharacterDataAsset->AttackMontages[ClickTime]);
 		ClickTime++;
+		
 	}
 	else
 	{
 		//在attacking的状态下按下攻击键，表示当前玩家需要继续连招.
-		//if(bInputBuffered == false && ClickTime < CharacterDataAsset->AttackMontages.Num())
-		//{
-		//	bInputBuffered = true;
-		//}
+		if(bInputBuffered == false && ClickTime < CharacterDataAsset->AttackMontages.Num())
+		{
+			bInputBuffered = true;
+		}
 
 		if (AttackState == ECharacterAttackState::Attacking && ClickTime >= CharacterDataAsset->AttackMontages.Num())
 		{//保底逻辑
 			AttackState = ECharacterAttackState::None;
 			ClickTime = 0;
-			//bInputBuffered = false;
+			bInputBuffered = false;
 		}
 	}
 }

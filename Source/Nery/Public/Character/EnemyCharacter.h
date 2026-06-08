@@ -14,7 +14,7 @@ struct FOnAttributeChangeData;//记得声明
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnEnemyHealthChanged, float, NewHealth);
 
 UCLASS()
-class NERY_API AEnemyCharacter : public ANeryBaseCharacter, public ICombatInterface
+class NERY_API AEnemyCharacter : public ANeryBaseCharacter
 {
 	GENERATED_BODY()
 

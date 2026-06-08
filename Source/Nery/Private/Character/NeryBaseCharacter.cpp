@@ -2,6 +2,7 @@
 
 
 #include "Character/NeryBaseCharacter.h"
+#include"EffectActor/Weapon.h"
 
 // Sets default values
 ANeryBaseCharacter::ANeryBaseCharacter()
@@ -21,6 +22,25 @@ void ANeryBaseCharacter::BeginPlay()
 UAbilitySystemComponent* ANeryBaseCharacter::GetAbilitySystemComponent() const
 {
 	return AbilitySystemComponent;
+}
+
+void ANeryBaseCharacter::SpawnWeapon()
+{
+	if (WeaponClass)
+	{
+		FActorSpawnParameters SpawnParameters;
+		SpawnParameters.Owner = this;
+		SpawnParameters.Instigator = GetInstigator();
+		Weapon = GetWorld()->SpawnActor<AWeapon>
+			(
+				WeaponClass,
+				GetActorLocation(),
+				GetActorRotation(),
+				SpawnParameters
+			);
+		Weapon->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetIncludingScale, TEXT("WeaponSocket"));
+		Weapon->SetOwningActor(this);
+	}
 }
 
 // Called every frame
