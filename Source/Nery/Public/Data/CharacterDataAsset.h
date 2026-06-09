@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Engine/DataAsset.h"
+#include"GameplayEffect.h"
 #include "CharacterDataAsset.generated.h"
 
 /**
@@ -20,4 +21,15 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Data")
 	TArray<UAnimMontage*> AttackMontages;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Data")
+	TSubclassOf<UGameplayEffect> AttackEffectClass;//角色的普通伤害
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Data")
+	TSubclassOf<UGameplayEffect> DefaultAttributeEffect;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Data")
+	TSubclassOf<UGameplayEffect> SecondaryAttributeEffect;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Data")
+	TSubclassOf<UGameplayEffect> VitalAttributeEffect;
 };

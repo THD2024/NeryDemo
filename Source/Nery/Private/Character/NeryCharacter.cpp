@@ -11,6 +11,7 @@
 #include "Net/UnrealNetwork.h"
 #include"EffectActor/Weapon.h"
 #include"Components/ActorComponent.h"
+#include"NeryBlueprintFunction/NeryBlueprintFunctionLibrary.h"
 #include"UI/HUD/NeryHUD.h"
 
 ANeryCharacter::ANeryCharacter()
@@ -53,6 +54,7 @@ void ANeryCharacter::SetMaxWalkSpeed(float NewMaxWalkSpeed)
 void ANeryCharacter::BeginPlay()
 {
 	Super::BeginPlay();
+	
 	if (ANeryPlayerController* PC = Cast<ANeryPlayerController>(GetController()))
 	{
 		PC->OnLinkAnimTiminig.AddLambda([this](bool IsLockOn) {
@@ -127,6 +129,9 @@ void ANeryCharacter::PossessedBy(AController* NewController)
 	InitASCandAttribute();
 	if (IsLocallyControlled())
 	{
+		UNeryBlueprintFunctionLibrary::InitDefaultAttribute(this, this);
+		UNeryBlueprintFunctionLibrary::InitSecondaryAttribute(this, this);
+		UNeryBlueprintFunctionLibrary::InitVitalAttribute(this, this);
 		InitHUD();
 	}
 }
@@ -135,6 +140,9 @@ void ANeryCharacter::OnRep_PlayerState()
 {
 	Super::OnRep_PlayerState();
 	InitASCandAttribute();
+	UNeryBlueprintFunctionLibrary::InitDefaultAttribute(this, this);
+	UNeryBlueprintFunctionLibrary::InitSecondaryAttribute(this, this);
+	UNeryBlueprintFunctionLibrary::InitVitalAttribute(this, this);
 	InitHUD();//Hud属于表现层，在这里调用初始化Hud的函数，来确保在玩家状态复制到客户端后，客户端的Hud能够正确显示玩家状态的信息。
 	
 }

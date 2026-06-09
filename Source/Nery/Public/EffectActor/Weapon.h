@@ -9,6 +9,8 @@
 class UBoxComponent;
 class USceneComponent;
 class UStaticMeshComponent;
+class UGameplayEffect;
+class USoundBase;
 
 UCLASS()
 class NERY_API AWeapon : public AActor
@@ -24,6 +26,7 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;	
 
+	void ApplyAttackEffect(AActor* TargetActor);
 
 	UPROPERTY(EditDefaultsOnly, Category = "WeaponCollision")
 	TObjectPtr<UBoxComponent> TraceBox;
@@ -39,6 +42,9 @@ protected:
 
 	UPROPERTY()
 	TObjectPtr<AActor> OwningActor;
+
+	UPROPERTY(EditDefaultsOnly, Category = "AttackSound")
+	TObjectPtr<USoundBase> AttackSound;
 
 public:	
 	// Called every frame
@@ -58,6 +64,8 @@ public:
 
 	bool CanWeaponTrace = false;
 
+	//设置新的武器是注意这个忽略数组
 	TArray<AActor*> IgnoreActors;
 
+	
 };

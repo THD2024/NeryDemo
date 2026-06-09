@@ -9,9 +9,15 @@
 /**
  * 
  */
+class UCharacterDataAsset;
+
 UCLASS()
 class NERY_API ANeryGameModeBase : public AGameModeBase
 {
 	GENERATED_BODY()
 	
+public:
+
+	UPROPERTY(EditAnywhere, Category = "CharacterInfo")
+	TObjectPtr<UCharacterDataAsset> CharacterInfo;
 };

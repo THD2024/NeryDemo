@@ -7,7 +7,12 @@
 #include"Interface/CombatInterface.h"
 #include"Kismet/KismetSystemLibrary.h"
 #include"NeryType.h"
+#include"GameplayEffect.h"
+#include "Sound/SoundBase.h"
+#include"AbilitySystemComponent.h"
 #include"Components/StaticMeshComponent.h"
+#include "AbilitySystemBlueprintLibrary.h"
+#include"NeryBlueprintFunction/NeryBlueprintFunctionLibrary.h"
 
 // Sets default values
 AWeapon::AWeapon()
@@ -33,6 +38,23 @@ void AWeapon::BeginPlay()
 	Super::BeginPlay();
 	TraceBox->OnComponentBeginOverlap.AddDynamic(this, &AWeapon::OnBoxOverlap);
 	TraceBox->OnComponentEndOverlap.AddDynamic(this, &AWeapon::OnBoxEndOverlap);
+}
+
+void AWeapon::ApplyAttackEffect(AActor* TargetActor)
+{
+	//在这里面apply游戏效果
+	
+	if (UAbilitySystemComponent* OwnerASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(Owner))
+	{
+		if (UAbilitySystemComponent* TargetASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(TargetActor))
+		{
+			GEngine->AddOnScreenDebugMessage(1, 2.f, FColor::Cyan, FString(TEXT("AttackEffect")));
+			FGameplayEffectContextHandle ContextHandle = OwnerASC->MakeEffectContext();
+			ContextHandle.AddInstigator(Owner, this);
+			FGameplayEffectSpecHandle SpecHandle = OwnerASC->MakeOutgoingSpec(UNeryBlueprintFunctionLibrary::GetCharacterAttackEffect(Owner), 1, ContextHandle);
+			OwnerASC->ApplyGameplayEffectSpecToTarget(*SpecHandle.Data.Get(), TargetASC);
+		}
+	}
 }
 
 
@@ -67,6 +89,7 @@ void AWeapon::BoxTrace(ECollisionChannel DetectiveObjectType)
 	{
 		for (const auto& HitResult : HitResults)
 		{
+			ApplyAttackEffect(HitResult.GetActor());//在确定检测有效后，尝试添加游戏效果
 			IgnoreActors.AddUnique(HitResult.GetActor());
 		}
 	}
