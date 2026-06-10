@@ -34,15 +34,19 @@ public:
 	/*Basic Attribute*/
 	
 	/*Secondary Attribute*/
-	ATTRIBUTE_ACCESSORS(UNeryAttributeSet, Health);
+	ATTRIBUTE_ACCESSORS(UNeryAttributeSet, MaxHealth);
 	ATTRIBUTE_ACCESSORS(UNeryAttributeSet, Stamina);
 	ATTRIBUTE_ACCESSORS(UNeryAttributeSet, Armor);
 	ATTRIBUTE_ACCESSORS(UNeryAttributeSet, ArmorPenetration);
 	ATTRIBUTE_ACCESSORS(UNeryAttributeSet, CriticalHitChance);
 	ATTRIBUTE_ACCESSORS(UNeryAttributeSet, CriticalHitEffect);
-	ATTRIBUTE_ACCESSORS(UNeryAttributeSet, Mana);
-
+	ATTRIBUTE_ACCESSORS(UNeryAttributeSet, MaxMana);
 	/*Secondary Attribute*/
+
+	/*Vital Attribute*/
+	ATTRIBUTE_ACCESSORS(UNeryAttributeSet, Mana);
+	ATTRIBUTE_ACCESSORS(UNeryAttributeSet, Health);
+	/*Vital Attribute*/
 protected:
 
 	/*Basic Attribute*/

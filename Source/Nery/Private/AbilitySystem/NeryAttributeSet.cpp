@@ -1,4 +1,3 @@
-// Fill out your copyright notice in the Description page of Project Settings.
 
 
 #include "AbilitySystem/NeryAttributeSet.h"
@@ -6,7 +5,7 @@
 
 UNeryAttributeSet::UNeryAttributeSet()
 {
-	InitHealth(50.0);//初始化属性值
+	
 }
 
 
