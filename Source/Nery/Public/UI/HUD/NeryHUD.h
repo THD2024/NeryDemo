@@ -13,6 +13,7 @@ struct FWidgetControllerParams;//在这里是需要声明父类控制器的参�
 class UWidgetController;//在这里是需要声明父类控制器，这里不需要调用到具体控制器的函数
 class UNeryUserWidget;//在这里是需要声明父类控制器的参数结构体，这里不需要调用到具体控制器的函数
 
+
 UCLASS()
 class NERY_API ANeryHUD : public AHUD
 {
