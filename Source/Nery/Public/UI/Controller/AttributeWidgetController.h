@@ -4,10 +4,15 @@
 
 #include "CoreMinimal.h"
 #include "UI/Controller/WidgetController.h"
+#include"Data/AttributeInfo.h"
 #include "AttributeWidgetController.generated.h"
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnAttributeInformation, float, AttributeValue);
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnAttributeInformation, FNeryAttributeInfo, AttributeInformation);
+
+class UAttributeInfo;
+struct FOnAttributeChangeData;
+struct FGameplayAttribute;
 /**
  * 
  */
@@ -18,14 +23,20 @@ class NERY_API UAttributeWidgetController : public UWidgetController
 	
 public:
 
+	UPROPERTY(EditDefaultsOnly)
+	TObjectPtr<UAttributeInfo> AttributeInfo;//属性资产
+
 	void BroadInitValue() override;
 
 	void BindCallBacks() override;
 
 protected:
 
+
 	UPROPERTY(BlueprintAssignable, Category = "AttributeDelegate")
-	FOnAttributeInformation OnAttributeValueChanged;//用来广播属性到属性菜单中
+	FOnAttributeInformation OnAttributeInformationChanged;//用来广播属性到属性菜单中
+
+	void BroadCastInfo(const FGameplayAttribute& AttributeData, float NewValue);
 
 	/*BasicAttribute*/
 	void OnResilienceChanged(const FOnAttributeChangeData& Data);

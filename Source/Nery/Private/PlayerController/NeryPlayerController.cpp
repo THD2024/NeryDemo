@@ -11,7 +11,8 @@
 #include "TimerManager.h"
 #include"InputAction.h"
 #include "Net/UnrealNetwork.h"
-
+#include"UI/Widget/NeryUserWidget.h"
+#include"UI/HUD/NeryHUD.h"
 #include"Kismet/KismetMathLibrary.h"
 
 ANeryPlayerController::ANeryPlayerController()
@@ -202,6 +203,7 @@ void ANeryPlayerController::SetupInputComponent()
 		//EnhancedInputComponent->BindAction(Crouch,ETriggerEvent::Triggered, this, &ANeryPlayerController::Crouch_Hold);
 		EnhancedInputComponent->BindAction(LockAction, ETriggerEvent::Started, this, &ANeryPlayerController::LockTarget);
 		EnhancedInputComponent->BindAction(AttackAction, ETriggerEvent::Started, this, &ANeryPlayerController::Attack);
+		EnhancedInputComponent->BindAction(AttributeMenuAction, ETriggerEvent::Started, this, &ANeryPlayerController::AttributeMenuButton);
 	}
 
 }
@@ -315,6 +317,25 @@ void ANeryPlayerController::Attack()
 	if (CurrentActor)
 	{
 		OnAttackInput.Broadcast();
+	}
+}
+
+void ANeryPlayerController::AttributeMenuButton()
+{
+	if (CanOpenMenu)
+	{
+		CanOpenMenu = false;
+	}
+	else
+	{
+		CanOpenMenu = true;
+	}
+	if (ANeryHUD* NeryHUD = Cast<ANeryHUD>(GetHUD()))
+	{
+		if (NeryHUD->GetOverlayWidget() && NeryHUD->GetOverlayWidget()->Implements<UCombatInterface>())
+		{
+			ICombatInterface::Execute_UpdateAttributeMenu(NeryHUD->GetOverlayWidget(),CanOpenMenu);
+		}
 	}
 }
 

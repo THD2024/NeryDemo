@@ -7,6 +7,9 @@
 #include "AbilitySystemBlueprintLibrary.h"
 #include"AbilitySystemComponent.h"
 #include"Data/CharacterDataAsset.h"
+#include"PlayerState/NeryPlayerState.h"
+#include"UI/Controller/AttributeWidgetController.h"
+#include"UI/HUD/NeryHUD.h"
 
 TSubclassOf<UGameplayEffect> UNeryBlueprintFunctionLibrary::GetCharacterAttackEffect(const UObject* WorldContextObject)
 {
@@ -64,4 +67,25 @@ void UNeryBlueprintFunctionLibrary::InitVitalAttribute(const UObject* WorldConte
 		FGameplayEffectSpecHandle SpecHandle = InASC->MakeOutgoingSpec(NeryGameMode->CharacterInfo->VitalAttributeEffect, 1, ContextHandle);
 		InASC->ApplyGameplayEffectSpecToSelf(*SpecHandle.Data.Get());
 	}
+}
+
+UAttributeWidgetController* UNeryBlueprintFunctionLibrary::GetAttributeWigetController(const UObject* WorldContextObject, AActor* InActor)
+{//这个扔到蓝图中去
+	if (APlayerController* PC = Cast<APlayerController>(UGameplayStatics::GetPlayerController(InActor, 0))) 
+	{
+		if (ANeryPlayerState* PS = PC->GetPlayerState<ANeryPlayerState>())
+		{
+			UAbilitySystemComponent* ASC = PS->AbilitySystemComponent;
+			UAttributeSet* AS = PS->AttributeSet;
+			if (ANeryHUD* NeryHUD = Cast<ANeryHUD>(PC->GetHUD()))
+			{
+				FWidgetControllerParams Params(PS,PC,ASC,AS);
+				UAttributeWidgetController* AttributeWidgetController = NeryHUD->GetAttributeWidgetController(Params);
+				AttributeWidgetController->BroadInitValue();
+				return AttributeWidgetController;
+			}
+		}
+	}
+	return nullptr;
+
 }

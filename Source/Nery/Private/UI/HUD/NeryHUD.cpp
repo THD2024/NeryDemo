@@ -4,6 +4,7 @@
 #include "UI/HUD/NeryHUD.h"
 #include"UI/Widget/NeryUserWidget.h"
 #include"UI/Controller/OverlayWidgetController.h"
+#include"UI/Controller/AttributeWidgetController.h"
 
 
 void ANeryHUD::InitWidgetAndController(const FWidgetControllerParams& Params)
@@ -15,9 +16,9 @@ void ANeryHUD::InitWidgetAndController(const FWidgetControllerParams& Params)
 		OverlayWidget->AddToViewport();
 		OverlayWidgetController->BindCallBacks();
 		OverlayWidgetController->BroadInitValue();
-
 	}
 }
+
 
 void ANeryHUD::BeginPlay()
 {
@@ -45,4 +46,22 @@ UWidgetController* ANeryHUD::GetOverlayWidgetController(const FWidgetControllerP
 		OverlayWidgetController->InitWidgetController(Params);
 	}
 	return OverlayWidgetController;
+}
+
+UAttributeWidgetController* ANeryHUD::GetAttributeWidgetController(const FWidgetControllerParams& Params)
+{
+	if (!AttributeWidgetController)
+	{//判断当前的控制器是否是空的，如果是就创建一个控制器并且赋值。
+		AttributeWidgetController = NewObject<UAttributeWidgetController>(this, AttributeWidgetControllerClass);
+		AttributeWidgetController->InitWidgetController(Params);
+		AttributeWidgetController->BindCallBacks();//创建成功后就绑定委托。
+	}
+	return AttributeWidgetController;
+
+}
+
+UNeryUserWidget* ANeryHUD::GetOverlayWidget()
+{
+	if (OverlayWidget)return OverlayWidget; 
+	return nullptr;
 }

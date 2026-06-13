@@ -1,11 +1,22 @@
 
 
 #include "AbilitySystem/NeryAttributeSet.h"
+#include"AbilitySystem/NeryGameplayTag.h"
 #include"Net/UnrealNetwork.h"//注册到网络复制属性的必要头文件
 
 UNeryAttributeSet::UNeryAttributeSet()
 {
-	
+	FNeryGameplayTags GameplayTags = FNeryGameplayTags::GetNeryGameplayTags();
+	AttributeToTags.Add(GetResilienceAttribute(), GameplayTags.Attribute_Basic_Resilience);
+	AttributeToTags.Add(GetStrengthAttribute(), GameplayTags.Attribute_Basic_Strength);
+	AttributeToTags.Add(GetVigorAttribute(), GameplayTags.Attribute_Basic_Vigor);
+
+	AttributeToTags.Add(GetArmorAttribute(), GameplayTags.Attribute_Secondary_Armor);
+	AttributeToTags.Add(GetArmorPenetrationAttribute(), GameplayTags.Attribute_Secondary_ArmorPenetration);
+	AttributeToTags.Add(GetCriticalHitChanceAttribute(), GameplayTags.Attribute_Secondary_CriticalHitChance);
+	AttributeToTags.Add(GetCriticalHitEffectAttribute(), GameplayTags.Attribute_Secondary_CriticalHitEffect);
+	AttributeToTags.Add(GetMaxManaAttribute(), GameplayTags.Attribute_Secondary_MaxMana);
+	AttributeToTags.Add(GetMaxHealthAttribute(), GameplayTags.Attribute_Secondary_MaxHealth);
 }
 
 

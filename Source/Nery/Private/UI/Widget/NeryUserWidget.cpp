@@ -10,4 +10,9 @@ void UNeryUserWidget::SetWidgetController(UWidgetController* InWidgetController)
 	OnWidgetControllerSet();
 }
 
+void UNeryUserWidget::UpdateAttributeMenu_Implementation(bool CanOpen)
+{
+	CanOpenMenu = CanOpen;
+}
+
 

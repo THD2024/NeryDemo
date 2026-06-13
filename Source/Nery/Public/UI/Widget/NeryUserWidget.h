@@ -4,14 +4,16 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
+#include"Interface/CombatInterface.h"
 #include "NeryUserWidget.generated.h"
+
 
 class UWidgetController;
 /**
  * 
  */
 UCLASS(BlueprintType,Blueprintable)
-class NERY_API UNeryUserWidget : public UUserWidget
+class NERY_API UNeryUserWidget : public UUserWidget,public ICombatInterface
 {
 	GENERATED_BODY()
 	
@@ -22,7 +24,15 @@ public:
 	UFUNCTION(BlueprintImplementableEvent)
 	void OnWidgetControllerSet();
 
+	virtual void UpdateAttributeMenu_Implementation(bool CanOpen) override;
+
 protected:
 	UPROPERTY(BlueprintReadOnly, Category = "Controller")
 	TObjectPtr<UWidgetController> WidgetController;
+
+	UPROPERTY(BlueprintReadWrite)
+	bool CanOpenMenu = false;
+
+
+
 };

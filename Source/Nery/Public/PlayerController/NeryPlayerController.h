@@ -55,6 +55,7 @@ protected:
 	void UnLock(AActor* InActor);//启动锁定特效
 	void Lock(AActor* InActor);//取消锁定特效
 	
+	bool CanOpenMenu = false;
 	bool IsTargetValid(AActor* InActor) const ;//判断当前检测到的对象是否有效，是否超出距离，是否中间有阻挡
 
 	//根据对象类型来检测一定范围内的目标,忽略目标自动设置为当前本身
@@ -87,6 +88,9 @@ protected:
 	TObjectPtr<UInputAction> AttackAction;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Input")
+	TObjectPtr<UInputAction> AttributeMenuAction;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Input")
 	TObjectPtr<UInputMappingContext> DefaultMappingContext;
 
 	//输入回调函数
@@ -97,6 +101,7 @@ protected:
 	void Shift_Release();
 	void LockTarget();
 	void Attack();
+	void AttributeMenuButton();
 	//	void Crouch_Hold();
 	
 

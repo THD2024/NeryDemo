@@ -32,4 +32,7 @@ public:
 
 	UFUNCTION(BlueprintNativeEvent)
 	ECharacterAttackState GetAttackState();
+
+	UFUNCTION(BlueprintNativeEvent)
+	void UpdateAttributeMenu(bool CanOpen);
 };

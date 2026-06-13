@@ -26,6 +26,8 @@ class NERY_API UNeryAttributeSet : public UAttributeSet
 public:
 	UNeryAttributeSet();
 
+	TMap<FGameplayAttribute, FGameplayTag> AttributeToTags;
+
 	//属性访问器宏，传入类名和属性名
 	/*Basic Attribute*/
 	ATTRIBUTE_ACCESSORS(UNeryAttributeSet, Resilience);

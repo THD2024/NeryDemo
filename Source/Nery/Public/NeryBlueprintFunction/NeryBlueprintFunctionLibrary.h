@@ -11,6 +11,7 @@
  */
 class UGameplayEffect;
 class ANeryGameModeBase;
+class UAttributeWidgetController;
 
 UCLASS()
 class NERY_API UNeryBlueprintFunctionLibrary : public UBlueprintFunctionLibrary
@@ -33,4 +34,7 @@ public:
 
 	UFUNCTION()
 	static void InitVitalAttribute(const UObject* WorldContextObject, AActor* InActor);
+
+	UFUNCTION(BlueprintPure,BlueprintCallable)
+	static UAttributeWidgetController* GetAttributeWigetController(const UObject* WorldContextObject, AActor* InActor);
 };
