@@ -26,6 +26,9 @@ public:
 
 	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly)
 	FText AttributeName = FText();
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	FText AttributeDescription = FText();
 };
 
 UCLASS(Blueprintable,BlueprintType)

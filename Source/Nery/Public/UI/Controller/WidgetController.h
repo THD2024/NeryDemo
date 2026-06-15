@@ -51,6 +51,7 @@ public:
 
 	void InitWidgetController(const FWidgetControllerParams& Params);
 
+	UFUNCTION(BlueprintCallable)
 	virtual void BroadInitValue() ;
 	
 	virtual void BindCallBacks();

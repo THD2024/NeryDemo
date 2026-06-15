@@ -36,5 +36,5 @@ public:
 	static void InitVitalAttribute(const UObject* WorldContextObject, AActor* InActor);
 
 	UFUNCTION(BlueprintPure,BlueprintCallable)
-	static UAttributeWidgetController* GetAttributeWigetController(const UObject* WorldContextObject, AActor* InActor);
+	static UAttributeWidgetController* GetAttributeWigetController(const UObject* WorldContextObject, APlayerController* PlayerController);
 };

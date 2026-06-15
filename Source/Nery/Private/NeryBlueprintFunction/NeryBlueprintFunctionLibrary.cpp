@@ -69,9 +69,9 @@ void UNeryBlueprintFunctionLibrary::InitVitalAttribute(const UObject* WorldConte
 	}
 }
 
-UAttributeWidgetController* UNeryBlueprintFunctionLibrary::GetAttributeWigetController(const UObject* WorldContextObject, AActor* InActor)
+UAttributeWidgetController* UNeryBlueprintFunctionLibrary::GetAttributeWigetController(const UObject* WorldContextObject, APlayerController* PlayerController)
 {//这个扔到蓝图中去
-	if (APlayerController* PC = Cast<APlayerController>(UGameplayStatics::GetPlayerController(InActor, 0))) 
+	if (APlayerController* PC = Cast<APlayerController>(PlayerController)) 
 	{
 		if (ANeryPlayerState* PS = PC->GetPlayerState<ANeryPlayerState>())
 		{

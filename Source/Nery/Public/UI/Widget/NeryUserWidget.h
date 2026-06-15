@@ -9,6 +9,7 @@
 
 
 class UWidgetController;
+
 /**
  * 
  */
@@ -23,6 +24,12 @@ public:
 
 	UFUNCTION(BlueprintImplementableEvent)
 	void OnWidgetControllerSet();
+
+	UFUNCTION(BlueprintCallable)
+	void SetOpenMenuValue();
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void OnOpenMenuChange();
 
 	virtual void UpdateAttributeMenu_Implementation(bool CanOpen) override;
 
