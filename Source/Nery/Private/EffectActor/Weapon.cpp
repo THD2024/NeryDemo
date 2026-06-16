@@ -19,13 +19,13 @@ AWeapon::AWeapon()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-
-
+	bReplicates = true;
+	PivotRoot = CreateDefaultSubobject<USceneComponent>("Pivot");
 	TraceBox = CreateDefaultSubobject<UBoxComponent>("TraceBox");
 	TraceStart = CreateDefaultSubobject<USceneComponent>("TraceStart");
 	TraceEnd = CreateDefaultSubobject<USceneComponent>("TraceEnd");
 	WeaponShape = CreateDefaultSubobject<UStaticMeshComponent>("WeaponShape");
-	SetRootComponent(TraceBox);
+	SetRootComponent(PivotRoot);
 	TraceStart->SetupAttachment(RootComponent);
 	TraceEnd->SetupAttachment(RootComponent);
 	WeaponShape->SetupAttachment(RootComponent);

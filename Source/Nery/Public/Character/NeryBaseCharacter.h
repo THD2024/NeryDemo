@@ -6,6 +6,7 @@
 #include "GameFramework/Character.h"
 #include"AbilitySystemInterface.h"
 #include"NeryType.h"
+#include "Net/UnrealNetwork.h"
 #include"Interface/CombatInterface.h"
 #include "NeryBaseCharacter.generated.h"
 
@@ -33,7 +34,7 @@ public:
 	UPROPERTY(EditAnywhere, Category = "Weapon")
 	TSubclassOf<AWeapon> WeaponClass;
 
-	UPROPERTY(EditAnywhere, Category = "Weapon")
+	UPROPERTY(Replicated,EditAnywhere, Category = "Weapon")
 	TObjectPtr<AWeapon> Weapon;
 
 
@@ -42,8 +43,11 @@ protected:
 	virtual void BeginPlay() override;
 	//等待子类调用
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
+	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 
 	void SpawnWeapon();
+
+	
 
 public:	
 	// Called every frame

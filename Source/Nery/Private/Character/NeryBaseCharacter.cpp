@@ -24,6 +24,12 @@ UAbilitySystemComponent* ANeryBaseCharacter::GetAbilitySystemComponent() const
 	return AbilitySystemComponent;
 }
 
+void ANeryBaseCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+	DOREPLIFETIME(ANeryBaseCharacter, Weapon);
+}
+
 void ANeryBaseCharacter::SpawnWeapon()
 {
 	if (WeaponClass)

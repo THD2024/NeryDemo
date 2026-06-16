@@ -11,6 +11,7 @@
  */
 class UGameplayEffect;
 class ANeryGameModeBase;
+class ANeryGameStateBase;
 class UAttributeWidgetController;
 
 UCLASS()
@@ -25,6 +26,9 @@ public:
 
 	UFUNCTION()
 	static ANeryGameModeBase* GetGameMode(const UObject* WorldContextObject);
+
+	UFUNCTION()
+	static ANeryGameStateBase* GetGameState(const UObject* WorldContextObject);
 
 	UFUNCTION()
 	static void InitDefaultAttribute(const UObject* WorldContextObject, AActor* InActor);

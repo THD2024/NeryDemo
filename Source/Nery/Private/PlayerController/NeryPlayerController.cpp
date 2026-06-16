@@ -314,10 +314,8 @@ void ANeryPlayerController::LockTarget()
 void ANeryPlayerController::Attack()
 {
 	//传递当前输入了攻击指令
-	if (CurrentActor)
-	{
-		OnAttackInput.Broadcast();
-	}
+	OnAttackInput.Broadcast();
+	
 }
 
 void ANeryPlayerController::AttributeMenuButton()

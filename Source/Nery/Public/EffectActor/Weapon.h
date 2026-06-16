@@ -29,6 +29,9 @@ protected:
 	void ApplyAttackEffect(AActor* TargetActor);
 
 	UPROPERTY(EditDefaultsOnly, Category = "WeaponCollision")
+	TObjectPtr<USceneComponent> PivotRoot;
+
+	UPROPERTY(EditDefaultsOnly, Category = "WeaponCollision")
 	TObjectPtr<UBoxComponent> TraceBox;
 
 	UPROPERTY(EditDefaultsOnly, Category = "WeaponCollision")

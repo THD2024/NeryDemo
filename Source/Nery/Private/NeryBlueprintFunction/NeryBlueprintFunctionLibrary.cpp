@@ -9,15 +9,16 @@
 #include"Data/CharacterDataAsset.h"
 #include"PlayerState/NeryPlayerState.h"
 #include"UI/Controller/AttributeWidgetController.h"
+#include"GameState/NeryGameStateBase.h"
 #include"UI/HUD/NeryHUD.h"
 
 TSubclassOf<UGameplayEffect> UNeryBlueprintFunctionLibrary::GetCharacterAttackEffect(const UObject* WorldContextObject)
 {
-	if (ANeryGameModeBase* NeryGameMode = GetGameMode(WorldContextObject))
+	if (ANeryGameStateBase* NeryGameState = GetGameState(WorldContextObject))
 	{
-		if (NeryGameMode->CharacterInfo && NeryGameMode->CharacterInfo->AttackEffectClass)
+		if (NeryGameState->CharacterInfo && NeryGameState->CharacterInfo->AttackEffectClass)
 		{
-			return NeryGameMode->CharacterInfo->AttackEffectClass;
+			return NeryGameState->CharacterInfo->AttackEffectClass;
 		}
 	}
 	return TSubclassOf<UGameplayEffect>();
@@ -25,19 +26,29 @@ TSubclassOf<UGameplayEffect> UNeryBlueprintFunctionLibrary::GetCharacterAttackEf
 
 ANeryGameModeBase* UNeryBlueprintFunctionLibrary::GetGameMode(const UObject* WorldContextObject)
 {
-	return CastChecked<ANeryGameModeBase>(UGameplayStatics::GetGameMode(WorldContextObject));
+	return Cast<ANeryGameModeBase>(UGameplayStatics::GetGameMode(WorldContextObject));
+	return nullptr;
+}
+
+ANeryGameStateBase* UNeryBlueprintFunctionLibrary::GetGameState(const UObject* WorldContextObject)
+{
+	if (UWorld* World = GEngine->GetWorldFromContextObject(WorldContextObject, EGetWorldErrorMode::LogAndReturnNull))
+	{
+		// 客户端在启动最初的几帧，这里确实会返回空
+		return Cast<ANeryGameStateBase>(World->GetGameState());
+	}	
 	return nullptr;
 }
 
 void UNeryBlueprintFunctionLibrary::InitDefaultAttribute(const UObject* WorldContextObject, AActor* InActor)
 {
 	//初始化基础属性
-	ANeryGameModeBase* NeryGameMode = GetGameMode(WorldContextObject);
-	if (NeryGameMode->CharacterInfo && NeryGameMode->CharacterInfo->DefaultAttributeEffect)
+	ANeryGameStateBase* NeryGameState = GetGameState(WorldContextObject);
+	if (NeryGameState->CharacterInfo && NeryGameState->CharacterInfo->DefaultAttributeEffect)
 	{
 		UAbilitySystemComponent* InASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(InActor);
 		FGameplayEffectContextHandle ContextHandle = InASC->MakeEffectContext();
-		FGameplayEffectSpecHandle SpecHandle = InASC->MakeOutgoingSpec(NeryGameMode->CharacterInfo->DefaultAttributeEffect, 1, ContextHandle);
+		FGameplayEffectSpecHandle SpecHandle = InASC->MakeOutgoingSpec(NeryGameState->CharacterInfo->DefaultAttributeEffect, 1, ContextHandle);
 		InASC->ApplyGameplayEffectSpecToSelf(*SpecHandle.Data.Get());
 	}
 	
@@ -47,24 +58,24 @@ void UNeryBlueprintFunctionLibrary::InitDefaultAttribute(const UObject* WorldCon
 void UNeryBlueprintFunctionLibrary::InitSecondaryAttribute(const UObject * WorldContextObject, AActor* InActor)
 {
 	//初始化二级属性
-	ANeryGameModeBase* NeryGameMode = GetGameMode(WorldContextObject);
-	if (NeryGameMode->CharacterInfo && NeryGameMode->CharacterInfo->SecondaryAttributeEffect)
+	ANeryGameStateBase* NeryGameState = GetGameState(WorldContextObject);
+	if (NeryGameState->CharacterInfo && NeryGameState->CharacterInfo->VitalAttributeEffect)
 	{
 		UAbilitySystemComponent* InASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(InActor);
 		FGameplayEffectContextHandle ContextHandle = InASC->MakeEffectContext();
-		FGameplayEffectSpecHandle SpecHandle = InASC->MakeOutgoingSpec(NeryGameMode->CharacterInfo->SecondaryAttributeEffect, 1, ContextHandle);
+		FGameplayEffectSpecHandle SpecHandle = InASC->MakeOutgoingSpec(NeryGameState->CharacterInfo->SecondaryAttributeEffect, 1, ContextHandle);
 		InASC->ApplyGameplayEffectSpecToSelf(*SpecHandle.Data.Get());
 	}
 }
 
 void UNeryBlueprintFunctionLibrary::InitVitalAttribute(const UObject* WorldContextObject, AActor* InActor)
 {
-	ANeryGameModeBase* NeryGameMode = GetGameMode(WorldContextObject);
-	if (NeryGameMode->CharacterInfo && NeryGameMode->CharacterInfo->VitalAttributeEffect)
+	ANeryGameStateBase* NeryGameState = GetGameState(WorldContextObject);
+	if (NeryGameState->CharacterInfo && NeryGameState->CharacterInfo->VitalAttributeEffect)
 	{
 		UAbilitySystemComponent* InASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(InActor);
 		FGameplayEffectContextHandle ContextHandle = InASC->MakeEffectContext();
-		FGameplayEffectSpecHandle SpecHandle = InASC->MakeOutgoingSpec(NeryGameMode->CharacterInfo->VitalAttributeEffect, 1, ContextHandle);
+		FGameplayEffectSpecHandle SpecHandle = InASC->MakeOutgoingSpec(NeryGameState->CharacterInfo->VitalAttributeEffect, 1, ContextHandle);
 		InASC->ApplyGameplayEffectSpecToSelf(*SpecHandle.Data.Get());
 	}
 }
