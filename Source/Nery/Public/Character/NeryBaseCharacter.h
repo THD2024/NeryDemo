@@ -45,9 +45,11 @@ protected:
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 
+	void InitAttribute();
+
 	void SpawnWeapon();
 
-	
+	bool bInitialized = false;
 
 public:	
 	// Called every frame

@@ -9,7 +9,6 @@
 #include"UI/Controller/WidgetController.h"
 #include"Data/CharacterDataAsset.h"
 #include"EffectActor/Weapon.h"
-
 #include"Components/ActorComponent.h"
 #include"NeryBlueprintFunction/NeryBlueprintFunctionLibrary.h"
 #include"UI/HUD/NeryHUD.h"
@@ -69,9 +68,9 @@ void ANeryCharacter::BeginPlay()
 		//接收到攻击按键输入事件
 		PC->OnAttackInput.AddUObject(this, &ANeryCharacter::ReceiveAttackInput);
 	}
-	if (!HasAuthority())
+	if (HasAuthority())
 	{
-		Server_SpawnWeapon();
+		SpawnWeapon();
 	}
 }
 
@@ -134,22 +133,19 @@ void ANeryCharacter::PossessedBy(AController* NewController)
 {
 	Super::PossessedBy(NewController);
 	InitASCandAttribute();
-	if (HasAuthority())
-	{
-		UNeryBlueprintFunctionLibrary::InitDefaultAttribute(this, this);
-		UNeryBlueprintFunctionLibrary::InitSecondaryAttribute(this, this);
-		UNeryBlueprintFunctionLibrary::InitVitalAttribute(this, this);
-		InitHUD();
-	}
+	InitAttribute();
+	InitHUD();
 }
 
 void ANeryCharacter::OnRep_PlayerState()
 {
 	Super::OnRep_PlayerState();
 	InitASCandAttribute();
-	UNeryBlueprintFunctionLibrary::InitDefaultAttribute(this, this);
-	UNeryBlueprintFunctionLibrary::InitSecondaryAttribute(this, this);
-	UNeryBlueprintFunctionLibrary::InitVitalAttribute(this, this);
+	if (HasAuthority())
+	{
+		InitAttribute();
+	}
+
 	InitHUD();//Hud属于表现层，在这里调用初始化Hud的函数，来确保在玩家状态复制到客户端后，客户端的Hud能够正确显示玩家状态的信息。
 	
 }
@@ -209,10 +205,6 @@ void ANeryCharacter::OnRep_LockOn()
 	GetCharacterMovement()->bOrientRotationToMovement = !bIsLockOn_NetWorked;
 }
 
-void ANeryCharacter::Server_SpawnWeapon_Implementation()
-{
-	SpawnWeapon();
-}
 
 ECharacterAttackState ANeryCharacter::GetAttackState_Implementation()
 {
@@ -230,6 +222,7 @@ void ANeryCharacter::Server_ReceiveAttackInput_Implementation()
 	if (AttackState == ECharacterAttackState::None && ClickTime < CharacterDataAsset->AttackMontages.Num())
 	{//在没有攻击状态的时候才可以播放攻击动画
 		AttackState = ECharacterAttackState::Attacking;
+		bUseControllerRotationYaw = true;
 		Multicast_PlayAttackMontage(ClickTime);
 		ClickTime++;
 	}
@@ -323,7 +316,6 @@ void ANeryCharacter::ReceiveAttackInput()//接收到攻击输入的回调函数
 	if (!HasAuthority())
 	{//服务器
 		Server_ReceiveAttackInput();//在本地调用完攻击逻辑后，就通知服务器来处理攻击逻辑，这样服务器就能知道当前玩家的攻击状态和攻击次数，从而来决定是否可以播放下一个攻击动画，实现连招的逻辑。
-
 	}
 	
 }

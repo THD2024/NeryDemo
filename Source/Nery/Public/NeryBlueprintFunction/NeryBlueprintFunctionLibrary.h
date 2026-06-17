@@ -13,6 +13,7 @@ class UGameplayEffect;
 class ANeryGameModeBase;
 class ANeryGameStateBase;
 class UAttributeWidgetController;
+class UCharacterDataAsset;
 
 UCLASS()
 class NERY_API UNeryBlueprintFunctionLibrary : public UBlueprintFunctionLibrary
@@ -39,6 +40,11 @@ public:
 	UFUNCTION()
 	static void InitVitalAttribute(const UObject* WorldContextObject, AActor* InActor);
 
+	static void ApplyBasicEffectToSelf(AActor* InActor, TSubclassOf<UGameplayEffect> InGameplayEffectClass);
+
 	UFUNCTION(BlueprintPure,BlueprintCallable)
 	static UAttributeWidgetController* GetAttributeWigetController(const UObject* WorldContextObject, APlayerController* PlayerController);
+
+	UFUNCTION(BlueprintPure,BlueprintCallable)
+	static bool bIsEnemy(AActor* InActor);
 };

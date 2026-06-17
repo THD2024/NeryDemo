@@ -3,6 +3,8 @@
 
 #include "Character/NeryBaseCharacter.h"
 #include"EffectActor/Weapon.h"
+#include"NeryBlueprintFunction/NeryBlueprintFunctionLibrary.h"
+
 
 // Sets default values
 ANeryBaseCharacter::ANeryBaseCharacter()
@@ -28,6 +30,16 @@ void ANeryBaseCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& O
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 	DOREPLIFETIME(ANeryBaseCharacter, Weapon);
+}
+
+void ANeryBaseCharacter::InitAttribute()
+{
+	if (bInitialized == true)return;
+	
+	UNeryBlueprintFunctionLibrary::InitDefaultAttribute(this, this);
+	UNeryBlueprintFunctionLibrary::InitSecondaryAttribute(this, this);
+	UNeryBlueprintFunctionLibrary::InitVitalAttribute(this, this);
+	bInitialized = true;
 }
 
 void ANeryBaseCharacter::SpawnWeapon()

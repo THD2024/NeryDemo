@@ -103,8 +103,6 @@ protected:
 	UFUNCTION(Server, Unreliable)
 	void Server_UpdateRotation(float DeltaTime);
 
-	UFUNCTION(Server, Reliable)
-	void Server_SpawnWeapon();
 	/*网络复制*/
 
 	/*Interface*/

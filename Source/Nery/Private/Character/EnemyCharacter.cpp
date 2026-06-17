@@ -6,6 +6,7 @@
 #include"UI/Controller/OverlayWidgetController.h"
 #include"UI/Widget/NeryUserWidget.h"
 #include"Components/WidgetComponent.h"
+#include"NeryBlueprintFunction/NeryBlueprintFunctionLibrary.h"
 #include"AbilitySystem/NeryAttributeSet.h"
 
 AEnemyCharacter::AEnemyCharacter()
@@ -21,6 +22,7 @@ AEnemyCharacter::AEnemyCharacter()
 	LockTargetFeedbackWidget = CreateDefaultSubobject<UWidgetComponent>(TEXT("LockTargetFeedbackWidget"));
 	LockTargetFeedbackWidget->SetupAttachment(GetMesh(),FName("LockTargetFeedbackSocket"));
 	LockTargetFeedbackWidget->SetVisibility(false);
+	Tags.Add(TEXT("Enemy"));
 }
 
 void AEnemyCharacter::BindCallbacks()
@@ -42,6 +44,11 @@ void AEnemyCharacter::BeginPlay()
 	if (AbilitySystemComponent)
 	{
 		AbilitySystemComponent->InitAbilityActorInfo(this, this);
+		if (HasAuthority())
+		{
+			InitAttribute();
+		}
+		
 		InitWidget();
 		BindCallbacks();
 	}
@@ -53,6 +60,7 @@ void AEnemyCharacter::PossessedBy(AController* NewController)
 	if (AbilitySystemComponent)
 	{
 		AbilitySystemComponent->InitAbilityActorInfo(this, this);
+		InitAttribute();
 	}
 }
 

@@ -18,4 +18,7 @@ class NERY_API ANeryGameStateBase : public AGameStateBase
 public:
 	UPROPERTY(EditAnywhere, Category = "CharacterInfo")
 	TObjectPtr<UCharacterDataAsset> CharacterInfo;
+
+	UPROPERTY(EditAnywhere, Category = "CharacterInfo")
+	TObjectPtr<UCharacterDataAsset> EnemyBasicInfo;
 };
