@@ -43,8 +43,6 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = "WeaponCollision")
 	TObjectPtr<UStaticMeshComponent> WeaponShape;
 
-	UPROPERTY()
-	TObjectPtr<AActor> OwningActor;
 
 	UPROPERTY(EditDefaultsOnly, Category = "AttackSound")
 	TObjectPtr<USoundBase> AttackSound;
@@ -61,7 +59,6 @@ public:
 
 	void BoxTrace(ECollisionChannel DetectiveObjectType);
 
-	void SetOwningActor(AActor* InActor) { OwningActor = InActor; };
 
 	void WeaponTrace();
 

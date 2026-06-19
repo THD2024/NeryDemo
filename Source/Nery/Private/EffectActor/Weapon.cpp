@@ -26,9 +26,11 @@ AWeapon::AWeapon()
 	TraceEnd = CreateDefaultSubobject<USceneComponent>("TraceEnd");
 	WeaponShape = CreateDefaultSubobject<UStaticMeshComponent>("WeaponShape");
 	SetRootComponent(PivotRoot);
+	TraceBox->SetupAttachment(RootComponent);
 	TraceStart->SetupAttachment(RootComponent);
 	TraceEnd->SetupAttachment(RootComponent);
 	WeaponShape->SetupAttachment(RootComponent);
+	TraceBox->SetCollisionObjectType(ECC_GameTraceChannel1);
 
 }
 
@@ -60,25 +62,24 @@ void AWeapon::ApplyAttackEffect(AActor* TargetActor)
 
 void AWeapon::BoxTrace(ECollisionChannel DetectiveObjectType)
 {
-	GEngine->AddOnScreenDebugMessage(1, 2.f, FColor::Blue, FString(TEXT("BoxTrace")));
 	//在这里进行盒型检测
 	TArray<FHitResult> HitResults;
 	const FVector TraceStartLocation = TraceStart->GetComponentLocation();
 	const FVector TraceEndLocation = TraceEnd->GetComponentLocation();
-	TArray<TEnumAsByte<EObjectTypeQuery>> ObjectTypes;
-	ObjectTypes.Add(UEngineTypes::ConvertToObjectType(ECollisionChannel::ECC_Pawn));
-	if (OwningActor)
+	ETraceTypeQuery TraceChannel;
+	TraceChannel = UEngineTypes::ConvertToTraceType(ECC_GameTraceChannel1);
+	if (GetOwner())
 	{
-		IgnoreActors.AddUnique(OwningActor);
+		IgnoreActors.AddUnique(Owner);
 	}
-	bool bHit = UKismetSystemLibrary::BoxTraceMultiForObjects
+	bool bHit = UKismetSystemLibrary::BoxTraceMulti
 	(
 		this,
 		TraceStartLocation,
 		TraceEndLocation,
 		FVector(5.f, 5.f, 5.f),
 		TraceBox->GetComponentRotation(),
-		ObjectTypes,
+		TraceChannel,
 		false,
 		IgnoreActors,
 		EDrawDebugTrace::ForDuration,
@@ -89,8 +90,12 @@ void AWeapon::BoxTrace(ECollisionChannel DetectiveObjectType)
 	{
 		for (const auto& HitResult : HitResults)
 		{
-			ApplyAttackEffect(HitResult.GetActor());//在确定检测有效后，尝试添加游戏效果
+			if (!IgnoreActors.Contains(HitResult.GetActor()))
+			{
+				ApplyAttackEffect(HitResult.GetActor());//在确定检测有效后，尝试添加游戏效果
+			}
 			IgnoreActors.AddUnique(HitResult.GetActor());
+
 		}
 	}
 }
@@ -113,8 +118,8 @@ void AWeapon::Tick(float DeltaTime)
 
 void AWeapon::OnBoxOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	if (!OwningActor->Implements<UCombatInterface>())return;
-	if (ICombatInterface::Execute_GetAttackState(OwningActor) == ECharacterAttackState::Attacking)
+	if (!GetOwner()->Implements<UCombatInterface>())return;
+	if (ICombatInterface::Execute_GetAttackState(GetOwner()) == ECharacterAttackState::Attacking)
 	{
 		CanWeaponTrace = true;
 	}

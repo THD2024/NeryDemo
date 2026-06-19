@@ -9,7 +9,8 @@ void UOverlayWidgetController::BroadInitValue()
 {
 	if (UNeryAttributeSet* AS = Cast<UNeryAttributeSet>(AttributeSet))
 	{
-		OnAttributeChanged.Broadcast(AS->GetHealth());
+		HealthChanged.Broadcast(AS->GetHealth());
+		MaxHealthChanged.Broadcast(AS->GetMaxHealth());
 	}
 
 }
@@ -21,11 +22,17 @@ void UOverlayWidgetController::BindCallBacks()
 		if (UNeryAbilitySystemComponent* ASC = Cast<UNeryAbilitySystemComponent>(AbilitySystemComponent))
 		{
 			ASC->GetGameplayAttributeValueChangeDelegate(AS->GetHealthAttribute()).AddUObject(this, &UOverlayWidgetController::OnHealthChanged);
+			ASC->GetGameplayAttributeValueChangeDelegate(AS->GetMaxHealthAttribute()).AddUObject(this, &UOverlayWidgetController::OnMaxHealthChanged);
 		}
 	}
 }
 
 void UOverlayWidgetController::OnHealthChanged(const FOnAttributeChangeData& Data)
 {
-	OnAttributeChanged.Broadcast(Data.NewValue);
+	HealthChanged.Broadcast(Data.NewValue);
+}
+
+void UOverlayWidgetController::OnMaxHealthChanged(const FOnAttributeChangeData& Data)
+{
+	MaxHealthChanged.Broadcast(Data.NewValue);
 }

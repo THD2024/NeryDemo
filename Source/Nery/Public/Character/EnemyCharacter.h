@@ -12,6 +12,7 @@ struct FOnAttributeChangeData;//记得声明
  * 
  */
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnEnemyHealthChanged, float, NewHealth);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnEnemyMaxHealth, float, MaxHealth);
 
 UCLASS()
 class NERY_API AEnemyCharacter : public ANeryBaseCharacter
@@ -34,11 +35,16 @@ protected:
 
 	void OnHealthChanged(const FOnAttributeChangeData& Data);
 
+	void OnMaxHealthDelegate(const FOnAttributeChangeData& Data);
+
 	virtual void LockTargetFeedBack_Implementation() override;
 	virtual void UnLockTargetFeedBack_Implementation()override;
 
 	UPROPERTY(BlueprintAssignable)
 	FOnEnemyHealthChanged OnEnemyHealthChanged;
+
+	UPROPERTY(BlueprintAssignable)
+	FOnEnemyMaxHealth MaxHealthDelegate;
 	
 	UPROPERTY(EditDefaultsOnly, Category = "LockTargetFeedback")
 	TObjectPtr<class UWidgetComponent> LockTargetFeedbackWidget;

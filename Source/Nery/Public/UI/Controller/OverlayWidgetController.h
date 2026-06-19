@@ -27,8 +27,12 @@ public:
 protected:
 	/*Delegate*/
 	UPROPERTY(BlueprintAssignable, Category = "AttributeDelegate")
-	FOnAttributeChanged OnAttributeChanged;
+	FOnAttributeChanged HealthChanged;
+
+	UPROPERTY(BlueprintAssignable, Category = "AttributeDelegate")
+	FOnAttributeChanged MaxHealthChanged;
 
 	void OnHealthChanged(const FOnAttributeChangeData& Data);
+	void OnMaxHealthChanged(const FOnAttributeChangeData& Data);
 
 };

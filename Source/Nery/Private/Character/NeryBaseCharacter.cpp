@@ -45,7 +45,7 @@ void ANeryBaseCharacter::InitAttribute()
 void ANeryBaseCharacter::SpawnWeapon()
 {
 	if (WeaponClass)
-	{//在生成actor是，owner和owningactor都已经设置。
+	{//在生成actor是，owner和都已经设置。
 		FActorSpawnParameters SpawnParameters;
 		SpawnParameters.Owner = this;
 		SpawnParameters.Instigator = GetInstigator();
@@ -57,7 +57,7 @@ void ANeryBaseCharacter::SpawnWeapon()
 				SpawnParameters
 			);
 		Weapon->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetIncludingScale, TEXT("WeaponSocket"));
-		Weapon->SetOwningActor(this);
+		Weapon->SetOwner(this);
 	}
 }
 

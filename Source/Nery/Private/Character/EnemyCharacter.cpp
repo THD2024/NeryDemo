@@ -32,7 +32,9 @@ void AEnemyCharacter::BindCallbacks()
 		if(UNeryAttributeSet* AS = Cast<UNeryAttributeSet>(AttributeSet))
 		{
 			ASC->GetGameplayAttributeValueChangeDelegate(AS->GetHealthAttribute()).AddUObject(this, &AEnemyCharacter::OnHealthChanged);
+			ASC->GetGameplayAttributeValueChangeDelegate(AS->GetMaxHealthAttribute()).AddUObject(this, &AEnemyCharacter::OnMaxHealthDelegate);
 			OnEnemyHealthChanged.Broadcast(AS->GetHealth());//广播初始值
+			MaxHealthDelegate.Broadcast(AS->GetMaxHealth());
 		}
 	}
 }
@@ -67,6 +69,11 @@ void AEnemyCharacter::PossessedBy(AController* NewController)
 void AEnemyCharacter::OnHealthChanged(const FOnAttributeChangeData& Data)
 {
 	OnEnemyHealthChanged.Broadcast(Data.NewValue);
+}
+
+void AEnemyCharacter::OnMaxHealthDelegate(const FOnAttributeChangeData& Data)
+{
+	MaxHealthDelegate.Broadcast(Data.NewValue);
 }
 
 void AEnemyCharacter::LockTargetFeedBack_Implementation()
