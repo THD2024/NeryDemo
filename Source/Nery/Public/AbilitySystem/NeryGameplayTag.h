@@ -32,6 +32,11 @@ public:
 	FGameplayTag Attribute_Vital_Health;
 	FGameplayTag Attribute_Vital_Mana;
 
+	/*GameplayCue*/
+	FGameplayTag GameplayCue_Damage_Critical;
+	FGameplayTag GameplayCue_Damage_Normal;
+	FGameplayTag GameplayCue_Damage_Environmental;
+
 private:
 	static  FNeryGameplayTags NeryGameplayTags;
 };

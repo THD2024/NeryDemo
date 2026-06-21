@@ -26,7 +26,7 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;	
 
-	void ApplyAttackEffect(AActor* TargetActor);
+	void ApplyAttackEffect(AActor* TargetActor,const FHitResult& HitResult);
 
 	UPROPERTY(EditDefaultsOnly, Category = "WeaponCollision")
 	TObjectPtr<USceneComponent> PivotRoot;

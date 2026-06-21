@@ -49,7 +49,11 @@ public:
 	ATTRIBUTE_ACCESSORS(UNeryAttributeSet, Mana);
 	ATTRIBUTE_ACCESSORS(UNeryAttributeSet, Health);
 	/*Vital Attribute*/
-protected:
+
+	/*MetaAttribute*/
+	ATTRIBUTE_ACCESSORS(UNeryAttributeSet, InComingDamage);
+	/*MetaAttribute*/
+	
 
 	/*Basic Attribute*/
 	UPROPERTY(ReplicatedUsing = OnRep_Resilience)
@@ -94,7 +98,14 @@ protected:
 	FGameplayAttributeData Mana;
 	/*Vital Attribute*/
 
+	/*MetaAttribute*/
+	UPROPERTY(BlueprintReadOnly, Category = "MetaAttribute")
+	FGameplayAttributeData InComingDamage;
 
+	/*MetaAttribute*/
+
+
+protected:
 	/*Delegate Call back Function*/
 
 	/*Basic Attribute*/

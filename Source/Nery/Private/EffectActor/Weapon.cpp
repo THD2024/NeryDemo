@@ -42,7 +42,7 @@ void AWeapon::BeginPlay()
 	TraceBox->OnComponentEndOverlap.AddDynamic(this, &AWeapon::OnBoxEndOverlap);
 }
 
-void AWeapon::ApplyAttackEffect(AActor* TargetActor)
+void AWeapon::ApplyAttackEffect(AActor* TargetActor,const FHitResult& HitResult)
 {
 	//在这里面apply游戏效果
 	
@@ -52,6 +52,7 @@ void AWeapon::ApplyAttackEffect(AActor* TargetActor)
 		{
 			GEngine->AddOnScreenDebugMessage(1, 2.f, FColor::Cyan, FString(TEXT("AttackEffect")));
 			FGameplayEffectContextHandle ContextHandle = OwnerASC->MakeEffectContext();
+			ContextHandle.AddHitResult(HitResult);
 			ContextHandle.AddInstigator(Owner, this);
 			FGameplayEffectSpecHandle SpecHandle = OwnerASC->MakeOutgoingSpec(UNeryBlueprintFunctionLibrary::GetCharacterAttackEffect(Owner), 1, ContextHandle);
 			OwnerASC->ApplyGameplayEffectSpecToTarget(*SpecHandle.Data.Get(), TargetASC);
@@ -92,7 +93,7 @@ void AWeapon::BoxTrace(ECollisionChannel DetectiveObjectType)
 		{
 			if (!IgnoreActors.Contains(HitResult.GetActor()))
 			{
-				ApplyAttackEffect(HitResult.GetActor());//在确定检测有效后，尝试添加游戏效果
+				ApplyAttackEffect(HitResult.GetActor(),HitResult);//在确定检测有效后，尝试添加游戏效果
 			}
 			IgnoreActors.AddUnique(HitResult.GetActor());
 
