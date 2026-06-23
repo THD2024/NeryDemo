@@ -236,7 +236,7 @@ void ANeryCharacter::Server_ReceiveAttackInput_Implementation()
 
 		if (AttackState == ECharacterAttackState::Attacking && ClickTime >= CharacterDataAsset->AttackMontages.Num())
 		{//保底逻辑
-			AttackState = ECharacterAttackState::None;
+			//AttackState = ECharacterAttackState::None;
 			ClickTime = 0;
 			//bInputBuffered = false;
 		}
@@ -343,7 +343,7 @@ void ANeryCharacter::HandleAttackLogic()
 
 		if (AttackState == ECharacterAttackState::Attacking && ClickTime >= CharacterDataAsset->AttackMontages.Num())
 		{//保底逻辑
-			AttackState = ECharacterAttackState::None;
+			//AttackState = ECharacterAttackState::None;
 			ClickTime = 0;
 			//bInputBuffered = false;
 		}

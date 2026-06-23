@@ -2,6 +2,7 @@
 
 #include "AbilitySystem/NeryAttributeSet.h"
 #include"AbilitySystem/NeryGameplayTag.h"
+#include "GameplayEffectExtension.h"
 #include"Net/UnrealNetwork.h"//注册到网络复制属性的必要头文件
 
 UNeryAttributeSet::UNeryAttributeSet()
@@ -135,5 +136,10 @@ void UNeryAttributeSet::PreAttributeChange(const FGameplayAttribute& Attribute, 
 void UNeryAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallbackData & Data)
 {
 	Super::PostGameplayEffectExecute(Data);
-	
+	if (Data.EvaluatedData.Attribute == GetInComingDamageAttribute())
+	{//将伤害设置到真正的血量上
+		float NewHealth = Health.GetBaseValue() + GetInComingDamage();
+		NewHealth = FMath::Clamp(NewHealth,0.f, GetMaxHealth());
+		Health.SetBaseValue(NewHealth);
+	}
 }

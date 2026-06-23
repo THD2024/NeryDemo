@@ -8,6 +8,8 @@
 #include "NeryAttributeSet.generated.h"
 
 
+struct FGameplayEffectModCallbackData;
+
 //内置的get set函数宏，分别是获取属性的属性，获取属性值，设置属性值，初始化属性值
 #define ATTRIBUTE_ACCESSORS(ClassName, PropertyName) \
 	GAMEPLAYATTRIBUTE_PROPERTY_GETTER(ClassName, PropertyName) \

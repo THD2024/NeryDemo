@@ -50,7 +50,7 @@ public:
 	float RunMaxWalkSpeed = 600.f;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	float RunNormalWalkSpeed = 230.f;
+	float RunNormalWalkSpeed = 450.f;
 
 	UPROPERTY(Replicated,VisibleAnywhere, BlueprintReadOnly, Category = "State")
 	ECharacterAttackState AttackState = ECharacterAttackState::None;//在none状态下，可以播放攻击动画
