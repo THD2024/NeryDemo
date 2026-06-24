@@ -43,6 +43,8 @@ public:
 
 	void HandleAttackLogic();
 
+	void UseBuffActor();
+
 	UPROPERTY(ReplicatedUsing = OnRep_LockOn)
 	bool bIsLockOn_NetWorked;
 
@@ -57,6 +59,9 @@ public:
 
 	UPROPERTY(EditAnywhere,BlueprintReadOnly,Category = "Data")
 	TObjectPtr<class UCharacterDataAsset> CharacterDataAsset;//通过DataAsset存储角色的攻击动画，受击动画，Ability等数据，将角色属性和本身的表现分离开来，方便后续的调整和扩展
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Data")
+	TObjectPtr<class UItemBagDataAsset> ItemBag;
 
 	
 
@@ -74,6 +79,8 @@ protected:
 	void OnRep_PlayerState() override;
 	
 	void InitASCandAttribute();
+
+
 
 	/*网络复制*/
 

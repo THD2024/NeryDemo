@@ -204,6 +204,8 @@ void ANeryPlayerController::SetupInputComponent()
 		EnhancedInputComponent->BindAction(LockAction, ETriggerEvent::Started, this, &ANeryPlayerController::LockTarget);
 		EnhancedInputComponent->BindAction(AttackAction, ETriggerEvent::Started, this, &ANeryPlayerController::Attack);
 		EnhancedInputComponent->BindAction(AttributeMenuAction, ETriggerEvent::Started, this, &ANeryPlayerController::AttributeMenuButton);
+		EnhancedInputComponent->BindAction(PickItemAction, ETriggerEvent::Triggered, this, &ANeryPlayerController::PickItem);
+		EnhancedInputComponent->BindAction(PickItemAction, ETriggerEvent::Started, this, &ANeryPlayerController::UseBuffActor);
 	}
 
 }
@@ -334,6 +336,19 @@ void ANeryPlayerController::AttributeMenuButton()
 		{
 			ICombatInterface::Execute_UpdateAttributeMenu(NeryHUD->GetOverlayWidget(),CanOpenMenu);
 		}
+	}
+}
+
+void ANeryPlayerController::PickItem()
+{
+	OnPickAction.Execute();
+}
+
+void ANeryPlayerController::UseBuffActor()
+{
+	if (ANeryCharacter* NeryChar = Cast<ANeryCharacter>(GetPawn()))
+	{
+		NeryChar->UseBuffActor();
 	}
 }
 

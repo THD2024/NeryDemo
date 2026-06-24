@@ -37,6 +37,11 @@ public:
 	FGameplayTag GameplayCue_Damage_Normal;
 	FGameplayTag GameplayCue_Damage_Environmental;
 
+	/*BuffActor*/
+	FGameplayTag Buff_Good_Health;
+	FGameplayTag Buff_Good_ArmorPenetration;
+	FGameplayTag Buff_Good_CriticalHitChance;
+
 private:
 	static  FNeryGameplayTags NeryGameplayTags;
 };

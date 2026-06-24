@@ -13,6 +13,8 @@ struct FTimerHandle;
 DECLARE_DELEGATE(FOnSelectedChangeDelegate);
 DECLARE_MULTICAST_DELEGATE_OneParam(FOnLinkAnimTiming, bool);
 DECLARE_MULTICAST_DELEGATE(FOnAttackInputDelegate);
+DECLARE_DELEGATE(FOnPickActionDelegate);
+
 /**
  * 
  */
@@ -28,7 +30,7 @@ public:
 	//广播
 	FOnLinkAnimTiming OnLinkAnimTiminig;
 	FOnAttackInputDelegate OnAttackInput;
-
+	FOnPickActionDelegate OnPickAction;
 protected:
 	void PlayerTick(float DeltaTime) override;
 	void UpdateCurrentRotation(float DeltaTime);//更新当前锁定目标的旋转
@@ -91,6 +93,12 @@ protected:
 	TObjectPtr<UInputAction> AttributeMenuAction;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Input")
+	TObjectPtr<UInputAction> PickItemAction;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Input")
+	TObjectPtr<UInputAction> BuffAction;//使用buff道具
+
+	UPROPERTY(EditDefaultsOnly, Category = "Input")
 	TObjectPtr<UInputMappingContext> DefaultMappingContext;
 
 	//输入回调函数
@@ -102,6 +110,8 @@ protected:
 	void LockTarget();
 	void Attack();
 	void AttributeMenuButton();
+	void PickItem();
+	void UseBuffActor();
 	//	void Crouch_Hold();
 	
 

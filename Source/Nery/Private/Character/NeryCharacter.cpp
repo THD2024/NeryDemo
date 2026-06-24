@@ -12,6 +12,7 @@
 #include"Components/ActorComponent.h"
 #include"NeryBlueprintFunction/NeryBlueprintFunctionLibrary.h"
 #include"UI/HUD/NeryHUD.h"
+#include"Data/ItemBagDataAsset.h"
 
 ANeryCharacter::ANeryCharacter()
 {
@@ -162,6 +163,13 @@ void ANeryCharacter::InitASCandAttribute()
 			AbilitySystemComponent->InitAbilityActorInfo(PS, this);
 		}
 	}
+}
+
+void ANeryCharacter::UseBuffActor()
+{
+	//这里需要Tag
+	//ItemBag->FindSpecificEffectByTag()
+	//UNeryBlueprintFunctionLibrary::ApplyBasicEffectToSelf(this,)
 }
 
 
