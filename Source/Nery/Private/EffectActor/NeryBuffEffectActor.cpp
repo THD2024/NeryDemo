@@ -6,6 +6,7 @@
 #include"Data/ItemBagDataAsset.h"
 #include"Kismet/GameplayStatics.h"
 #include"PlayerController/NeryPlayerController.h"
+#include"Interface/CombatInterface.h"
 
 void ANeryBuffEffectActor::BeginPlay()
 {
@@ -16,12 +17,13 @@ void ANeryBuffEffectActor::SphereBeginOverlap(UPrimitiveComponent* OverlappedCom
 {
 	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("BuffActor"));
 	if (OtherActor->ActorHasTag(FName("Enemy")))return;//保证进来的是角色
+	OverlapActor = OtherActor;
 	if (!PC)
 	{
 		PC = Cast<ANeryPlayerController>(OtherActor->GetInstigatorController());
-		if (PC)
+		if (PC && PC->OnPickAction.IsBound() == false)
 		{
-			PC->OnPickAction.BindUObject(this, &ANeryBuffEffectActor::AddActorToItemBag);
+			PC->OnPickAction.AddUObject(this, &ANeryBuffEffectActor::AddActorToItemBag);
 		}
 	}
 	
@@ -30,7 +32,12 @@ void ANeryBuffEffectActor::SphereBeginOverlap(UPrimitiveComponent* OverlappedCom
 	if (!PickWidget)
 	{
 		PickWidget = CreateWidget<UUserWidget>(GetWorld(), PickWidgetClass);
+		PickWidget->AddToViewport();
 		//生成位置在event construct函数后面设置在蓝图中设置。
+	}
+	else
+	{
+		PickWidget->SetVisibility(ESlateVisibility::Visible);
 	}
 
 }
@@ -39,17 +46,36 @@ void ANeryBuffEffectActor::SphereEndOverlap(UPrimitiveComponent * OverlappedComp
 {
 	if (OtherActor->ActorHasTag(FName("Enemy")))return;
 	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("BuffActor endoverlap"));
+	OverlapActor = nullptr;
 	IsOverlaped = false;
-	PickWidget->RemoveFromParent();//离开就直接销毁提示组件
+	if (PickWidget)
+	{
+		PickWidget->SetVisibility(ESlateVisibility::Collapsed);
+	}
 }
+
+void ANeryBuffEffectActor::EndPlay(const EEndPlayReason::Type EndPlayReason)
+{
+	if (PC)
+	{
+		PC->OnPickAction.RemoveAll(this);
+	}
+}
+
+
 
 void ANeryBuffEffectActor::AddActorToItemBag()
 {
 	//由按键输入来调用,这里表示已经按下拾取键，暂时不考虑拾取上限的问题。这里被触发
 	if (IsOverlaped == true)
 	{//只有在检测范围内才能进行下面的拾取逻辑
+		if (OverlapActor && OverlapActor->Implements<UCombatInterface>())
+		{
+			ICombatInterface::Execute_CallAddBuffNumber(OverlapActor, BuffTag);
+			
+		}
+		
 		//写添加逻辑
-		ItemBag->AddItem(BuffTag);
 		IsOverlaped = false;
 		PickWidget->RemoveFromParent();//离开就直接销毁提示组件
 		Destroy();//拾取完后需要将对象销毁

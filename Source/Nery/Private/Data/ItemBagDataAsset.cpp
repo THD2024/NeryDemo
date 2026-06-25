@@ -3,24 +3,11 @@
 
 #include "Data/ItemBagDataAsset.h"
 
-void UItemBagDataAsset::AddItem(const FGameplayTag& InTag)
-{//拾取到东西后就调用这个函数
-	FItemInformation ItemInfo = GetSpecificItemInfoByTag(InTag);
-	ItemInfo.StorageNumber++;
-}
-
-void UItemBagDataAsset::ReduceItem(const FGameplayTag& InTag)
-{//使用了一次效果后就调用这个，用来更新
-	FItemInformation ItemInfo = GetSpecificItemInfoByTag(InTag);
-	if (ItemInfo.StorageNumber == 0)return;
-	ItemInfo.StorageNumber--;
-}
-
 TSubclassOf<UGameplayEffect> UItemBagDataAsset::FindSpecificEffectByTag(const FGameplayTag& InTag)
 {
 	for (const auto& ItemInfo : ItemBag)
 	{
-		if (InTag.MatchesTag(ItemInfo.BuffTag))
+		if (InTag.MatchesTagExact(ItemInfo.BuffTag))
 		{
 			return ItemInfo.BuffEffect;
 		}
@@ -28,14 +15,14 @@ TSubclassOf<UGameplayEffect> UItemBagDataAsset::FindSpecificEffectByTag(const FG
 	return TSubclassOf<UGameplayEffect>();
 }
 
-FItemInformation& UItemBagDataAsset::GetSpecificItemInfoByTag(const FGameplayTag& InTag)
+FItemInformation UItemBagDataAsset::GetSpecificItemInfoByTag(const FGameplayTag& InTag)
 {
 	for ( auto& ItemInfo : ItemBag)
 	{
-		if (InTag.MatchesTag(ItemInfo.BuffTag))
+		if (InTag.MatchesTagExact(ItemInfo.BuffTag))
 		{
 			return ItemInfo;
 		}
 	}
-	return FItemInformation();
+	return FItemInformation();//这里是返回的副本，正好用来传递信息到widget
 }

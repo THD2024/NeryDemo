@@ -13,7 +13,7 @@ struct FTimerHandle;
 DECLARE_DELEGATE(FOnSelectedChangeDelegate);
 DECLARE_MULTICAST_DELEGATE_OneParam(FOnLinkAnimTiming, bool);
 DECLARE_MULTICAST_DELEGATE(FOnAttackInputDelegate);
-DECLARE_DELEGATE(FOnPickActionDelegate);
+DECLARE_MULTICAST_DELEGATE(FOnPickActionDelegate);
 
 /**
  * 

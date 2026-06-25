@@ -23,13 +23,15 @@ public:
 	FText BaseInformation = FText();
 
 	UPROPERTY(EditDefaultsOnly)
-	FGameplayTag BuffTag;
+	FGameplayTag BuffTag = FGameplayTag();
 
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<UGameplayEffect> BuffEffect;
 
-	UPROPERTY(VisibleAnywhere)
-	int32 StorageNumber = 0;
+	UPROPERTY(EditDefaultsOnly)
+	UTexture2D* Icon;
+
+	int32 StorageNumber = 0;//这个不能手动更改，这里保留用来后面传递信息到widget中。
 };
 
 UCLASS(BlueprintType,Blueprintable)
@@ -41,11 +43,7 @@ public:
 	UPROPERTY(EditAnywhere)
 	TArray<FItemInformation> ItemBag;
 
-	void AddItem(const FGameplayTag& InTag);
-
-	void ReduceItem(const FGameplayTag& InTag);
-
 	TSubclassOf<UGameplayEffect> FindSpecificEffectByTag(const FGameplayTag& InTag);
 
-	FItemInformation& GetSpecificItemInfoByTag(const FGameplayTag& InTag);
+	FItemInformation GetSpecificItemInfoByTag(const FGameplayTag& InTag);
 };

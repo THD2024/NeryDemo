@@ -341,7 +341,7 @@ void ANeryPlayerController::AttributeMenuButton()
 
 void ANeryPlayerController::PickItem()
 {
-	OnPickAction.Execute();
+	OnPickAction.Broadcast();
 }
 
 void ANeryPlayerController::UseBuffActor()

@@ -9,6 +9,8 @@
 class ANeryPlayerState;
 class UActorComponent;
 
+
+
 /**
  * 
  */
@@ -24,6 +26,10 @@ public:
 
 	void SetMaxWalkSpeed(float NewMaxWalkSpeed);
 
+	void AddBuffNumberByTag(const FGameplayTag& InTag);
+
+	void ReduceBuffNumberByTag(const FGameplayTag& InTag);
+	
 	UFUNCTION(BlueprintImplementableEvent)
 	void LinkAnimTiming(bool IsLockOn);
 
@@ -63,7 +69,8 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Data")
 	TObjectPtr<class UItemBagDataAsset> ItemBag;
 
-	
+	UPROPERTY()
+	TMap<FGameplayTag, float> BuffNumberInfo;
 
 protected:
 	virtual void BeginPlay() override;
@@ -80,7 +87,7 @@ protected:
 	
 	void InitASCandAttribute();
 
-
+	virtual void CallAddBuffNumber_Implementation(const FGameplayTag& InTag)override;
 
 	/*网络复制*/
 

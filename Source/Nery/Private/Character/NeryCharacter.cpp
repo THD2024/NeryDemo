@@ -14,6 +14,7 @@
 #include"UI/HUD/NeryHUD.h"
 #include"Data/ItemBagDataAsset.h"
 
+
 ANeryCharacter::ANeryCharacter()
 {
 	//防止角色跟随控制器旋转	
@@ -50,6 +51,30 @@ void ANeryCharacter::SetMaxWalkSpeed(float NewMaxWalkSpeed)
 	}
 }
 
+void ANeryCharacter::AddBuffNumberByTag(const FGameplayTag& InTag)
+{
+	for (auto& BuffInfo : BuffNumberInfo)
+	{
+		if (BuffInfo.Key.MatchesTagExact(InTag))
+		{
+			BuffInfo.Value++;
+
+		}
+	}
+}
+
+void ANeryCharacter::ReduceBuffNumberByTag(const FGameplayTag & InTag)
+{
+	for (auto& BuffInfo : BuffNumberInfo)
+	{
+		if (BuffInfo.Key.MatchesTagExact(InTag))
+		{
+			BuffInfo.Value--;
+			BuffInfo.Value = FMath::Max<float>(0.f, BuffInfo.Value);
+		}
+	}
+}
+
 
 
 void ANeryCharacter::BeginPlay()
@@ -73,6 +98,9 @@ void ANeryCharacter::BeginPlay()
 	{
 		SpawnWeapon();
 	}
+	BuffNumberInfo.Add(FNeryGameplayTags::GetNeryGameplayTags().Buff_Good_Health, 0);
+	BuffNumberInfo.Add(FNeryGameplayTags::GetNeryGameplayTags().Buff_Good_CriticalHitChance, 0);
+	BuffNumberInfo.Add(FNeryGameplayTags::GetNeryGameplayTags().Buff_Good_ArmorPenetration, 0);
 }
 
 void ANeryCharacter::Tick(float DeltaTime)
@@ -165,11 +193,15 @@ void ANeryCharacter::InitASCandAttribute()
 	}
 }
 
+void ANeryCharacter::CallAddBuffNumber_Implementation(const FGameplayTag& InTag)
+{
+	AddBuffNumberByTag(InTag);
+}
+
 void ANeryCharacter::UseBuffActor()
 {
 	//这里需要Tag
-	//ItemBag->FindSpecificEffectByTag()
-	//UNeryBlueprintFunctionLibrary::ApplyBasicEffectToSelf(this,)
+	//这个需要和ui中显示的当前调配到装备栏中的一致。
 }
 
 

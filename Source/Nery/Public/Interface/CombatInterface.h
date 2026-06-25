@@ -6,8 +6,8 @@
 #include "UObject/Interface.h"
 #include "CombatInterface.generated.h"
 
+struct FGameplayTag;
 // This class does not need to be modified.
-enum class ECharacterAttackState : uint8;
 
 UINTERFACE(MinimalAPI)
 class UCombatInterface : public UInterface
@@ -35,4 +35,7 @@ public:
 
 	UFUNCTION(BlueprintNativeEvent)
 	void UpdateAttributeMenu(bool CanOpen);
+
+	UFUNCTION(BlueprintNativeEvent)
+	void CallAddBuffNumber(const FGameplayTag& InTag);
 };

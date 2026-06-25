@@ -8,6 +8,7 @@
 #include"NeryType.h"
 #include "Net/UnrealNetwork.h"
 #include"Interface/CombatInterface.h"
+#include"AbilitySystem/NeryGameplayTag.h"
 #include "NeryBaseCharacter.generated.h"
 
 class UAbilitySystemComponent;
