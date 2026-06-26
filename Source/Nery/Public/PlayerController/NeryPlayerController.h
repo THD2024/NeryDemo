@@ -14,6 +14,7 @@ DECLARE_DELEGATE(FOnSelectedChangeDelegate);
 DECLARE_MULTICAST_DELEGATE_OneParam(FOnLinkAnimTiming, bool);
 DECLARE_MULTICAST_DELEGATE(FOnAttackInputDelegate);
 DECLARE_MULTICAST_DELEGATE(FOnPickActionDelegate);
+DECLARE_MULTICAST_DELEGATE(FOnConsumeBuffDelegate);
 
 /**
  * 
@@ -31,6 +32,7 @@ public:
 	FOnLinkAnimTiming OnLinkAnimTiminig;
 	FOnAttackInputDelegate OnAttackInput;
 	FOnPickActionDelegate OnPickAction;
+	FOnConsumeBuffDelegate OnConsumeInput;
 protected:
 	void PlayerTick(float DeltaTime) override;
 	void UpdateCurrentRotation(float DeltaTime);//更新当前锁定目标的旋转

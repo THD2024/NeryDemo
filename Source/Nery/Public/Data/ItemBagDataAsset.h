@@ -19,18 +19,22 @@ struct FItemInformation
 	GENERATED_BODY()
 
 public:
-	UPROPERTY(EditDefaultsOnly)
+	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly)
 	FText BaseInformation = FText();
 
-	UPROPERTY(EditDefaultsOnly)
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	FGameplayTag BuffTag = FGameplayTag();
 
-	UPROPERTY(EditDefaultsOnly)
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	TSubclassOf<UGameplayEffect> BuffEffect;
 
-	UPROPERTY(EditDefaultsOnly)
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	UTexture2D* Icon;
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	FText ActorName = FText();
+
+	UPROPERTY(BlueprintReadOnly)
 	int32 StorageNumber = 0;//这个不能手动更改，这里保留用来后面传递信息到widget中。
 };
 

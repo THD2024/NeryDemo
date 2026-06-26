@@ -69,8 +69,8 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Data")
 	TObjectPtr<class UItemBagDataAsset> ItemBag;
 
-	UPROPERTY()
-	TMap<FGameplayTag, float> BuffNumberInfo;
+	UPROPERTY(EditDefaultsOnly)
+	TMap<FGameplayTag, int32> BuffNumberInfo;
 
 protected:
 	virtual void BeginPlay() override;
@@ -87,7 +87,13 @@ protected:
 	
 	void InitASCandAttribute();
 
+	/*接口*/
 	virtual void CallAddBuffNumber_Implementation(const FGameplayTag& InTag)override;
+
+	virtual UItemBagDataAsset* GetItemBag_Implementation()override;
+
+	virtual int32 GetBuffNumber_Implementation(const FGameplayTag& InTag) override;
+	/*接口*/
 
 	/*网络复制*/
 

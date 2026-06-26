@@ -4,9 +4,12 @@
 
 #include "CoreMinimal.h"
 #include "UI/Controller/WidgetController.h"
+#include"Data/ItemBagDataAsset.h"
 #include "OverlayWidgetController.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnAttributeChanged,float, AttributeValue);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnBuffInfoChanged, FItemInformation, BuffInfo);
+
 /**
  * 
  */
@@ -32,7 +35,13 @@ protected:
 	UPROPERTY(BlueprintAssignable, Category = "AttributeDelegate")
 	FOnAttributeChanged MaxHealthChanged;
 
+	UPROPERTY(BlueprintAssignable, Category = "AttributeDelegate")
+	FOnBuffInfoChanged BuffInfoChanged;
+
 	void OnHealthChanged(const FOnAttributeChangeData& Data);
 	void OnMaxHealthChanged(const FOnAttributeChangeData& Data);
+	void OnBuffInfoChanged();
+
+	void BroadBuffInfo();
 
 };

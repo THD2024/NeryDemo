@@ -198,6 +198,20 @@ void ANeryCharacter::CallAddBuffNumber_Implementation(const FGameplayTag& InTag)
 	AddBuffNumberByTag(InTag);
 }
 
+UItemBagDataAsset* ANeryCharacter::GetItemBag_Implementation()
+{
+	if (ItemBag)
+	{
+		return ItemBag;
+	}
+	return nullptr;
+}
+
+int32 ANeryCharacter::GetBuffNumber_Implementation(const FGameplayTag& InTag)
+{
+	return *BuffNumberInfo.Find(InTag);
+}
+
 void ANeryCharacter::UseBuffActor()
 {
 	//这里需要Tag

@@ -7,6 +7,7 @@
 #include "CombatInterface.generated.h"
 
 struct FGameplayTag;
+class UItemBagDataAsset;
 // This class does not need to be modified.
 
 UINTERFACE(MinimalAPI)
@@ -38,4 +39,10 @@ public:
 
 	UFUNCTION(BlueprintNativeEvent)
 	void CallAddBuffNumber(const FGameplayTag& InTag);
+
+	UFUNCTION(BlueprintNativeEvent)
+	UItemBagDataAsset* GetItemBag();
+
+	UFUNCTION(BlueprintNativeEvent)
+	int32 GetBuffNumber(const FGameplayTag& InTag);
 };

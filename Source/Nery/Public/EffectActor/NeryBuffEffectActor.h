@@ -28,9 +28,11 @@ public:
 
 	void AddActorToItemBag();
 
+	UFUNCTION(BlueprintImplementableEvent)
+	void OnSetWidgetTiming(const FItemInformation& ItemInfo);
 
 protected:
-	bool IsOverlaped = false;
+	bool bIsOverlaped = false;
 
 	UPROPERTY()
 	ANeryPlayerController* PC;
@@ -44,7 +46,7 @@ protected:
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<UUserWidget> PickWidgetClass;
 
-	UPROPERTY(EditDefaultsOnly)
+	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly)
 	TObjectPtr<UUserWidget> PickWidget;
 
 	UPROPERTY()
