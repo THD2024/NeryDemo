@@ -4,9 +4,9 @@
 
 #include "CoreMinimal.h"
 #include "UObject/Interface.h"
+#include"GameplayTagContainer.h"
 #include "CombatInterface.generated.h"
 
-struct FGameplayTag;
 class UItemBagDataAsset;
 // This class does not need to be modified.
 
@@ -44,5 +44,5 @@ public:
 	UItemBagDataAsset* GetItemBag();
 
 	UFUNCTION(BlueprintNativeEvent)
-	int32 GetBuffNumber(const FGameplayTag& InTag);
+	TMap<FGameplayTag,int32> GetBuffNumber();
 };

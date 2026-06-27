@@ -40,7 +40,7 @@ public:
 	UPROPERTY()
 	TObjectPtr<APlayerState> PlayerState = nullptr;
 
-	UPROPERTY()
+	UPROPERTY(BlueprintReadOnly)
 	TObjectPtr<APlayerController> PlayerController = nullptr;
 
 	UPROPERTY()

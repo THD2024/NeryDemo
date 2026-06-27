@@ -101,6 +101,8 @@ void ANeryCharacter::BeginPlay()
 	BuffNumberInfo.Add(FNeryGameplayTags::GetNeryGameplayTags().Buff_Good_Health, 0);
 	BuffNumberInfo.Add(FNeryGameplayTags::GetNeryGameplayTags().Buff_Good_CriticalHitChance, 0);
 	BuffNumberInfo.Add(FNeryGameplayTags::GetNeryGameplayTags().Buff_Good_ArmorPenetration, 0);
+	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("BuffNumberInfo Setted"));
+
 }
 
 void ANeryCharacter::Tick(float DeltaTime)
@@ -207,9 +209,9 @@ UItemBagDataAsset* ANeryCharacter::GetItemBag_Implementation()
 	return nullptr;
 }
 
-int32 ANeryCharacter::GetBuffNumber_Implementation(const FGameplayTag& InTag)
+TMap<FGameplayTag, int32> ANeryCharacter::GetBuffNumber_Implementation()
 {
-	return *BuffNumberInfo.Find(InTag);
+	return BuffNumberInfo;
 }
 
 void ANeryCharacter::UseBuffActor()

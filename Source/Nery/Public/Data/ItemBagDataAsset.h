@@ -49,5 +49,6 @@ public:
 
 	TSubclassOf<UGameplayEffect> FindSpecificEffectByTag(const FGameplayTag& InTag);
 
+	UFUNCTION(BlueprintCallable)
 	FItemInformation GetSpecificItemInfoByTag(const FGameplayTag& InTag);
 };

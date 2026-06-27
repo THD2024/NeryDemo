@@ -92,7 +92,7 @@ protected:
 
 	virtual UItemBagDataAsset* GetItemBag_Implementation()override;
 
-	virtual int32 GetBuffNumber_Implementation(const FGameplayTag& InTag) override;
+	virtual TMap<FGameplayTag, int32> GetBuffNumber_Implementation()override;
 	/*接口*/
 
 	/*网络复制*/

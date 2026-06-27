@@ -14,6 +14,7 @@ class ANeryGameModeBase;
 class ANeryGameStateBase;
 class UAttributeWidgetController;
 class UCharacterDataAsset;
+struct FBuffNumberInfo;
 
 UCLASS()
 class NERY_API UNeryBlueprintFunctionLibrary : public UBlueprintFunctionLibrary
@@ -47,4 +48,6 @@ public:
 
 	UFUNCTION(BlueprintPure,BlueprintCallable)
 	static bool bIsEnemy(AActor* InActor);
+
+	
 };

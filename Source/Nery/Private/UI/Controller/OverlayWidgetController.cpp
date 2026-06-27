@@ -31,6 +31,7 @@ void UOverlayWidgetController::BindCallBacks()
 	if (ANeryPlayerController* PC = Cast<ANeryPlayerController>(PlayerController))
 	{
 		PC->OnConsumeInput.AddUObject(this, &UOverlayWidgetController::OnBuffInfoChanged);
+		PC->OnPickAction.AddUObject(this, &UOverlayWidgetController::OnBuffInfoChanged);
 	}
 }
 
@@ -59,12 +60,12 @@ void UOverlayWidgetController::BroadBuffInfo()
 		if (PC->GetPawn() && PC->GetPawn()->Implements<UCombatInterface>())
 		{
 			APawn* Pawn = PC->GetPawn();
-			UItemBagDataAsset* ItemBagData = ICombatInterface::Execute_GetItemBag(Pawn);
-			for (auto BuffInfo : ItemBagData->ItemBag)
-			{
-				BuffInfo.StorageNumber = ICombatInterface::Execute_GetBuffNumber(Pawn, BuffInfo.BuffTag);
-				BuffInfoChanged.Broadcast(BuffInfo);
-			}
+			FBuffNumberInfo PassBuffInfo;
+			PassBuffInfo.NewBuffInfo = ICombatInterface::Execute_GetBuffNumber(Pawn);
+			
+			//每次将这个标签和数量全部打包过去
+			BuffInfoChanged.Broadcast(PassBuffInfo);
+
 		}
 	}
 }

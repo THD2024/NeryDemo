@@ -5,10 +5,22 @@
 #include "CoreMinimal.h"
 #include "UI/Controller/WidgetController.h"
 #include"Data/ItemBagDataAsset.h"
+#include"GameplayTagContainer.h"
 #include "OverlayWidgetController.generated.h"
 
+USTRUCT(BlueprintType)
+struct FBuffNumberInfo
+{
+	GENERATED_BODY()
+
+public:
+	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly)
+	TMap<FGameplayTag, int32>NewBuffInfo;
+};
+
+
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnAttributeChanged,float, AttributeValue);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnBuffInfoChanged, FItemInformation, BuffInfo);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnBuffInfoChanged, FBuffNumberInfo, BuffNumber);
 
 /**
  * 
