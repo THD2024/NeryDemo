@@ -69,7 +69,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Data")
 	TObjectPtr<class UItemBagDataAsset> ItemBag;
 
-	UPROPERTY(EditDefaultsOnly)
+	UPROPERTY(EditAnywhere,BlueprintReadOnly)//在蓝图中添加基本的buff标签，然后value的动态变化通过代码来实现
 	TMap<FGameplayTag, int32> BuffNumberInfo;
 
 protected:

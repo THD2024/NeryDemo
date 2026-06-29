@@ -80,7 +80,6 @@ void ANeryCharacter::ReduceBuffNumberByTag(const FGameplayTag & InTag)
 void ANeryCharacter::BeginPlay()
 {
 	Super::BeginPlay();
-	
 	if (ANeryPlayerController* PC = Cast<ANeryPlayerController>(GetController()))
 	{
 		PC->OnLinkAnimTiminig.AddLambda([this](bool IsLockOn) {
@@ -98,10 +97,7 @@ void ANeryCharacter::BeginPlay()
 	{
 		SpawnWeapon();
 	}
-	BuffNumberInfo.Add(FNeryGameplayTags::GetNeryGameplayTags().Buff_Good_Health, 0);
-	BuffNumberInfo.Add(FNeryGameplayTags::GetNeryGameplayTags().Buff_Good_CriticalHitChance, 0);
-	BuffNumberInfo.Add(FNeryGameplayTags::GetNeryGameplayTags().Buff_Good_ArmorPenetration, 0);
-	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("BuffNumberInfo Setted"));
+	
 
 }
 
@@ -199,6 +195,7 @@ void ANeryCharacter::CallAddBuffNumber_Implementation(const FGameplayTag& InTag)
 {
 	AddBuffNumberByTag(InTag);
 }
+
 
 UItemBagDataAsset* ANeryCharacter::GetItemBag_Implementation()
 {

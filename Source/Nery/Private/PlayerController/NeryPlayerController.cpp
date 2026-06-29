@@ -14,6 +14,7 @@
 #include"UI/Widget/NeryUserWidget.h"
 #include"UI/HUD/NeryHUD.h"
 #include"Kismet/KismetMathLibrary.h"
+#include"NeryBlueprintFunction/NeryBlueprintFunctionLibrary.h"
 
 ANeryPlayerController::ANeryPlayerController()
 {
@@ -346,6 +347,10 @@ void ANeryPlayerController::PickItem()
 
 void ANeryPlayerController::UseBuffActor()
 {
+	if (ANeryCharacter* Nery = Cast<ANeryCharacter>(GetPawn()))
+	{
+		Nery->ReduceBuffNumberByTag(UNeryBlueprintFunctionLibrary::GetCurrentBuffWidgetTag(this));
+	}
 	OnConsumeInput.Broadcast();
 }
 

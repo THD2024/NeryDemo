@@ -36,6 +36,9 @@ public:
 
 	UPROPERTY(BlueprintReadOnly)
 	int32 StorageNumber = 0;//这个不能手动更改，这里保留用来后面传递信息到widget中。
+
+	UPROPERTY(BlueprintReadOnly,EditDefaultsOnly)
+	UTexture2D* WidgetBackGround;
 };
 
 UCLASS(BlueprintType,Blueprintable)

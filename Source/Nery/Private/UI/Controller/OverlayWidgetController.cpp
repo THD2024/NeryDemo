@@ -62,7 +62,6 @@ void UOverlayWidgetController::BroadBuffInfo()
 			APawn* Pawn = PC->GetPawn();
 			FBuffNumberInfo PassBuffInfo;
 			PassBuffInfo.NewBuffInfo = ICombatInterface::Execute_GetBuffNumber(Pawn);
-			
 			//每次将这个标签和数量全部打包过去
 			BuffInfoChanged.Broadcast(PassBuffInfo);
 

@@ -15,6 +15,8 @@ class ANeryGameStateBase;
 class UAttributeWidgetController;
 class UCharacterDataAsset;
 struct FBuffNumberInfo;
+class UItemBagDataAsset;
+class UWidgetSlotTagInfo;
 
 UCLASS()
 class NERY_API UNeryBlueprintFunctionLibrary : public UBlueprintFunctionLibrary
@@ -49,5 +51,12 @@ public:
 	UFUNCTION(BlueprintPure,BlueprintCallable)
 	static bool bIsEnemy(AActor* InActor);
 
-	
+	UFUNCTION(BlueprintPure, BlueprintCallable)
+	static UItemBagDataAsset* GetItemBagFromActor(AActor* InActor);
+
+	UFUNCTION(BlueprintPure, BlueprintCallable)
+	static const FGameplayTag GetCurrentBuffWidgetTag(const UObject* WorldContextObject);
+
+	UFUNCTION(BlueprintCallable)
+	static void SetCurrentBuffWidgetTag(const UObject* WorldContextObject,const FGameplayTag& InTag);
 };

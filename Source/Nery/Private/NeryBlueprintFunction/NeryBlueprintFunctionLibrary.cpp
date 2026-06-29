@@ -11,6 +11,8 @@
 #include"UI/Controller/AttributeWidgetController.h"
 #include"GameState/NeryGameStateBase.h"
 #include"UI/HUD/NeryHUD.h"
+#include"Interface/CombatInterface.h"
+#include"Data/WidgetSlotTagInfo.h"
 
 TSubclassOf<UGameplayEffect> UNeryBlueprintFunctionLibrary::GetCharacterAttackEffect(const UObject* WorldContextObject)
 {
@@ -139,3 +141,33 @@ bool UNeryBlueprintFunctionLibrary::bIsEnemy(AActor* InActor)
 	}
 	return false;
 }
+
+UItemBagDataAsset* UNeryBlueprintFunctionLibrary::GetItemBagFromActor(AActor* InActor)
+{
+	if (InActor && InActor->Implements<UCombatInterface>())
+	{
+		return ICombatInterface::Execute_GetItemBag(InActor);
+	}
+	return nullptr;
+}
+
+const FGameplayTag UNeryBlueprintFunctionLibrary::GetCurrentBuffWidgetTag(const UObject* WorldContextObject)
+{
+	ANeryGameStateBase* NeryGameState = GetGameState(WorldContextObject);
+	if (NeryGameState->WidgetTagInfo)
+	{
+		return NeryGameState->WidgetTagInfo->GetBuffWidgetTag();
+	}
+	return FGameplayTag();
+}
+
+void UNeryBlueprintFunctionLibrary::SetCurrentBuffWidgetTag(const UObject* WorldContextObject, const FGameplayTag& InTag)
+{
+	ANeryGameStateBase* NeryGameState = GetGameState(WorldContextObject);
+	if (NeryGameState->WidgetTagInfo)
+	{
+		 NeryGameState->WidgetTagInfo->SetBuffActorWidgetTag(InTag);
+	}
+}
+
+
