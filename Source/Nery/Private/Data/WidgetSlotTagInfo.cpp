@@ -2,23 +2,27 @@
 
 
 #include "Data/WidgetSlotTagInfo.h"
+#include"Net/UnrealNetwork.h"
 
+
+void UWidgetSlotTagInfo::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+	DOREPLIFETIME(UWidgetSlotTagInfo, BuffSlotTags);
+	DOREPLIFETIME(UWidgetSlotTagInfo, PhysicalAbilitySlotTags);
+	DOREPLIFETIME(UWidgetSlotTagInfo, MagicBuffSlotTags);
+}
 
 const FGameplayTag UWidgetSlotTagInfo::GetBuffWidgetTag()
 {
-	if (BuffActorWidgetTag.Num() <= 0) return FGameplayTag();
-	 auto Info = BuffActorWidgetTag.CreateConstIterator();
-	 return Info.Value();
+	if (BuffSlotTags.WidgetSlotTags.Num() <= 0) return FGameplayTag();
+	return BuffSlotTags.WidgetSlotTags[0];
 }
 
-void UWidgetSlotTagInfo::SetBuffActorWidgetTag(const FGameplayTag& WidgetTag)
+void UWidgetSlotTagInfo::SetBuffActorWidgetTagByTag(const FGameplayTag& WidgetTag)
 {
-	if (BuffActorWidgetTag.Num() <= 0)return;
-	for (auto& BuffTagInfo : BuffActorWidgetTag)
+	if (BuffSlotTags.WidgetSlotTags[0] != WidgetTag)
 	{
-		if (WidgetTag.MatchesTag(BuffTagInfo.Key))
-		{
-			BuffTagInfo.Value = WidgetTag;
-		}
+		BuffSlotTags.WidgetSlotTags[0] = WidgetTag;//buffactor从始至终就只有一个显示槽，数据也就只有一个
 	}
 }

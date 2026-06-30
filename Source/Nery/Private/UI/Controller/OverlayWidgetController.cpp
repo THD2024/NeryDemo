@@ -32,6 +32,8 @@ void UOverlayWidgetController::BindCallBacks()
 	{
 		PC->OnConsumeInput.AddUObject(this, &UOverlayWidgetController::OnBuffInfoChanged);
 		PC->OnPickAction.AddUObject(this, &UOverlayWidgetController::OnBuffInfoChanged);
+		PC->OnRightScrollInput.AddUObject(this, &UOverlayWidgetController::OnBroadRightScroll);
+		PC->OnLeftScrollInput.AddUObject(this, &UOverlayWidgetController::OnBroadLeftScroll);
 	}
 }
 
@@ -51,6 +53,16 @@ void UOverlayWidgetController::OnBuffInfoChanged()
 	// 翻看，则最好的办法就是每次
 	//在这里传递广播
 	BroadBuffInfo();
+}
+
+void UOverlayWidgetController::OnBroadRightScroll()
+{
+	RightScroll.Broadcast();
+}
+
+void UOverlayWidgetController::OnBroadLeftScroll()
+{
+	LeftScroll.Broadcast();
 }
 
 void UOverlayWidgetController::BroadBuffInfo()

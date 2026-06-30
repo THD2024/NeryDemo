@@ -207,6 +207,8 @@ void ANeryPlayerController::SetupInputComponent()
 		EnhancedInputComponent->BindAction(AttributeMenuAction, ETriggerEvent::Started, this, &ANeryPlayerController::AttributeMenuButton);
 		EnhancedInputComponent->BindAction(PickItemAction, ETriggerEvent::Triggered, this, &ANeryPlayerController::PickItem);
 		EnhancedInputComponent->BindAction(BuffAction, ETriggerEvent::Started, this, &ANeryPlayerController::UseBuffActor);
+		EnhancedInputComponent->BindAction(RightScrollAction, ETriggerEvent::Started, this, &ANeryPlayerController::RightScroll);
+		EnhancedInputComponent->BindAction(LeftScrollAction, ETriggerEvent::Started, this, &ANeryPlayerController::LeftScroll);
 	}
 
 }
@@ -352,6 +354,21 @@ void ANeryPlayerController::UseBuffActor()
 		Nery->ReduceBuffNumberByTag(UNeryBlueprintFunctionLibrary::GetCurrentBuffWidgetTag(this));
 	}
 	OnConsumeInput.Broadcast();
+}
+
+void ANeryPlayerController::RightScroll()
+{
+	OnRightScrollInput.Broadcast();
+}
+
+void ANeryPlayerController::LeftScroll()
+{
+	OnLeftScrollInput.Broadcast();
+}
+
+void ANeryPlayerController::Server_SetBuffWidgetTag_Implementation(const FGameplayTag& Tag)
+{
+	UNeryBlueprintFunctionLibrary::SetCurrentBuffWidgetTag(this,Tag);
 }
 
 

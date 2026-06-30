@@ -12,9 +12,7 @@ class UInputMappingContext;
 struct FTimerHandle;
 DECLARE_DELEGATE(FOnSelectedChangeDelegate);
 DECLARE_MULTICAST_DELEGATE_OneParam(FOnLinkAnimTiming, bool);
-DECLARE_MULTICAST_DELEGATE(FOnAttackInputDelegate);
-DECLARE_MULTICAST_DELEGATE(FOnPickActionDelegate);
-DECLARE_MULTICAST_DELEGATE(FOnConsumeBuffDelegate);
+DECLARE_MULTICAST_DELEGATE(FOnInputDelegate);
 
 /**
  * 
@@ -30,9 +28,12 @@ public:
 
 	//广播
 	FOnLinkAnimTiming OnLinkAnimTiminig;
-	FOnAttackInputDelegate OnAttackInput;
-	FOnPickActionDelegate OnPickAction;
-	FOnConsumeBuffDelegate OnConsumeInput;
+	FOnInputDelegate OnAttackInput;
+	FOnInputDelegate OnPickAction;
+	FOnInputDelegate OnConsumeInput;
+	FOnInputDelegate OnRightScrollInput;
+	FOnInputDelegate OnLeftScrollInput;
+
 protected:
 	void PlayerTick(float DeltaTime) override;
 	void UpdateCurrentRotation(float DeltaTime);//更新当前锁定目标的旋转
@@ -101,6 +102,12 @@ protected:
 	TObjectPtr<UInputAction> BuffAction;//使用buff道具
 
 	UPROPERTY(EditDefaultsOnly, Category = "Input")
+	TObjectPtr<UInputAction> LeftScrollAction;//左切换
+
+	UPROPERTY(EditDefaultsOnly, Category = "Input")
+	TObjectPtr<UInputAction> RightScrollAction;//右切换
+
+	UPROPERTY(EditDefaultsOnly, Category = "Input")
 	TObjectPtr<UInputMappingContext> DefaultMappingContext;
 
 	//输入回调函数
@@ -114,8 +121,12 @@ protected:
 	void AttributeMenuButton();
 	void PickItem();
 	void UseBuffActor();
+	void RightScroll();
+	void LeftScroll();
 	//	void Crouch_Hold();
 	
+	UFUNCTION(Server,Reliable,BlueprintCallable)
+	void Server_SetBuffWidgetTag(const FGameplayTag& Tag);
 
 	
 };

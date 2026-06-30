@@ -21,6 +21,7 @@ public:
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnAttributeChanged,float, AttributeValue);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnBuffInfoChanged, FBuffNumberInfo, BuffNumber);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnScrollInput);
 
 /**
  * 
@@ -50,10 +51,17 @@ protected:
 	UPROPERTY(BlueprintAssignable, Category = "AttributeDelegate")
 	FOnBuffInfoChanged BuffInfoChanged;
 
+	UPROPERTY(BlueprintAssignable, Category = "AttributeDelegate")
+	FOnScrollInput RightScroll;
+
+	UPROPERTY(BlueprintAssignable, Category = "AttributeDelegate")
+	FOnScrollInput LeftScroll;
+
 	void OnHealthChanged(const FOnAttributeChangeData& Data);
 	void OnMaxHealthChanged(const FOnAttributeChangeData& Data);
 	void OnBuffInfoChanged();
-
+	void OnBroadRightScroll();
+	void OnBroadLeftScroll();
 	void BroadBuffInfo();
 
 };

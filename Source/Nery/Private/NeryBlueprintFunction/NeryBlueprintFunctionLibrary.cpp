@@ -166,7 +166,7 @@ void UNeryBlueprintFunctionLibrary::SetCurrentBuffWidgetTag(const UObject* World
 	ANeryGameStateBase* NeryGameState = GetGameState(WorldContextObject);
 	if (NeryGameState->WidgetTagInfo)
 	{
-		 NeryGameState->WidgetTagInfo->SetBuffActorWidgetTag(InTag);
+		 NeryGameState->WidgetTagInfo->SetBuffActorWidgetTagByTag(InTag);
 	}
 }
 

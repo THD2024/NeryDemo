@@ -36,6 +36,9 @@ public:
 	FGameplayTag GameplayCue_Damage_Critical;
 	FGameplayTag GameplayCue_Damage_Normal;
 	FGameplayTag GameplayCue_Damage_Environmental;
+	FGameplayTag GameplayCue_Buff_Health;
+	FGameplayTag GameplayCue_Buff_ArmorPenetration;
+	FGameplayTag GameplayCue_Buff_CriticalHitChance;
 
 	/*BuffActor*/
 	FGameplayTag Buff_Good_Health;

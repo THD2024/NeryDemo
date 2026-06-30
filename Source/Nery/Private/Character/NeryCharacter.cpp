@@ -71,8 +71,11 @@ void ANeryCharacter::ReduceBuffNumberByTag(const FGameplayTag & InTag)
 		{
 			BuffInfo.Value--;
 			BuffInfo.Value = FMath::Max<float>(0.f, BuffInfo.Value);
+			break;
 		}
 	}
+	ApplyBuffEffect(InTag);
+	
 }
 
 
@@ -211,13 +214,6 @@ TMap<FGameplayTag, int32> ANeryCharacter::GetBuffNumber_Implementation()
 	return BuffNumberInfo;
 }
 
-void ANeryCharacter::UseBuffActor()
-{
-	//这里需要Tag
-	//这个需要和ui中显示的当前调配到装备栏中的一致。
-}
-
-
 
 void ANeryCharacter::Server_SetLockTarget_Implementation(AActor* NewTarget)
 {
@@ -256,6 +252,17 @@ void ANeryCharacter::OnRep_LockOn()
 	LinkAnimTiming(bIsLockOn_NetWorked);
 	// 同时更新移动组件旋转设置，确保视觉表现一致
 	GetCharacterMovement()->bOrientRotationToMovement = !bIsLockOn_NetWorked;
+}
+
+void ANeryCharacter::ApplyBuffEffect(const FGameplayTag& InTag)
+{
+	if (ItemBag)
+	{
+		if (ItemBag->FindSpecificEffectByTag(InTag))
+		{
+			UNeryBlueprintFunctionLibrary::ApplyBasicEffectToSelf(this, ItemBag->FindSpecificEffectByTag(InTag));
+		}
+	}
 }
 
 

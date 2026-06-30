@@ -49,8 +49,6 @@ public:
 
 	void HandleAttackLogic();
 
-	void UseBuffActor();
-
 	UPROPERTY(ReplicatedUsing = OnRep_LockOn)
 	bool bIsLockOn_NetWorked;
 
@@ -87,16 +85,19 @@ protected:
 	
 	void InitASCandAttribute();
 
+
 	/*接口*/
 	virtual void CallAddBuffNumber_Implementation(const FGameplayTag& InTag)override;
 
 	virtual UItemBagDataAsset* GetItemBag_Implementation()override;
 
 	virtual TMap<FGameplayTag, int32> GetBuffNumber_Implementation()override;
+
+	virtual ECharacterAttackState GetAttackState_Implementation() override;
 	/*接口*/
 
-	/*网络复制*/
 
+	/*网络复制*/
 	UPROPERTY(Replicated)
 	TObjectPtr<AActor>NetLockedTarget;
 
@@ -122,13 +123,9 @@ protected:
 
 	UFUNCTION(Server, Unreliable)
 	void Server_UpdateRotation(float DeltaTime);
-
 	/*网络复制*/
 
-	/*Interface*/
-	virtual ECharacterAttackState GetAttackState_Implementation() override;
-
-	/*Interface*/
+	void ApplyBuffEffect(const FGameplayTag& InTag);
 
 
 	float RotateSpeed = 10.f;//角色旋转的速度

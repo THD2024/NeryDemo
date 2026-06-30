@@ -17,6 +17,11 @@ class NERY_API ANeryGameStateBase : public AGameStateBase
 	GENERATED_BODY()
 	
 public:
+	ANeryGameStateBase();
+
+	virtual void PostInitializeComponents() override;
+
+	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 
 	UPROPERTY(EditAnywhere, Category = "CharacterInfo")
 	TObjectPtr<UCharacterDataAsset> CharacterInfo;
@@ -27,7 +32,7 @@ public:
 	UPROPERTY(EditAnywhere, Category = "CharacterInfo")
 	TSubclassOf<UWidgetSlotTagInfo> WidgetTagInfoClass;
 
-	UPROPERTY(BlueprintReadOnly)
+	UPROPERTY(BlueprintReadOnly,Replicated)
 	TObjectPtr<UWidgetSlotTagInfo>WidgetTagInfo;
 
 };

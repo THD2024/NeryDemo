@@ -28,6 +28,10 @@ void FNeryGameplayTags::InitializeTags()
 	NeryGameplayTags.GameplayCue_Damage_Normal = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("GameplayCue.Damage.Normal"), FString(TEXT("Normal Damage")));
 	NeryGameplayTags.GameplayCue_Damage_Critical = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("GameplayCue.Damage.Critical"), FString(TEXT("Critical Damage")));
 	NeryGameplayTags.GameplayCue_Damage_Environmental = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("GameplayCue.Damage.Environmental"), FString(TEXT("Environmental Damage")));
+	NeryGameplayTags.GameplayCue_Buff_ArmorPenetration = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("GameplayCue.Buff.ArmorPenetration"), FString(TEXT("Strength your ArmorPenetration")));
+	NeryGameplayTags.GameplayCue_Buff_CriticalHitChance = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("GameplayCue.Buff.CriticalHitChance"), FString(TEXT("Be Easier to Criticalhit")));
+	NeryGameplayTags.GameplayCue_Buff_Health = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("GameplayCue.Buff.Health"), FString(TEXT("Recover your Health")));
+
 
 	NeryGameplayTags.Buff_Good_ArmorPenetration = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Buff.Good.ArmorPenetration"), FString(TEXT("Strengthen ArmorPenetration")));
 	NeryGameplayTags.Buff_Good_Health = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Buff.Good.Health"), FString(TEXT("Recover Health")));
