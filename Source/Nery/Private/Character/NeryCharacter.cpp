@@ -71,10 +71,17 @@ void ANeryCharacter::ReduceBuffNumberByTag(const FGameplayTag & InTag)
 		{
 			BuffInfo.Value--;
 			BuffInfo.Value = FMath::Max<float>(0.f, BuffInfo.Value);
-			break;
+			if(BuffInfo.Value > 0)
+			{
+				ApplyBuffEffect(InTag);
+				if (!HasAuthority())
+				{
+					Server_ApplyBuffEffect(InTag);
+				}
+			}
+			return;
 		}
 	}
-	ApplyBuffEffect(InTag);
 	
 }
 
@@ -252,6 +259,11 @@ void ANeryCharacter::OnRep_LockOn()
 	LinkAnimTiming(bIsLockOn_NetWorked);
 	// 同时更新移动组件旋转设置，确保视觉表现一致
 	GetCharacterMovement()->bOrientRotationToMovement = !bIsLockOn_NetWorked;
+}
+
+void ANeryCharacter::Server_ApplyBuffEffect_Implementation(const FGameplayTag& InTag)
+{
+	ApplyBuffEffect(InTag);
 }
 
 void ANeryCharacter::ApplyBuffEffect(const FGameplayTag& InTag)

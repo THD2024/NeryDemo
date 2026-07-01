@@ -7,22 +7,30 @@
 #include"Kismet/GameplayStatics.h"
 #include"PlayerController/NeryPlayerController.h"
 #include"Interface/CombatInterface.h"
+#include"Net/UnrealNetwork.h"
+
+
+ANeryBuffEffectActor::ANeryBuffEffectActor()
+{
+	bReplicates = true;
+}
 
 void ANeryBuffEffectActor::BeginPlay()
 {
 	Super::BeginPlay();
-	bIsOverlaped = true;
+	bIsOverlaped = false;
 }
 
 void ANeryBuffEffectActor::SphereBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
-{
-	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("BuffActor"));
+{	
 	if (OtherActor->ActorHasTag(FName("Enemy")))return;//保证进来的是角色
 	OverlapActor = OtherActor;
 	bIsOverlaped = true;
 	if (!PC)
 	{
-		PC = Cast<ANeryPlayerController>(OtherActor->GetInstigatorController());
+		APawn* Pawn = Cast<APawn>(OtherActor);
+		PC = Cast<ANeryPlayerController>(Pawn->GetController());
+		if (!PC ||PC->IsLocalController() == false)return;
 		if (PC && PC->OnPickAction.IsBoundToObject(this) == false)
 		{
 			PC->OnPickAction.AddUObject(this, &ANeryBuffEffectActor::AddActorToItemBag);
@@ -47,9 +55,10 @@ void ANeryBuffEffectActor::SphereBeginOverlap(UPrimitiveComponent* OverlappedCom
 void ANeryBuffEffectActor::SphereEndOverlap(UPrimitiveComponent * OverlappedComponent, AActor * OtherActor, UPrimitiveComponent * OtherComp, int32 OtherBodyIndex)
 {
 	if (OtherActor->ActorHasTag(FName("Enemy")))return;
-	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("BuffActor endoverlap"));
 	OverlapActor = nullptr;
 	bIsOverlaped = false;
+	if (!PC || PC->IsLocalController() == false)return;
+
 	if (PickWidget)
 	{
 		PickWidget->SetVisibility(ESlateVisibility::Collapsed);
@@ -64,20 +73,35 @@ void ANeryBuffEffectActor::EndPlay(const EEndPlayReason::Type EndPlayReason)
 	}
 }
 
+//void ANeryBuffEffectActor::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+//{
+//	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+//	DOREPLIFETIME(ANeryBuffEffectActor, bIsOverlaped);
+//
+//}
+
 
 
 void ANeryBuffEffectActor::AddActorToItemBag()
 {
-	//由按键输入来调用,这里表示已经按下拾取键，暂时不考虑拾取上限的问题。这里被触发
 	if (!bIsOverlaped)return;
-	//只有在检测范围内才能进行下面的拾取逻辑
-		if (OverlapActor && OverlapActor->Implements<UCombatInterface>())
-		{
-			ICombatInterface::Execute_CallAddBuffNumber(OverlapActor, BuffTag);
-		}
-		
-		//写添加逻辑
+	if(PickWidget)
+	{
 		PickWidget->RemoveFromParent();//离开就直接销毁提示组件
-		Destroy();//拾取完后需要将对象销毁
-	
+		PickWidget = nullptr;
+	}
+	Server_AddActorToItemBag();
+}
+
+void ANeryBuffEffectActor::Server_AddActorToItemBag_Implementation()
+{
+	//由按键输入来调用,这里表示已经按下拾取键，暂时不考虑拾取上限的问题。这里被触发
+
+	//只有在检测范围内才能进行下面的拾取逻辑
+	if (OverlapActor && OverlapActor->Implements<UCombatInterface>())
+	{
+		ICombatInterface::Execute_CallAddBuffNumber(OverlapActor, BuffTag);
+	}
+	Destroy();//拾取完后需要将对象销毁
+
 }

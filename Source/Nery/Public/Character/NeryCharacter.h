@@ -123,6 +123,9 @@ protected:
 
 	UFUNCTION(Server, Unreliable)
 	void Server_UpdateRotation(float DeltaTime);
+
+	UFUNCTION(Server,Unreliable)
+	void Server_ApplyBuffEffect(const FGameplayTag& InTag);
 	/*网络复制*/
 
 	void ApplyBuffEffect(const FGameplayTag& InTag);

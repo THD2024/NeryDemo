@@ -18,6 +18,8 @@ class NERY_API ANeryBuffEffectActor : public ANeryEffectActor
 	GENERATED_BODY()
 	
 public:
+	ANeryBuffEffectActor();
+
 	virtual void BeginPlay() override;
 
 	virtual void SphereBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)override;
@@ -26,12 +28,19 @@ public:
 
 	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason)override;
 
+	//virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
+
 	void AddActorToItemBag();
 
 	UFUNCTION(BlueprintImplementableEvent)
 	void OnSetWidgetTiming(const FItemInformation& ItemInfo);
+	
+	UFUNCTION(Server,Reliable)
+	void Server_AddActorToItemBag();
 
 protected:
+
+	UPROPERTY()
 	bool bIsOverlaped = false;
 
 	UPROPERTY()
