@@ -85,12 +85,18 @@ void ANeryBuffEffectActor::EndPlay(const EEndPlayReason::Type EndPlayReason)
 void ANeryBuffEffectActor::AddActorToItemBag()
 {
 	if (!bIsOverlaped)return;
+	if(PC->IsLocalController() == false)return;
 	if(PickWidget)
 	{
 		PickWidget->RemoveFromParent();//离开就直接销毁提示组件
 		PickWidget = nullptr;
 	}
-	Server_AddActorToItemBag();
+	if (OverlapActor && OverlapActor->Implements<UCombatInterface>())
+	{
+		ICombatInterface::Execute_CallAddBuffNumber(OverlapActor, BuffTag,this);
+	}
+	Destroy();//拾取完后需要将对象销毁
+	
 }
 
 void ANeryBuffEffectActor::Server_AddActorToItemBag_Implementation()
@@ -100,7 +106,7 @@ void ANeryBuffEffectActor::Server_AddActorToItemBag_Implementation()
 	//只有在检测范围内才能进行下面的拾取逻辑
 	if (OverlapActor && OverlapActor->Implements<UCombatInterface>())
 	{
-		ICombatInterface::Execute_CallAddBuffNumber(OverlapActor, BuffTag);
+		ICombatInterface::Execute_CallAddBuffNumber(OverlapActor, BuffTag,this);
 	}
 	Destroy();//拾取完后需要将对象销毁
 

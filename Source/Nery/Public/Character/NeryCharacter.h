@@ -11,6 +11,19 @@ class UActorComponent;
 
 
 
+USTRUCT(BlueprintType)
+struct FBuffNumberBagInfo
+{
+	GENERATED_BODY()
+
+public:
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)//在蓝图中添加基本的buff标签，然后value的动态变化通过代码来实现
+	FGameplayTag BuffTag;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)//在蓝图中添加基本的buff标签，然后value的动态变化通过代码来实现
+	int32 BuffNumber = 0;
+};
+
 /**
  * 
  */
@@ -26,7 +39,7 @@ public:
 
 	void SetMaxWalkSpeed(float NewMaxWalkSpeed);
 
-	void AddBuffNumberByTag(const FGameplayTag& InTag);
+	void AddBuffNumberByTag(const FGameplayTag& InTag, AActor* Interactor);
 
 	void ReduceBuffNumberByTag(const FGameplayTag& InTag);
 	
@@ -67,8 +80,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Data")
 	TObjectPtr<class UItemBagDataAsset> ItemBag;
 
-	UPROPERTY(EditAnywhere,BlueprintReadOnly)//在蓝图中添加基本的buff标签，然后value的动态变化通过代码来实现
-	TMap<FGameplayTag, int32> BuffNumberInfo;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, ReplicatedUsing = OnRep_BuffNumberChanged)//在蓝图中添加基本的buff标签，然后value的动态变化通过代码来实现
+	TArray<FBuffNumberBagInfo> BuffNumberBagInfo;
+
 
 protected:
 	virtual void BeginPlay() override;
@@ -87,7 +101,7 @@ protected:
 
 
 	/*接口*/
-	virtual void CallAddBuffNumber_Implementation(const FGameplayTag& InTag)override;
+	virtual void CallAddBuffNumber_Implementation(const FGameplayTag& InTag,AActor* Interactor)override;
 
 	virtual UItemBagDataAsset* GetItemBag_Implementation()override;
 
@@ -126,9 +140,19 @@ protected:
 
 	UFUNCTION(Server,Unreliable)
 	void Server_ApplyBuffEffect(const FGameplayTag& InTag);
+
+	UFUNCTION(Server, Reliable)
+	void Server_AddBuffNumberByTag(const FGameplayTag& InTag, AActor* Interactor);
+
+	UFUNCTION(Server, Reliable)
+	void Server_ReduceBuffNumberByTag(const FGameplayTag& InTag);
+
+	UFUNCTION()
+	void OnRep_BuffNumberChanged();
 	/*网络复制*/
 
 	void ApplyBuffEffect(const FGameplayTag& InTag);
+	void TryToBroadBuffNumberInfo();
 
 
 	float RotateSpeed = 10.f;//角色旋转的速度
@@ -137,5 +161,6 @@ protected:
 
 	bool bAnimNotified = false;
 	bool bInputBuffered = false;//这个变量用来表示当前是否有输入被缓冲了，如果有输入被缓冲了，就说明在当前攻击动画播放的过程中，玩家又按了一次攻击输入，这时就可以在动画蒙太奇的Notify节点中通过判断这个变量来播放下一个攻击动画，实现连续攻击的逻辑
-	
+	bool CanBroadNumberInfo = false;
+
 };

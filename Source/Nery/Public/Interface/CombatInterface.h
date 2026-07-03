@@ -38,7 +38,7 @@ public:
 	void UpdateAttributeMenu(bool CanOpen);
 
 	UFUNCTION(BlueprintNativeEvent)
-	void CallAddBuffNumber(const FGameplayTag& InTag);
+	void CallAddBuffNumber(const FGameplayTag& InTag,AActor* Interactor);
 
 	UFUNCTION(BlueprintNativeEvent)
 	UItemBagDataAsset* GetItemBag();

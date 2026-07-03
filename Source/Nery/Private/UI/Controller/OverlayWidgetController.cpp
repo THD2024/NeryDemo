@@ -31,7 +31,7 @@ void UOverlayWidgetController::BindCallBacks()
 	if (ANeryPlayerController* PC = Cast<ANeryPlayerController>(PlayerController))
 	{
 		PC->OnConsumeInput.AddUObject(this, &UOverlayWidgetController::OnBuffInfoChanged);
-		PC->OnPickAction.AddUObject(this, &UOverlayWidgetController::OnBuffInfoChanged);
+		PC->OnBuffNumberAdded.AddUObject(this, &UOverlayWidgetController::OnBuffInfoChanged);
 		PC->OnRightScrollInput.AddUObject(this, &UOverlayWidgetController::OnBroadRightScroll);
 		PC->OnLeftScrollInput.AddUObject(this, &UOverlayWidgetController::OnBroadLeftScroll);
 	}
@@ -52,7 +52,9 @@ void UOverlayWidgetController::OnBuffInfoChanged()
 	//不管三七二十一，全给打包过去。根据当前组件中显示的actor类型来匹配到对应的信息，当然，如果在这之间没有使用药水，但是需要
 	// 翻看，则最好的办法就是每次
 	//在这里传递广播
+	
 	BroadBuffInfo();
+	
 }
 
 void UOverlayWidgetController::OnBroadRightScroll()

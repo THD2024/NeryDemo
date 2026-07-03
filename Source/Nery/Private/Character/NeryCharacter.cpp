@@ -51,38 +51,57 @@ void ANeryCharacter::SetMaxWalkSpeed(float NewMaxWalkSpeed)
 	}
 }
 
-void ANeryCharacter::AddBuffNumberByTag(const FGameplayTag& InTag)
+void ANeryCharacter::Server_AddBuffNumberByTag_Implementation(const FGameplayTag& InTag, AActor* Interactor)
 {
-	for (auto& BuffInfo : BuffNumberInfo)
+	for (auto& BuffInfo : BuffNumberBagInfo)
 	{
-		if (BuffInfo.Key.MatchesTagExact(InTag))
+		if (BuffInfo.BuffTag.MatchesTagExact(InTag))
 		{
-			BuffInfo.Value++;
+			UE_LOG(LogTemp, Warning, TEXT("Before Add : %d"), BuffInfo.BuffNumber);
+			BuffInfo.BuffNumber++;
+			break;
+		}
+	}
+	if(IsLocallyControlled())
+	{
+		TryToBroadBuffNumberInfo();
+	}
+	if (Interactor)
+	{
+		Interactor->Destroy();
+	}
+}
 
+void ANeryCharacter::AddBuffNumberByTag(const FGameplayTag& InTag,AActor*Interactor)
+{
+	Server_AddBuffNumberByTag(InTag,Interactor);
+}
+
+void ANeryCharacter::Server_ReduceBuffNumberByTag_Implementation(const FGameplayTag& InTag)
+{
+	for (auto& BuffInfo : BuffNumberBagInfo)
+	{
+		if (BuffInfo.BuffTag.MatchesTagExact(InTag))
+		{
+			if (BuffInfo.BuffNumber > 0)
+			{
+				ApplyBuffEffect(InTag);
+				BuffInfo.BuffNumber--;
+				BuffInfo.BuffNumber = FMath::Max<float>(0.f, BuffInfo.BuffNumber);
+			}
+			
+			if (IsLocallyControlled())
+			{
+				TryToBroadBuffNumberInfo();
+			}
+			return;
 		}
 	}
 }
 
 void ANeryCharacter::ReduceBuffNumberByTag(const FGameplayTag & InTag)
 {
-	for (auto& BuffInfo : BuffNumberInfo)
-	{
-		if (BuffInfo.Key.MatchesTagExact(InTag))
-		{
-			BuffInfo.Value--;
-			BuffInfo.Value = FMath::Max<float>(0.f, BuffInfo.Value);
-			if(BuffInfo.Value > 0)
-			{
-				ApplyBuffEffect(InTag);
-				if (!HasAuthority())
-				{
-					Server_ApplyBuffEffect(InTag);
-				}
-			}
-			return;
-		}
-	}
-	
+	Server_ReduceBuffNumberByTag(InTag);
 }
 
 
@@ -108,7 +127,6 @@ void ANeryCharacter::BeginPlay()
 		SpawnWeapon();
 	}
 	
-
 }
 
 void ANeryCharacter::Tick(float DeltaTime)
@@ -201,9 +219,9 @@ void ANeryCharacter::InitASCandAttribute()
 	}
 }
 
-void ANeryCharacter::CallAddBuffNumber_Implementation(const FGameplayTag& InTag)
+void ANeryCharacter::CallAddBuffNumber_Implementation(const FGameplayTag& InTag, AActor* Interactor)
 {
-	AddBuffNumberByTag(InTag);
+	AddBuffNumberByTag(InTag, Interactor);
 }
 
 
@@ -218,7 +236,12 @@ UItemBagDataAsset* ANeryCharacter::GetItemBag_Implementation()
 
 TMap<FGameplayTag, int32> ANeryCharacter::GetBuffNumber_Implementation()
 {
-	return BuffNumberInfo;
+	TMap<FGameplayTag, int32> Result;
+	for (const auto& BagInfo : BuffNumberBagInfo)
+	{
+		Result.Add(BagInfo.BuffTag, BagInfo.BuffNumber);
+	}
+	return Result;
 }
 
 
@@ -252,6 +275,7 @@ void ANeryCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLi
 	DOREPLIFETIME(ANeryCharacter, bIsLockOn_NetWorked);
 	DOREPLIFETIME(ANeryCharacter, AttackState);
 	DOREPLIFETIME(ANeryCharacter, NetLockedTarget);
+	DOREPLIFETIME_CONDITION(ANeryCharacter, BuffNumberBagInfo, COND_OwnerOnly);
 }
 
 void ANeryCharacter::OnRep_LockOn()
@@ -266,6 +290,11 @@ void ANeryCharacter::Server_ApplyBuffEffect_Implementation(const FGameplayTag& I
 	ApplyBuffEffect(InTag);
 }
 
+void ANeryCharacter::OnRep_BuffNumberChanged()
+{
+	TryToBroadBuffNumberInfo();
+}
+
 void ANeryCharacter::ApplyBuffEffect(const FGameplayTag& InTag)
 {
 	if (ItemBag)
@@ -275,6 +304,15 @@ void ANeryCharacter::ApplyBuffEffect(const FGameplayTag& InTag)
 			UNeryBlueprintFunctionLibrary::ApplyBasicEffectToSelf(this, ItemBag->FindSpecificEffectByTag(InTag));
 		}
 	}
+}
+
+void ANeryCharacter::TryToBroadBuffNumberInfo()
+{
+	if (ANeryPlayerController* PC = Cast<ANeryPlayerController>(GetController()))
+	{
+		PC->OnBuffNumberAdded.Broadcast();
+	}
+	
 }
 
 

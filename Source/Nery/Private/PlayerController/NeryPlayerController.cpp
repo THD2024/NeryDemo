@@ -205,7 +205,7 @@ void ANeryPlayerController::SetupInputComponent()
 		EnhancedInputComponent->BindAction(LockAction, ETriggerEvent::Started, this, &ANeryPlayerController::LockTarget);
 		EnhancedInputComponent->BindAction(AttackAction, ETriggerEvent::Started, this, &ANeryPlayerController::Attack);
 		EnhancedInputComponent->BindAction(AttributeMenuAction, ETriggerEvent::Started, this, &ANeryPlayerController::AttributeMenuButton);
-		EnhancedInputComponent->BindAction(PickItemAction, ETriggerEvent::Triggered, this, &ANeryPlayerController::PickItem);
+		EnhancedInputComponent->BindAction(PickItemAction, ETriggerEvent::Started, this, &ANeryPlayerController::PickItem);
 		EnhancedInputComponent->BindAction(BuffAction, ETriggerEvent::Started, this, &ANeryPlayerController::UseBuffActor);
 		EnhancedInputComponent->BindAction(RightScrollAction, ETriggerEvent::Started, this, &ANeryPlayerController::RightScroll);
 		EnhancedInputComponent->BindAction(LeftScrollAction, ETriggerEvent::Started, this, &ANeryPlayerController::LeftScroll);
@@ -345,6 +345,7 @@ void ANeryPlayerController::AttributeMenuButton()
 void ANeryPlayerController::PickItem()
 {
 	OnPickAction.Broadcast();
+	
 }
 
 void ANeryPlayerController::UseBuffActor()
@@ -353,7 +354,6 @@ void ANeryPlayerController::UseBuffActor()
 	{
 		Nery->ReduceBuffNumberByTag(UNeryBlueprintFunctionLibrary::GetCurrentBuffWidgetTag(this));
 	}
-	OnConsumeInput.Broadcast();
 }
 
 void ANeryPlayerController::RightScroll()

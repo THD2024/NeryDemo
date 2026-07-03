@@ -26,6 +26,7 @@ public:
 	bool IsLocked() { return IsValid(CurrentActor); }
 	AActor* GetLockedActor();
 
+
 	//广播
 	FOnLinkAnimTiming OnLinkAnimTiminig;
 	FOnInputDelegate OnAttackInput;
@@ -33,6 +34,7 @@ public:
 	FOnInputDelegate OnConsumeInput;
 	FOnInputDelegate OnRightScrollInput;
 	FOnInputDelegate OnLeftScrollInput;
+	FOnInputDelegate OnBuffNumberAdded;
 
 protected:
 	void PlayerTick(float DeltaTime) override;
