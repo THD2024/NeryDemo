@@ -50,7 +50,6 @@ void AWeapon::ApplyAttackEffect(AActor* TargetActor,const FHitResult& HitResult)
 	{
 		if (UAbilitySystemComponent* TargetASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(TargetActor))
 		{
-			GEngine->AddOnScreenDebugMessage(1, 2.f, FColor::Cyan, FString(TEXT("AttackEffect")));
 			FGameplayEffectContextHandle ContextHandle = OwnerASC->MakeEffectContext();
 			ContextHandle.AddHitResult(HitResult);
 			ContextHandle.AddInstigator(Owner, this);

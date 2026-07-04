@@ -25,15 +25,15 @@ void UAttributeWidgetController::BindCallBacks()
 	{
 		if (UNeryAbilitySystemComponent* ASC = Cast<UNeryAbilitySystemComponent>(AbilitySystemComponent))
 		{
-			ASC->GetGameplayAttributeValueChangeDelegate(AS->GetHealthAttribute()).AddUObject(this,&UAttributeWidgetController::OnResilienceChanged);
-			ASC->GetGameplayAttributeValueChangeDelegate(AS->GetHealthAttribute()).AddUObject(this,&UAttributeWidgetController::OnStrengthChanged);
-			ASC->GetGameplayAttributeValueChangeDelegate(AS->GetHealthAttribute()).AddUObject(this,&UAttributeWidgetController::OnVigorChanged);
-			ASC->GetGameplayAttributeValueChangeDelegate(AS->GetHealthAttribute()).AddUObject(this,&UAttributeWidgetController::OnArmorChanged);
-			ASC->GetGameplayAttributeValueChangeDelegate(AS->GetHealthAttribute()).AddUObject(this,&UAttributeWidgetController::OnArmorPenetrationChanged);
-			ASC->GetGameplayAttributeValueChangeDelegate(AS->GetHealthAttribute()).AddUObject(this,&UAttributeWidgetController::OnCriticalHitChanceChanged);
-			ASC->GetGameplayAttributeValueChangeDelegate(AS->GetHealthAttribute()).AddUObject(this,&UAttributeWidgetController::OnCriticalHitEffectChanged);
-			ASC->GetGameplayAttributeValueChangeDelegate(AS->GetHealthAttribute()).AddUObject(this,&UAttributeWidgetController::OnMaxHealthChanged);
-			ASC->GetGameplayAttributeValueChangeDelegate(AS->GetHealthAttribute()).AddUObject(this,&UAttributeWidgetController::OnMaxManaChanged);
+			ASC->GetGameplayAttributeValueChangeDelegate(AS->GetResilienceAttribute()).AddUObject(this,&UAttributeWidgetController::OnResilienceChanged);
+			ASC->GetGameplayAttributeValueChangeDelegate(AS->GetStrengthAttribute()).AddUObject(this,&UAttributeWidgetController::OnStrengthChanged);
+			ASC->GetGameplayAttributeValueChangeDelegate(AS->GetVigorAttribute()).AddUObject(this,&UAttributeWidgetController::OnVigorChanged);
+			ASC->GetGameplayAttributeValueChangeDelegate(AS->GetArmorAttribute()).AddUObject(this,&UAttributeWidgetController::OnArmorChanged);
+			ASC->GetGameplayAttributeValueChangeDelegate(AS->GetArmorPenetrationAttribute()).AddUObject(this,&UAttributeWidgetController::OnArmorPenetrationChanged);
+			ASC->GetGameplayAttributeValueChangeDelegate(AS->GetCriticalHitChanceAttribute()).AddUObject(this,&UAttributeWidgetController::OnCriticalHitChanceChanged);
+			ASC->GetGameplayAttributeValueChangeDelegate(AS->GetCriticalHitEffectAttribute()).AddUObject(this,&UAttributeWidgetController::OnCriticalHitEffectChanged);
+			ASC->GetGameplayAttributeValueChangeDelegate(AS->GetMaxHealthAttribute()).AddUObject(this,&UAttributeWidgetController::OnMaxHealthChanged);
+			ASC->GetGameplayAttributeValueChangeDelegate(AS->GetMaxManaAttribute()).AddUObject(this,&UAttributeWidgetController::OnMaxManaChanged);
 		}
 	}
 	
