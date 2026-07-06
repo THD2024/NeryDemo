@@ -50,4 +50,7 @@ protected:
 	void OnCriticalHitEffectChanged(const FOnAttributeChangeData& Data);
 	void OnMaxHealthChanged(const FOnAttributeChangeData& Data);
 	void OnMaxManaChanged(const FOnAttributeChangeData& Data);
+
+	/*AttributePoint*/
+	void OnAttributePointChanged(const FOnAttributeChangeData& Data);
 };

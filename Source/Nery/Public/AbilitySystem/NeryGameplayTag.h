@@ -32,6 +32,9 @@ public:
 	FGameplayTag Attribute_Vital_Health;
 	FGameplayTag Attribute_Vital_Mana;
 
+	/*AttributePoint*/
+	FGameplayTag Attribute_Level_AttributePoint;
+
 	/*GameplayCue*/
 	FGameplayTag GameplayCue_Damage_Critical;
 	FGameplayTag GameplayCue_Damage_Normal;

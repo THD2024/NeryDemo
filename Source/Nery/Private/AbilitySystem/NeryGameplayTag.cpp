@@ -25,6 +25,8 @@ void FNeryGameplayTags::InitializeTags()
 	NeryGameplayTags.Attribute_Vital_Health = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Attribute.Vital.Health"), FString(TEXT("Health")));
 	NeryGameplayTags.Attribute_Vital_Mana = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Attribute.Vital.Mana"), FString(TEXT("Mana")));
 
+	NeryGameplayTags.Attribute_Level_AttributePoint = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Attribute.Level.AttributePoint"), FString(TEXT("AttributePoint")));
+
 	NeryGameplayTags.GameplayCue_Damage_Normal = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("GameplayCue.Damage.Normal"), FString(TEXT("Normal Damage")));
 	NeryGameplayTags.GameplayCue_Damage_Critical = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("GameplayCue.Damage.Critical"), FString(TEXT("Critical Damage")));
 	NeryGameplayTags.GameplayCue_Damage_Environmental = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("GameplayCue.Damage.Environmental"), FString(TEXT("Environmental Damage")));

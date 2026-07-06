@@ -54,8 +54,15 @@ public:
 
 	/*MetaAttribute*/
 	ATTRIBUTE_ACCESSORS(UNeryAttributeSet, InComingDamage);
+	ATTRIBUTE_ACCESSORS(UNeryAttributeSet, InComingXp);
 	/*MetaAttribute*/
 	
+	/*Character Attributes*/
+	ATTRIBUTE_ACCESSORS(UNeryAttributeSet, Xp);
+	ATTRIBUTE_ACCESSORS(UNeryAttributeSet, AttributePoint);
+	ATTRIBUTE_ACCESSORS(UNeryAttributeSet, Level);
+	/*Character Attributes*/
+
 
 	/*Basic Attribute*/
 	UPROPERTY(ReplicatedUsing = OnRep_Resilience)
@@ -104,7 +111,22 @@ public:
 	UPROPERTY(BlueprintReadOnly, Category = "MetaAttribute")
 	FGameplayAttributeData InComingDamage;
 
+	UPROPERTY(BlueprintReadOnly, Category = "MetaAttribute")
+	FGameplayAttributeData InComingXp;
+
 	/*MetaAttribute*/
+
+
+	/*Character Attributes*/
+	UPROPERTY(ReplicatedUsing = OnRep_Xp)
+	FGameplayAttributeData Xp;
+
+	UPROPERTY(ReplicatedUsing = OnRep_AttributePoint)
+	FGameplayAttributeData AttributePoint;
+
+	UPROPERTY(ReplicatedUsing = OnRep_Level)
+	FGameplayAttributeData Level;
+	/*Character Attributes*/
 
 
 protected:
@@ -155,10 +177,27 @@ protected:
 	void OnRep_Mana(const FGameplayAttributeData& OldMana);
 
 	/*Vital Attribute*/
+
+	/*Character Attributes*/
+	UFUNCTION()
+	void OnRep_Xp(const FGameplayAttributeData& OldXp);
+
+	UFUNCTION()
+	void OnRep_AttributePoint(const FGameplayAttributeData& OldAttributePoint);
+
+	UFUNCTION()
+	void OnRep_Level(const FGameplayAttributeData& OldLevel);
+	/*Character Attributes*/
+
+	float NextLevelXp = 100.f;
+
+
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 
 	virtual void PreAttributeChange(const FGameplayAttribute& Attribute, float& NewValue) override;
 
 	virtual void PostGameplayEffectExecute(const struct FGameplayEffectModCallbackData& Data) override;
+
+	void AutoHandleLevelUp();
 
 };

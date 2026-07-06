@@ -34,6 +34,7 @@ void UAttributeWidgetController::BindCallBacks()
 			ASC->GetGameplayAttributeValueChangeDelegate(AS->GetCriticalHitEffectAttribute()).AddUObject(this,&UAttributeWidgetController::OnCriticalHitEffectChanged);
 			ASC->GetGameplayAttributeValueChangeDelegate(AS->GetMaxHealthAttribute()).AddUObject(this,&UAttributeWidgetController::OnMaxHealthChanged);
 			ASC->GetGameplayAttributeValueChangeDelegate(AS->GetMaxManaAttribute()).AddUObject(this,&UAttributeWidgetController::OnMaxManaChanged);
+			ASC->GetGameplayAttributeValueChangeDelegate(AS->GetAttributePointAttribute()).AddUObject(this, &UAttributeWidgetController::OnAttributePointChanged);
 		}
 	}
 	
@@ -94,6 +95,11 @@ void UAttributeWidgetController::OnMaxHealthChanged(const FOnAttributeChangeData
 }
 
 void UAttributeWidgetController::OnMaxManaChanged(const FOnAttributeChangeData& Data)
+{
+	BroadCastInfo(Data.Attribute, Data.NewValue);
+}
+
+void UAttributeWidgetController::OnAttributePointChanged(const FOnAttributeChangeData& Data)
 {
 	BroadCastInfo(Data.Attribute, Data.NewValue);
 }

@@ -13,6 +13,7 @@
 #include"UI/HUD/NeryHUD.h"
 #include"Interface/CombatInterface.h"
 #include"Data/WidgetSlotTagInfo.h"
+#include"AbilitySystem/NeryAttributeSet.h"
 
 TSubclassOf<UGameplayEffect> UNeryBlueprintFunctionLibrary::GetCharacterAttackEffect(const UObject* WorldContextObject)
 {
@@ -168,6 +169,38 @@ void UNeryBlueprintFunctionLibrary::SetCurrentBuffWidgetTag(const UObject* World
 	{
 		 NeryGameState->WidgetTagInfo->SetBuffActorWidgetTagByTag(InTag);
 	}
+}
+
+int32 UNeryBlueprintFunctionLibrary::GetLevel(const UAbilitySystemComponent* AbilitySystemComponent)
+{
+	if (AbilitySystemComponent)
+	{
+		if (const UNeryAttributeSet* AttributeSet = Cast<UNeryAttributeSet>(AbilitySystemComponent->GetAttributeSet(UAttributeSet::StaticClass())))
+		{
+			return FMath::FloorToInt(AttributeSet->GetLevel());//向下取整
+		}
+	}
+	return int32();
+}
+
+float UNeryBlueprintFunctionLibrary::GetXpByLevel(const UObject* WorldContextObject, float InLevel)
+{
+	ANeryGameStateBase* NeryGameState = GetGameState(WorldContextObject);
+	if (NeryGameState->LevelUpInfo)
+	{
+		return NeryGameState->LevelUpInfo->GetXPFromLevel(InLevel);
+	}
+	return 0.0f;
+}
+
+float UNeryBlueprintFunctionLibrary::GetAttributePointbyCurrentLevel(const UObject* WorldContextObject, float CurrentLevel)
+{
+	ANeryGameStateBase* NeryGameState = GetGameState(WorldContextObject);
+	if (NeryGameState->LevelUpInfo)
+	{
+		return NeryGameState->LevelUpInfo->GetAttributePointsFromLevel(CurrentLevel);
+	}
+	return 0.0f;
 }
 
 

@@ -3,11 +3,15 @@
 #include "AbilitySystem/NeryAttributeSet.h"
 #include"AbilitySystem/NeryGameplayTag.h"
 #include "GameplayEffectExtension.h"
+#include"NeryBlueprintFunction/NeryBlueprintFunctionLibrary.h"
 #include"Net/UnrealNetwork.h"//注册到网络复制属性的必要头文件
 
 UNeryAttributeSet::UNeryAttributeSet()
 {
 	FNeryGameplayTags GameplayTags = FNeryGameplayTags::GetNeryGameplayTags();
+	InitXp(0);
+	InitAttributePoint(0);//这个实现显示到attributemenu上面的
+	InitLevel(1);
 	AttributeToTags.Add(GetResilienceAttribute(), GameplayTags.Attribute_Basic_Resilience);
 	AttributeToTags.Add(GetStrengthAttribute(), GameplayTags.Attribute_Basic_Strength);
 	AttributeToTags.Add(GetVigorAttribute(), GameplayTags.Attribute_Basic_Vigor);
@@ -18,6 +22,9 @@ UNeryAttributeSet::UNeryAttributeSet()
 	AttributeToTags.Add(GetCriticalHitEffectAttribute(), GameplayTags.Attribute_Secondary_CriticalHitEffect);
 	AttributeToTags.Add(GetMaxManaAttribute(), GameplayTags.Attribute_Secondary_MaxMana);
 	AttributeToTags.Add(GetMaxHealthAttribute(), GameplayTags.Attribute_Secondary_MaxHealth);
+
+	AttributeToTags.Add(GetAttributePointAttribute(),GameplayTags.Attribute_Level_AttributePoint);
+
 }
 
 
@@ -72,6 +79,21 @@ void UNeryAttributeSet::OnRep_Mana(const FGameplayAttributeData & OldMana)
 	GAMEPLAYATTRIBUTE_REPNOTIFY(UNeryAttributeSet, Mana, OldMana);
 }
 
+void UNeryAttributeSet::OnRep_Xp(const FGameplayAttributeData& OldXp)
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UNeryAttributeSet, Xp, OldXp);
+}
+
+void UNeryAttributeSet::OnRep_AttributePoint(const FGameplayAttributeData & OldAttributePoint)
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UNeryAttributeSet, AttributePoint, OldAttributePoint);
+}
+
+void UNeryAttributeSet::OnRep_Level(const FGameplayAttributeData & OldLevel)
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UNeryAttributeSet, Level, OldLevel);
+}
+
 void UNeryAttributeSet::OnRep_MaxMana(const FGameplayAttributeData& OldMaxMana)
 {
 	GAMEPLAYATTRIBUTE_REPNOTIFY(UNeryAttributeSet, MaxMana, OldMaxMana);
@@ -102,6 +124,11 @@ void UNeryAttributeSet::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>&Out
 	/*Vital Attribute*/
 	DOREPLIFETIME_CONDITION_NOTIFY(UNeryAttributeSet, Health, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UNeryAttributeSet, Mana, COND_None, REPNOTIFY_Always);
+
+	/*Character Attributes*/
+	DOREPLIFETIME_CONDITION_NOTIFY(UNeryAttributeSet, Xp, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UNeryAttributeSet, AttributePoint, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UNeryAttributeSet, Level, COND_None, REPNOTIFY_Always);
 }
 
 void UNeryAttributeSet::PreAttributeChange(const FGameplayAttribute& Attribute, float& NewValue)
@@ -139,7 +166,39 @@ void UNeryAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallba
 	if (Data.EvaluatedData.Attribute == GetInComingDamageAttribute())
 	{//将伤害设置到真正的血量上
 		float NewHealth = Health.GetBaseValue() + GetInComingDamage();
+		SetInComingDamage(0.f);
 		NewHealth = FMath::Clamp(NewHealth,0.f, GetMaxHealth());
 		Health.SetBaseValue(NewHealth);
+	}
+	if (Data.EvaluatedData.Attribute == GetInComingXpAttribute())
+	{
+		//这里面写经验值的处理逻辑，并且计算等级提升和属性点的增加
+		//也就是说这里等级从来不会被直接修改，而是通过经验值的增加来间接修改等级
+		//而每次升级，都会增加属性点的数量,同时属性点在Ui中显示的时候也应该是Int32
+		float NewXp = Xp.GetBaseValue() + GetInComingXp();
+		SetInComingXp(0.f);
+		NewXp = FMath::Clamp(NewXp, 0.f, 100000.f);
+		Xp.SetBaseValue(NewXp);
+		AutoHandleLevelUp();
+	}
+}
+
+void UNeryAttributeSet::AutoHandleLevelUp()
+{
+	while (GetXp() >= NextLevelXp)//这里后面设置等级上限后，记得加上等级上限的判断
+	{//当当前xp大于了下一级xp，就证明该升级了，同时计算下一级的经验值
+		if (!GetOwningActor())return;
+		NextLevelXp = UNeryBlueprintFunctionLibrary::GetXpByLevel(GetOwningActor(), GetLevel() + 1);//默认值为2级xp
+		int32 CurrentLevel = FMath::FloorToInt(GetLevel());//向下取整
+		int32 NextLevel = CurrentLevel + 1;
+		NextLevel = FMath::Clamp(NextLevel, 1, 100);//等级上限为100
+		NextLevelXp = UNeryBlueprintFunctionLibrary::GetXpByLevel(GetOwningActor(), NextLevel);
+		Level.SetBaseValue(NextLevel);
+
+		//计算升级后增加的属性点数量
+		float AddedAttributePoint = UNeryBlueprintFunctionLibrary::GetAttributePointbyCurrentLevel(GetOwningActor(), NextLevel);
+		float NewAttributePoint = GetAttributePoint() + AddedAttributePoint;
+		NewAttributePoint = FMath::Clamp(NewAttributePoint, 0, 100);
+		AttributePoint.SetBaseValue(NewAttributePoint);
 	}
 }

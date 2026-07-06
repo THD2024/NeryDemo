@@ -6,6 +6,7 @@
 #include "GameFramework/GameStateBase.h"
 #include"Data/CharacterDataAsset.h"
 #include"Data/WidgetSlotTagInfo.h"
+#include"Data/LevelUpInfo.h"
 #include "NeryGameStateBase.generated.h"
 
 /**
@@ -34,5 +35,8 @@ public:
 
 	UPROPERTY(BlueprintReadOnly,Replicated)
 	TObjectPtr<UWidgetSlotTagInfo>WidgetTagInfo;
+
+	UPROPERTY(EditAnywhere, Category = "LevelUp")
+	TObjectPtr<ULevelUpInfo> LevelUpInfo;
 
 };

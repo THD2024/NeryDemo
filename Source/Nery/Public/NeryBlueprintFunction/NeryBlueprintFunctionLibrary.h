@@ -59,4 +59,13 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	static void SetCurrentBuffWidgetTag(const UObject* WorldContextObject,const FGameplayTag& InTag);
+
+	UFUNCTION(BlueprintPure,BlueprintCallable)
+	static int32 GetLevel(const UAbilitySystemComponent* AbilitySystemComponent);
+
+	UFUNCTION(BlueprintPure, BlueprintCallable)
+	static float GetXpByLevel(const UObject* WorldContextObject, float InLevel);
+
+	UFUNCTION(BlueprintPure, BlueprintCallable)
+	static float GetAttributePointbyCurrentLevel(const UObject* WorldContextObject, float CurrentLevel);
 };
