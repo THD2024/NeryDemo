@@ -36,8 +36,9 @@ void FNeryGameplayTags::InitializeTags()
 	NeryGameplayTags.GameplayCue_Trap_FireDamage = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("GameplayCue.Trap.FireDamage"), FString(TEXT("Fire Damage")));
 
 
-
 	NeryGameplayTags.Buff_Good_ArmorPenetration = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Buff.Good.ArmorPenetration"), FString(TEXT("Strengthen ArmorPenetration")));
 	NeryGameplayTags.Buff_Good_Health = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Buff.Good.Health"), FString(TEXT("Recover Health")));
 	NeryGameplayTags.Buff_Good_CriticalHitChance = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Buff.Good.CriticalHitChance"), FString(TEXT("Strengthen CriticalHitChance")));
+
+	NeryGameplayTags.Damage_Normal = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Damage.Normal"), FString(TEXT("Normal Damage")));
 }

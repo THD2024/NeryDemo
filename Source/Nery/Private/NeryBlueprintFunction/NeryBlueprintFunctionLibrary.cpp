@@ -183,7 +183,7 @@ int32 UNeryBlueprintFunctionLibrary::GetLevel(const UAbilitySystemComponent* Abi
 	return int32();
 }
 
-float UNeryBlueprintFunctionLibrary::GetXpByLevel(const UObject* WorldContextObject, float InLevel)
+float UNeryBlueprintFunctionLibrary::GetXpByLevel(const UObject* WorldContextObject, const float InLevel)
 {
 	ANeryGameStateBase* NeryGameState = GetGameState(WorldContextObject);
 	if (NeryGameState->LevelUpInfo)
@@ -193,12 +193,22 @@ float UNeryBlueprintFunctionLibrary::GetXpByLevel(const UObject* WorldContextObj
 	return 0.0f;
 }
 
-float UNeryBlueprintFunctionLibrary::GetAttributePointbyCurrentLevel(const UObject* WorldContextObject, float CurrentLevel)
+float UNeryBlueprintFunctionLibrary::GetAttributePointbyCurrentLevel(const UObject* WorldContextObject, const float CurrentLevel)
 {
 	ANeryGameStateBase* NeryGameState = GetGameState(WorldContextObject);
 	if (NeryGameState->LevelUpInfo)
 	{
 		return NeryGameState->LevelUpInfo->GetAttributePointsFromLevel(CurrentLevel);
+	}
+	return 0.0f;
+}
+
+float UNeryBlueprintFunctionLibrary::GetNormalDamageByLevel(const UObject* WorldContextObject, const int32 CurrentLevel)
+{
+	ANeryGameStateBase* NeryGameState = GetGameState(WorldContextObject);
+	if (NeryGameState->LevelUpInfo)
+	{
+		return NeryGameState->LevelUpInfo->GetNormalDamageFromLevel(CurrentLevel);
 	}
 	return 0.0f;
 }

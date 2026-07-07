@@ -8,6 +8,8 @@
 #include"Kismet/KismetSystemLibrary.h"
 #include"NeryType.h"
 #include"GameplayEffect.h"
+#include "GameplayEffectTypes.h"
+#include"GameplayTagContainer.h"
 #include "Sound/SoundBase.h"
 #include"AbilitySystemComponent.h"
 #include"Components/StaticMeshComponent.h"
@@ -53,7 +55,11 @@ void AWeapon::ApplyAttackEffect(AActor* TargetActor,const FHitResult& HitResult)
 			FGameplayEffectContextHandle ContextHandle = OwnerASC->MakeEffectContext();
 			ContextHandle.AddHitResult(HitResult);
 			ContextHandle.AddInstigator(Owner, this);
-			FGameplayEffectSpecHandle SpecHandle = OwnerASC->MakeOutgoingSpec(UNeryBlueprintFunctionLibrary::GetCharacterAttackEffect(Owner), 1, ContextHandle);
+			int32 CurrentLevel = UNeryBlueprintFunctionLibrary::GetLevel(OwnerASC);
+			FGameplayEffectSpecHandle SpecHandle = OwnerASC->MakeOutgoingSpec(UNeryBlueprintFunctionLibrary::GetCharacterAttackEffect(Owner), CurrentLevel, ContextHandle);
+			float DamageValue = UNeryBlueprintFunctionLibrary::GetNormalDamageByLevel(GetWorld(), CurrentLevel);
+			FGameplayTag DamageTag = FGameplayTag::RequestGameplayTag("Damage.Normal");
+			SpecHandle.Data->SetSetByCallerMagnitude(DamageTag, DamageValue);
 			OwnerASC->ApplyGameplayEffectSpecToTarget(*SpecHandle.Data.Get(), TargetASC);
 		}
 	}

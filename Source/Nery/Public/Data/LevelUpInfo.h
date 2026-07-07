@@ -10,7 +10,7 @@
 /**
  * 
  */
-//该数据资产的功能仅用于neryattribute升级时进行数据参考
+//该数据资产的功能仅用于neryattribute升级时进行数据参考和基础等级伤害提供
 
 USTRUCT(BlueprintType)
 struct FLevelInfo
@@ -22,6 +22,10 @@ struct FLevelInfo
 
 	UPROPERTY(EditDefaultsOnly)
 	FScalableFloat AttributePointsPerLevel;//每级奖励的属性点数
+
+	UPROPERTY(EditDefaultsOnly)
+	FScalableFloat Damage_Normal;//普通伤害
+
 };
 
 UCLASS(Blueprintable,BlueprintType)
@@ -40,7 +44,10 @@ public:
 	{
 		return LevelUpInfo.AttributePointsPerLevel.GetValueAtLevel(Level);
 	}
-
+	float GetNormalDamageFromLevel(float Level) const
+	{
+		return LevelUpInfo.Damage_Normal.GetValueAtLevel(Level);
+	}
 protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "LevelUp")
 	FLevelInfo LevelUpInfo;

@@ -61,6 +61,7 @@ public:
 	ATTRIBUTE_ACCESSORS(UNeryAttributeSet, Xp);
 	ATTRIBUTE_ACCESSORS(UNeryAttributeSet, AttributePoint);
 	ATTRIBUTE_ACCESSORS(UNeryAttributeSet, Level);
+	ATTRIBUTE_ACCESSORS(UNeryAttributeSet, MaxLevel);
 	/*Character Attributes*/
 
 
@@ -126,6 +127,9 @@ public:
 
 	UPROPERTY(ReplicatedUsing = OnRep_Level)
 	FGameplayAttributeData Level;
+
+	UPROPERTY(ReplicatedUsing = OnRep_MaxLevel)
+	FGameplayAttributeData MaxLevel;
 	/*Character Attributes*/
 
 
@@ -187,6 +191,9 @@ protected:
 
 	UFUNCTION()
 	void OnRep_Level(const FGameplayAttributeData& OldLevel);
+
+	UFUNCTION()
+	void OnRep_MaxLevel(const FGameplayAttributeData& OldMaxLevel);
 	/*Character Attributes*/
 
 	float NextLevelXp = 100.f;
@@ -198,6 +205,6 @@ protected:
 
 	virtual void PostGameplayEffectExecute(const struct FGameplayEffectModCallbackData& Data) override;
 
-	void AutoHandleLevelUp();
+	void AutoHandleLevelUp(const AActor* Instigator);
 
 };

@@ -60,12 +60,15 @@ public:
 	UFUNCTION(BlueprintCallable)
 	static void SetCurrentBuffWidgetTag(const UObject* WorldContextObject,const FGameplayTag& InTag);
 
-	UFUNCTION(BlueprintPure,BlueprintCallable)
+	UFUNCTION(BlueprintPure,BlueprintCallable)//需要获取玩家等级调用这个函数
 	static int32 GetLevel(const UAbilitySystemComponent* AbilitySystemComponent);
 
-	UFUNCTION(BlueprintPure, BlueprintCallable)
+	UFUNCTION(BlueprintPure, BlueprintCallable)//计算等级的辅助函数,仅限于attributeset
 	static float GetXpByLevel(const UObject* WorldContextObject, float InLevel);
 
-	UFUNCTION(BlueprintPure, BlueprintCallable)
+	UFUNCTION(BlueprintPure, BlueprintCallable)//仅限于attributeset
 	static float GetAttributePointbyCurrentLevel(const UObject* WorldContextObject, float CurrentLevel);
+
+	UFUNCTION(BlueprintPure, BlueprintCallable)//此处通过获取显示到视口的等级来获取普通伤害，这里是int32类型。
+	static float GetNormalDamageByLevel(const UObject* WorldContextObject, int32 CurrentLevel);
 };

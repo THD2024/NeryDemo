@@ -48,7 +48,8 @@ void UECC_Damage::Execute_Implementation(const FGameplayEffectCustomExecutionPar
 
 	FAggregatorEvaluateParameters EvaluateParameters = FAggregatorEvaluateParameters();
 	//这里的damage需要通过引进等级来使实现,暂时通过硬编码设置为100
-	float Damage = 100.f;
+	const FGameplayEffectSpec CurrentSpec = ExecutionParams.GetOwningSpec();
+	float Damage = CurrentSpec.GetSetByCallerMagnitude(FGameplayTag::RequestGameplayTag("Damage.Normal"));
 
 	float Armor = 0.f;
 	ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(GetDamageStatics().ArmorDef, EvaluateParameters, Armor);
@@ -72,9 +73,9 @@ void UECC_Damage::Execute_Implementation(const FGameplayEffectCustomExecutionPar
 
 	bool bCriticalHit = false;
 	bCriticalHit = CriticalHitChance > FMath::RandRange(0.f, 1.f) ? true : false;
-	 Damage = bCriticalHit ? Damage * (1 + CriticalHitEffect / 100) : Damage;
+	 Damage = bCriticalHit ? Damage * (1 + CriticalHitEffect*2 / 100) : Damage;
 
-	 const FGameplayModifierEvaluatedData EvaluatedData = FGameplayModifierEvaluatedData(UNeryAttributeSet::GetInComingDamageAttribute(), EGameplayModOp::Additive, -Damage);
+	 const FGameplayModifierEvaluatedData EvaluatedData = FGameplayModifierEvaluatedData(UNeryAttributeSet::GetInComingDamageAttribute(), EGameplayModOp::Override, Damage);
 	 OutExecutionOutput.AddOutputModifier(EvaluatedData);
 	 
 	 //GameplayCue来实现不同伤害显示

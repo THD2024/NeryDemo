@@ -49,6 +49,9 @@ public:
 	FGameplayTag Buff_Good_ArmorPenetration;
 	FGameplayTag Buff_Good_CriticalHitChance;
 
+	/*Damage*/
+	FGameplayTag Damage_Normal;
+
 private:
 	static  FNeryGameplayTags NeryGameplayTags;
 };
