@@ -14,7 +14,8 @@ UNeryAttributeSet::UNeryAttributeSet()
 	InitXp(0);
 	InitAttributePoint(0);//这个实现显示到attributemenu上面的
 	InitLevel(1);
-	InitMaxLevel(5);
+	InitMaxLevel(5);//这个目前通过手动赋值的方式，比较死板，后面换种方式
+	InitNextLevelXp(100.f);
 	AttributeToTags.Add(GetResilienceAttribute(), GameplayTags.Attribute_Basic_Resilience);
 	AttributeToTags.Add(GetStrengthAttribute(), GameplayTags.Attribute_Basic_Strength);
 	AttributeToTags.Add(GetVigorAttribute(), GameplayTags.Attribute_Basic_Vigor);
@@ -44,7 +45,6 @@ void UNeryAttributeSet::OnRep_Strength(const FGameplayAttributeData & OldStrengt
 void UNeryAttributeSet::OnRep_Vigor(const FGameplayAttributeData & OldVigor)
 {
 	GAMEPLAYATTRIBUTE_REPNOTIFY(UNeryAttributeSet, Vigor, OldVigor);
-
 }
 
 void UNeryAttributeSet::OnRep_Health(const FGameplayAttributeData& OldHealth)
@@ -103,6 +103,11 @@ void UNeryAttributeSet::OnRep_MaxLevel(const FGameplayAttributeData& OldMaxLevel
 
 }
 
+void UNeryAttributeSet::OnRep_NextLevelXp(const FGameplayAttributeData& OldNextLevelXp)
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UNeryAttributeSet, NextLevelXp, OldNextLevelXp);
+}
+
 void UNeryAttributeSet::OnRep_MaxMana(const FGameplayAttributeData& OldMaxMana)
 {
 	GAMEPLAYATTRIBUTE_REPNOTIFY(UNeryAttributeSet, MaxMana, OldMaxMana);
@@ -139,6 +144,7 @@ void UNeryAttributeSet::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>&Out
 	DOREPLIFETIME_CONDITION_NOTIFY(UNeryAttributeSet, AttributePoint, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UNeryAttributeSet, Level, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UNeryAttributeSet, MaxLevel, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UNeryAttributeSet, NextLevelXp, COND_None, REPNOTIFY_Always);
 }
 
 void UNeryAttributeSet::PreAttributeChange(const FGameplayAttribute& Attribute, float& NewValue)
@@ -188,7 +194,7 @@ void UNeryAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallba
 		//而每次升级，都会增加属性点的数量,同时属性点在Ui中显示的时候也应该是Int32
 		float NewXp = Xp.GetBaseValue() + GetInComingXp();
 		SetInComingXp(0.f);
-		NewXp = FMath::Clamp(NewXp, 0.f, 100000.f);
+		NewXp = FMath::Clamp(NewXp, 0.f, GetNextLevelXp());
 		SetXp(NewXp);
 		if(AActor* Instigator = Data.EffectSpec.GetContext().GetInstigator())
 		{
@@ -201,14 +207,15 @@ void UNeryAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallba
 void UNeryAttributeSet::AutoHandleLevelUp(const AActor* Instigator)
 {
 	const float CurrentXp = GetXp();	
-	while (CurrentXp > NextLevelXp )//这里后面设置等级上限后，记得加上等级上限的判断
+	while (CurrentXp >= GetNextLevelXp() )//这里后面设置等级上限后，记得加上等级上限的判断
 	{//当当前xp大于了下一级xp，就证明该升级了，同时计算下一级的经验值
 		if (GetLevel() >= GetMaxLevel())return;
 		int32 CurrentLevel = FMath::FloorToInt(GetLevel());//向下取整
 		int32 NextLevel = CurrentLevel + 1;
 		NextLevel = FMath::Clamp(NextLevel, 1, GetMaxLevel());//等级上限为100
 		SetLevel(NextLevel);//等级升级
-		NextLevelXp = UNeryBlueprintFunctionLibrary::GetXpByLevel(Instigator, GetLevel() + 1);
+		float TempNextLevelXp = UNeryBlueprintFunctionLibrary::GetXpByLevel(Instigator, GetLevel() + 1);
+		SetNextLevelXp(TempNextLevelXp);
 
 		//计算升级后增加的属性点数量
 		float AddedAttributePoint = UNeryBlueprintFunctionLibrary::GetAttributePointbyCurrentLevel(Instigator, GetLevel());

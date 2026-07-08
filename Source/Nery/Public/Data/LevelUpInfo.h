@@ -5,6 +5,8 @@
 #include "CoreMinimal.h"
 #include "Engine/DataAsset.h"
 #include"ScalableFloat.h"
+#include"GameplayTagContainer.h"
+#include"GameplayEffect.h"
 #include "LevelUpInfo.generated.h"
 
 /**
@@ -48,7 +50,23 @@ public:
 	{
 		return LevelUpInfo.Damage_Normal.GetValueAtLevel(Level);
 	}
+
+	TSubclassOf<UGameplayEffect> GetUpgradeBasicAttributeEffect(const FGameplayTag& AttributeTag)
+	{
+		if (UpgradeBasicAttributeMap.Contains(AttributeTag))
+		{
+			return UpgradeBasicAttributeMap[AttributeTag];
+		}
+		return TSubclassOf<UGameplayEffect>();
+	}
+
+	
+
 protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "LevelUp")
 	FLevelInfo LevelUpInfo;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "LevelUp")
+	TMap<FGameplayTag, TSubclassOf<UGameplayEffect>> UpgradeBasicAttributeMap;
+	
 };

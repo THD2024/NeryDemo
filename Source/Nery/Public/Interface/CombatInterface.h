@@ -45,4 +45,6 @@ public:
 
 	UFUNCTION(BlueprintNativeEvent)
 	TMap<FGameplayTag,int32> GetBuffNumber();
+
+
 };

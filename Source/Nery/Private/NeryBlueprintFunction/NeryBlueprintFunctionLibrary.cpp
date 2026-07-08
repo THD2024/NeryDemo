@@ -108,6 +108,7 @@ void UNeryBlueprintFunctionLibrary::InitVitalAttribute(const UObject* WorldConte
 void UNeryBlueprintFunctionLibrary::ApplyBasicEffectToSelf(AActor* InActor, TSubclassOf<UGameplayEffect> InGameplayEffectClass)
 {
 	UAbilitySystemComponent* InASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(InActor);
+	if (!InASC)return;
 	FGameplayEffectContextHandle ContextHandle = InASC->MakeEffectContext();
 	FGameplayEffectSpecHandle SpecHandle = InASC->MakeOutgoingSpec(InGameplayEffectClass, 1, ContextHandle);
 	InASC->ApplyGameplayEffectSpecToSelf(*SpecHandle.Data.Get());
@@ -211,6 +212,25 @@ float UNeryBlueprintFunctionLibrary::GetNormalDamageByLevel(const UObject* World
 		return NeryGameState->LevelUpInfo->GetNormalDamageFromLevel(CurrentLevel);
 	}
 	return 0.0f;
+}
+
+void UNeryBlueprintFunctionLibrary::AddBasicAttributePoints(const UObject* WorldContextObject, const FGameplayTag& AttributeTag,  AActor* InActor)
+{
+	ANeryGameStateBase* NeryGameState = GetGameState(WorldContextObject);
+	if (NeryGameState->LevelUpInfo)
+	{
+		if(NeryGameState->LevelUpInfo->GetUpgradeBasicAttributeEffect(AttributeTag))
+		{
+			// Handle the attribute point addition logic here
+			ApplyBasicEffectToSelf(InActor, NeryGameState->LevelUpInfo->GetUpgradeBasicAttributeEffect(AttributeTag));
+		}
+	}
+	
+}
+
+void UNeryBlueprintFunctionLibrary::ApplyEffectToSelfBySetByCaller(AActor* InActor, TSubclassOf<UGameplayEffect> InGameplayEffectClass)
+{
+	
 }
 
 

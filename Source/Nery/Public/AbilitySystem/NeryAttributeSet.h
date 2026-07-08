@@ -62,6 +62,7 @@ public:
 	ATTRIBUTE_ACCESSORS(UNeryAttributeSet, AttributePoint);
 	ATTRIBUTE_ACCESSORS(UNeryAttributeSet, Level);
 	ATTRIBUTE_ACCESSORS(UNeryAttributeSet, MaxLevel);
+	ATTRIBUTE_ACCESSORS(UNeryAttributeSet, NextLevelXp);
 	/*Character Attributes*/
 
 
@@ -130,6 +131,9 @@ public:
 
 	UPROPERTY(ReplicatedUsing = OnRep_MaxLevel)
 	FGameplayAttributeData MaxLevel;
+
+	UPROPERTY(ReplicatedUsing = OnRep_NextLevelXp)
+	FGameplayAttributeData NextLevelXp;
 	/*Character Attributes*/
 
 
@@ -194,9 +198,10 @@ protected:
 
 	UFUNCTION()
 	void OnRep_MaxLevel(const FGameplayAttributeData& OldMaxLevel);
-	/*Character Attributes*/
 
-	float NextLevelXp = 100.f;
+	UFUNCTION()
+	void OnRep_NextLevelXp(const FGameplayAttributeData& OldNextLevelXp);
+	/*Character Attributes*/
 
 
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;

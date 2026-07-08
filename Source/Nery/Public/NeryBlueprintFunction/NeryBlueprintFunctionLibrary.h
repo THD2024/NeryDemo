@@ -71,4 +71,10 @@ public:
 
 	UFUNCTION(BlueprintPure, BlueprintCallable)//此处通过获取显示到视口的等级来获取普通伤害，这里是int32类型。
 	static float GetNormalDamageByLevel(const UObject* WorldContextObject, int32 CurrentLevel);
+
+	UFUNCTION(BlueprintCallable)
+	static void AddBasicAttributePoints(const UObject* WorldContextObject, const FGameplayTag& AttributeTag, AActor* InActor);
+
+	static void ApplyEffectToSelfBySetByCaller(AActor* InActor, TSubclassOf<UGameplayEffect> InGameplayEffectClass);
+
 };

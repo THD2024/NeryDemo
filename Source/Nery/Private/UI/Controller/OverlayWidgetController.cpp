@@ -14,6 +14,9 @@ void UOverlayWidgetController::BroadInitValue()
 	{
 		HealthChanged.Broadcast(AS->GetHealth());
 		MaxHealthChanged.Broadcast(AS->GetMaxHealth());
+		LevelChanged.Broadcast(AS->GetLevel());
+		XpChanged.Broadcast(AS->GetXp());
+		NextLevelXpChanged.Broadcast(AS->GetNextLevelXp());
 	}
 	BroadBuffInfo();
 }
@@ -26,6 +29,9 @@ void UOverlayWidgetController::BindCallBacks()
 		{
 			ASC->GetGameplayAttributeValueChangeDelegate(AS->GetHealthAttribute()).AddUObject(this, &UOverlayWidgetController::OnHealthChanged);
 			ASC->GetGameplayAttributeValueChangeDelegate(AS->GetMaxHealthAttribute()).AddUObject(this, &UOverlayWidgetController::OnMaxHealthChanged);
+			ASC->GetGameplayAttributeValueChangeDelegate(AS->GetLevelAttribute()).AddUObject(this, &UOverlayWidgetController::OnLevelChanged);
+			ASC->GetGameplayAttributeValueChangeDelegate(AS->GetXpAttribute()).AddUObject(this, &UOverlayWidgetController::OnXpChanged);
+			ASC->GetGameplayAttributeValueChangeDelegate(AS->GetNextLevelXpAttribute()).AddUObject(this, &UOverlayWidgetController::OnNextLevelXpChanged);
 		}
 	}
 	if (ANeryPlayerController* PC = Cast<ANeryPlayerController>(PlayerController))
@@ -45,6 +51,21 @@ void UOverlayWidgetController::OnHealthChanged(const FOnAttributeChangeData& Dat
 void UOverlayWidgetController::OnMaxHealthChanged(const FOnAttributeChangeData& Data)
 {
 	MaxHealthChanged.Broadcast(Data.NewValue);
+}
+
+void UOverlayWidgetController::OnLevelChanged(const FOnAttributeChangeData& Data)
+{
+	LevelChanged.Broadcast(Data.NewValue);
+}
+
+void UOverlayWidgetController::OnXpChanged(const FOnAttributeChangeData & Data)
+{
+	XpChanged.Broadcast(Data.NewValue);
+}
+
+void UOverlayWidgetController::OnNextLevelXpChanged(const FOnAttributeChangeData& Data)
+{
+	NextLevelXpChanged.Broadcast(Data.NewValue);
 }
 
 void UOverlayWidgetController::OnBuffInfoChanged()

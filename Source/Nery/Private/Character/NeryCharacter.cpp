@@ -12,6 +12,7 @@
 #include"Components/ActorComponent.h"
 #include"NeryBlueprintFunction/NeryBlueprintFunctionLibrary.h"
 #include"UI/HUD/NeryHUD.h"
+#include"AbilitySystem/NeryAttributeSet.h"
 #include"Data/ItemBagDataAsset.h"
 
 
