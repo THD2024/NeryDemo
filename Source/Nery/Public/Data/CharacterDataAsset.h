@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "Engine/DataAsset.h"
 #include"GameplayEffect.h"
+#include "Abilities/GameplayAbility.h"
 #include "CharacterDataAsset.generated.h"
 
 /**
@@ -32,4 +33,7 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Data")
 	TSubclassOf<UGameplayEffect> VitalAttributeEffect;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Data")
+	TArray<TSubclassOf<UGameplayAbility>> BasicAbilitiesClass;
 };

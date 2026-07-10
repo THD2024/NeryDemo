@@ -6,6 +6,7 @@
 #include "AbilitySystemComponent.h"
 #include "NeryAbilitySystemComponent.generated.h"
 
+
 /**
  * 
  */
@@ -14,4 +15,7 @@ class NERY_API UNeryAbilitySystemComponent : public UAbilitySystemComponent
 {
 	GENERATED_BODY()
 	
+
+public:
+	void GiveCharacterAbilities(const TArray<TSubclassOf<UGameplayAbility>>& BasicAbilitiesClass);//通过赋予能力，将Inuttag和能力联系起来
 };

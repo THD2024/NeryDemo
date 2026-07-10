@@ -191,6 +191,21 @@ void ANeryCharacter::PossessedBy(AController* NewController)
 	InitASCandAttribute();
 	InitAttribute();
 	InitHUD();
+	GiveBasicAbilities();
+}
+
+void ANeryCharacter::GiveBasicAbilities()
+{
+	if (UNeryAbilitySystemComponent* ASC = Cast<UNeryAbilitySystemComponent>(AbilitySystemComponent))
+	{
+		if (CharacterDataAsset)
+		{
+			if (CharacterDataAsset->BasicAbilitiesClass.Num() > 0)
+			{
+				ASC->GiveCharacterAbilities(CharacterDataAsset->BasicAbilitiesClass);
+			}
+		}
+	}
 }
 
 void ANeryCharacter::OnRep_PlayerState()

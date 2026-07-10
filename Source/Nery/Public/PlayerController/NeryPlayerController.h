@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/PlayerController.h"
 #include"InputActionValue.h"
+#include"Data/InputTagtoAbilityInfo.h"
 #include "NeryPlayerController.generated.h"
 
 class UInputAction;
@@ -125,8 +126,14 @@ protected:
 	void UseBuffActor();
 	void RightScroll();
 	void LeftScroll();
+	void PressedFunc(const FGameplayTag& Tag);
+	void HeldFunc(const FGameplayTag& Tag);
+	void ReleasedFunc(const FGameplayTag& Tag);
 	//	void Crouch_Hold();
 	
+	UPROPERTY(EditAnywhere, Category = "InputConfig")
+	TObjectPtr<UInputTagtoAbilityInfo> InputTagConfig;
+
 	UFUNCTION(Server,Reliable,BlueprintCallable)
 	void Server_SetBuffWidgetTag(const FGameplayTag& Tag);
 

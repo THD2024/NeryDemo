@@ -3,7 +3,6 @@
 
 #include "PlayerController/NeryPlayerController.h"
 #include"EnhancedInputSubsystems.h"
-#include"EnhancedInputComponent.h"
 #include"Character/NeryCharacter.h"
 #include "GameFramework/Character.h"
 #include"Interface/CombatInterface.h"
@@ -15,6 +14,10 @@
 #include"UI/HUD/NeryHUD.h"
 #include"Kismet/KismetMathLibrary.h"
 #include"NeryBlueprintFunction/NeryBlueprintFunctionLibrary.h"
+#include"EnhancedInput/NeryInputComponent.h"
+#include"AbilitySystemBlueprintLibrary.h"
+#include"AbilitySystem/NeryAbilitySystemComponent.h"
+
 
 ANeryPlayerController::ANeryPlayerController()
 {
@@ -194,21 +197,23 @@ void ANeryPlayerController::SetupInputComponent()
 	Super::SetupInputComponent();
 	
 	//绑定输入动作
-	if (UEnhancedInputComponent* EnhancedInputComponent = CastChecked<UEnhancedInputComponent>(InputComponent))
+	if (UNeryInputComponent* NeryInputComponent = CastChecked<UNeryInputComponent>(InputComponent))
 	{
-		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Started, this, &ANeryPlayerController::Jump);
-		EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &ANeryPlayerController::Move);
-		EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &ANeryPlayerController::Look);
-		EnhancedInputComponent->BindAction(ShiftAction,ETriggerEvent::Triggered, this, &ANeryPlayerController::Shift_Hold);
-		EnhancedInputComponent->BindAction(ShiftAction,ETriggerEvent::Completed, this, &ANeryPlayerController::Shift_Release);
+
+		NeryInputComponent->BindAction(JumpAction, ETriggerEvent::Started, this, &ANeryPlayerController::Jump);
+		NeryInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &ANeryPlayerController::Move);
+		NeryInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &ANeryPlayerController::Look);
+		NeryInputComponent->BindAction(ShiftAction,ETriggerEvent::Triggered, this, &ANeryPlayerController::Shift_Hold);
+		NeryInputComponent->BindAction(ShiftAction,ETriggerEvent::Completed, this, &ANeryPlayerController::Shift_Release);
 		//EnhancedInputComponent->BindAction(Crouch,ETriggerEvent::Triggered, this, &ANeryPlayerController::Crouch_Hold);
-		EnhancedInputComponent->BindAction(LockAction, ETriggerEvent::Started, this, &ANeryPlayerController::LockTarget);
-		EnhancedInputComponent->BindAction(AttackAction, ETriggerEvent::Started, this, &ANeryPlayerController::Attack);
-		EnhancedInputComponent->BindAction(AttributeMenuAction, ETriggerEvent::Started, this, &ANeryPlayerController::AttributeMenuButton);
-		EnhancedInputComponent->BindAction(PickItemAction, ETriggerEvent::Started, this, &ANeryPlayerController::PickItem);
-		EnhancedInputComponent->BindAction(BuffAction, ETriggerEvent::Started, this, &ANeryPlayerController::UseBuffActor);
-		EnhancedInputComponent->BindAction(RightScrollAction, ETriggerEvent::Started, this, &ANeryPlayerController::RightScroll);
-		EnhancedInputComponent->BindAction(LeftScrollAction, ETriggerEvent::Started, this, &ANeryPlayerController::LeftScroll);
+		NeryInputComponent->BindAction(LockAction, ETriggerEvent::Started, this, &ANeryPlayerController::LockTarget);
+		NeryInputComponent->BindAction(AttributeMenuAction, ETriggerEvent::Started, this, &ANeryPlayerController::AttributeMenuButton);
+		NeryInputComponent->BindAction(PickItemAction, ETriggerEvent::Started, this, &ANeryPlayerController::PickItem);
+		NeryInputComponent->BindAction(BuffAction, ETriggerEvent::Started, this, &ANeryPlayerController::UseBuffActor);
+		NeryInputComponent->BindAction(RightScrollAction, ETriggerEvent::Started, this, &ANeryPlayerController::RightScroll);
+		NeryInputComponent->BindAction(LeftScrollAction, ETriggerEvent::Started, this, &ANeryPlayerController::LeftScroll);
+		NeryInputComponent->BindAction(AttackAction, ETriggerEvent::Started, this, &ANeryPlayerController::Attack);
+		NeryInputComponent->BindActionAbility(InputTagConfig, this, PressedFunc, HeldFunc, ReleasedFunc);
 	}
 
 }
@@ -364,6 +369,27 @@ void ANeryPlayerController::RightScroll()
 void ANeryPlayerController::LeftScroll()
 {
 	OnLeftScrollInput.Broadcast();
+}
+
+void ANeryPlayerController::PressedFunc(const FGameplayTag& Tag)
+{
+	//在这里激活技能
+	if (UNeryAbilitySystemComponent* NeryASC = Cast<UNeryAbilitySystemComponent>(UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(GetPawn())))
+	{
+		FGameplayTagContainer Container;
+		Container.AddTag(Tag);
+		NeryASC->TryActivateAbilitiesByTag(Container);
+	}
+}
+
+void ANeryPlayerController::HeldFunc(const FGameplayTag & Tag)
+{
+	//暂时没有用处
+}
+
+void ANeryPlayerController::ReleasedFunc(const FGameplayTag & Tag)
+{
+	//暂时没有用处
 }
 
 void ANeryPlayerController::Server_SetBuffWidgetTag_Implementation(const FGameplayTag& Tag)

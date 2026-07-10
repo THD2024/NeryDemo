@@ -52,6 +52,9 @@ public:
 	/*Damage*/
 	FGameplayTag Damage_Normal;
 
+	/*InputTag*/
+	FGameplayTag Input_BasicAttack;
+
 private:
 	static  FNeryGameplayTags NeryGameplayTags;
 };

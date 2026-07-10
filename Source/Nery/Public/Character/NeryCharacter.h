@@ -94,6 +94,8 @@ protected:
 
 	void PossessedBy(AController* NewController) override;
 
+	void GiveBasicAbilities();
+
 	void OnRep_PlayerState() override;
 	
 	void InitASCandAttribute();

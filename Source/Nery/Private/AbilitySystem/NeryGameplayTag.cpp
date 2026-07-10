@@ -41,4 +41,6 @@ void FNeryGameplayTags::InitializeTags()
 	NeryGameplayTags.Buff_Good_CriticalHitChance = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Buff.Good.CriticalHitChance"), FString(TEXT("Strengthen CriticalHitChance")));
 
 	NeryGameplayTags.Damage_Normal = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Damage.Normal"), FString(TEXT("Normal Damage")));
+
+	NeryGameplayTags.Input_BasicAttack = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Input.BasicAttack"), FString(TEXT("BasicAttackInputTag")));
 }
