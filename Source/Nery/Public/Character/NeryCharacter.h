@@ -10,7 +10,6 @@ class ANeryPlayerState;
 class UActorComponent;
 
 
-
 USTRUCT(BlueprintType)
 struct FBuffNumberBagInfo
 {
@@ -109,6 +108,7 @@ protected:
 
 	virtual ECharacterAttackState GetAttackState_Implementation() override;
 
+	virtual void CallUpgradeAttribute_Implementation(const FGameplayTag& AttributeTag)override;
 	/*接口*/
 
 
@@ -150,6 +150,9 @@ protected:
 
 	UFUNCTION()
 	void OnRep_BuffNumberChanged();
+
+	UFUNCTION(Server,Reliable)
+	void Server_UpgradeBasicAttributebyPoints(const FGameplayTag& AttributeTag);
 	/*网络复制*/
 
 	void ApplyBuffEffect(const FGameplayTag& InTag);

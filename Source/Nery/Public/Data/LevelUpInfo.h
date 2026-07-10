@@ -51,11 +51,11 @@ public:
 		return LevelUpInfo.Damage_Normal.GetValueAtLevel(Level);
 	}
 
-	TSubclassOf<UGameplayEffect> GetUpgradeBasicAttributeEffect(const FGameplayTag& AttributeTag)
+	TSubclassOf<UGameplayEffect> GetUpgradeBasicAttributeEffect()
 	{
-		if (UpgradeBasicAttributeMap.Contains(AttributeTag))
+		if (UpgradeBasicAttributeEffect)
 		{
-			return UpgradeBasicAttributeMap[AttributeTag];
+			return UpgradeBasicAttributeEffect;
 		}
 		return TSubclassOf<UGameplayEffect>();
 	}
@@ -67,6 +67,6 @@ protected:
 	FLevelInfo LevelUpInfo;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "LevelUp")
-	TMap<FGameplayTag, TSubclassOf<UGameplayEffect>> UpgradeBasicAttributeMap;
+	TSubclassOf<UGameplayEffect> UpgradeBasicAttributeEffect;//这个是专门的用来实现技能加点的游戏效果
 	
 };

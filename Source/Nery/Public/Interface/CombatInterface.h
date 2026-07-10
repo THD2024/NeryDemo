@@ -46,5 +46,7 @@ public:
 	UFUNCTION(BlueprintNativeEvent)
 	TMap<FGameplayTag,int32> GetBuffNumber();
 
+	UFUNCTION(BlueprintNativeEvent,BlueprintCallable)
+	void CallUpgradeAttribute(const FGameplayTag& AttributeTag);
 
 };

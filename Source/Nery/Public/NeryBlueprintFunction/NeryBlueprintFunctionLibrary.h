@@ -75,6 +75,6 @@ public:
 	UFUNCTION(BlueprintCallable)
 	static void AddBasicAttributePoints(const UObject* WorldContextObject, const FGameplayTag& AttributeTag, AActor* InActor);
 
-	static void ApplyEffectToSelfBySetByCaller(AActor* InActor, TSubclassOf<UGameplayEffect> InGameplayEffectClass);
+	static void ApplyEffectToSelfBySetByCaller(AActor* InActor, TSubclassOf<UGameplayEffect> InGameplayEffectClass, const FGameplayTag& AttributeTag);//注意，如果是用在除了属性加点之外的，那么需要注意这里的setbycaller设置改为从曲线表来获取数据，更加灵活。
 
 };

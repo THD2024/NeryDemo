@@ -296,6 +296,11 @@ void ANeryCharacter::OnRep_BuffNumberChanged()
 	TryToBroadBuffNumberInfo();
 }
 
+void ANeryCharacter::Server_UpgradeBasicAttributebyPoints_Implementation(const FGameplayTag& AttributeTag)
+{
+	UNeryBlueprintFunctionLibrary::AddBasicAttributePoints(this,AttributeTag, this);
+}
+
 void ANeryCharacter::ApplyBuffEffect(const FGameplayTag& InTag)
 {
 	if (ItemBag)
@@ -320,6 +325,17 @@ void ANeryCharacter::TryToBroadBuffNumberInfo()
 ECharacterAttackState ANeryCharacter::GetAttackState_Implementation()
 {
 	return AttackState;
+}
+
+void ANeryCharacter::CallUpgradeAttribute_Implementation(const FGameplayTag& AttributeTag)
+{
+	if (UNeryAttributeSet* NeryAS = Cast<UNeryAttributeSet>(AttributeSet))
+	{
+		if (NeryAS->GetAttributePoint() > 0)//判断当前属性点是否是>0，才能进行属性
+		{
+			Server_UpgradeBasicAttributebyPoints(AttributeTag);
+		}
+	}
 }
 
 void ANeryCharacter::Server_UpdateRotation_Implementation(float DeltaTime)
