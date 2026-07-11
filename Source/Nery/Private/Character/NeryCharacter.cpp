@@ -9,7 +9,7 @@
 #include"UI/Controller/WidgetController.h"
 #include"Data/CharacterDataAsset.h"
 #include"EffectActor/Weapon.h"
-#include"Components/ActorComponent.h"
+
 #include"NeryBlueprintFunction/NeryBlueprintFunctionLibrary.h"
 #include"UI/HUD/NeryHUD.h"
 #include"AbilitySystem/NeryAttributeSet.h"
@@ -190,12 +190,17 @@ void ANeryCharacter::PossessedBy(AController* NewController)
 	Super::PossessedBy(NewController);
 	InitASCandAttribute();
 	InitAttribute();
-	InitHUD();
+	if (IsLocallyControlled())//保证了在当前为监听服务器的情况下，也显示Ui
+	{
+		InitHUD();
+		InitAttribute();
+	}
 	GiveBasicAbilities();
 }
 
 void ANeryCharacter::GiveBasicAbilities()
 {
+	if (!HasAuthority())return;//这里保证能力只被服务器赋予，防止后面如果别的地方调用。
 	if (UNeryAbilitySystemComponent* ASC = Cast<UNeryAbilitySystemComponent>(AbilitySystemComponent))
 	{
 		if (CharacterDataAsset)
@@ -212,13 +217,11 @@ void ANeryCharacter::OnRep_PlayerState()
 {
 	Super::OnRep_PlayerState();
 	InitASCandAttribute();
-	if (HasAuthority())
+	if (IsLocallyControlled())
 	{
-		InitAttribute();
+		InitHUD();//Hud属于表现层，在这里调用初始化Hud的函数，来确保在玩家状态复制到客户端后，客户端的Hud能够正确显示玩家状态的信息。
+		//同时这里保证只会初始Hud到当前玩家的屏幕上
 	}
-
-	InitHUD();//Hud属于表现层，在这里调用初始化Hud的函数，来确保在玩家状态复制到客户端后，客户端的Hud能够正确显示玩家状态的信息。
-	
 }
 
 void ANeryCharacter::InitASCandAttribute()

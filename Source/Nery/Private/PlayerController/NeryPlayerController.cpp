@@ -213,7 +213,7 @@ void ANeryPlayerController::SetupInputComponent()
 		NeryInputComponent->BindAction(RightScrollAction, ETriggerEvent::Started, this, &ANeryPlayerController::RightScroll);
 		NeryInputComponent->BindAction(LeftScrollAction, ETriggerEvent::Started, this, &ANeryPlayerController::LeftScroll);
 		NeryInputComponent->BindAction(AttackAction, ETriggerEvent::Started, this, &ANeryPlayerController::Attack);
-		NeryInputComponent->BindActionAbility(InputTagConfig, this, PressedFunc, HeldFunc, ReleasedFunc);
+		NeryInputComponent->BindActionAbility(InputTagConfig, this, &ANeryPlayerController::PressedFunc, &ANeryPlayerController::HeldFunc, &ANeryPlayerController::ReleasedFunc);
 	}
 
 }
@@ -371,23 +371,21 @@ void ANeryPlayerController::LeftScroll()
 	OnLeftScrollInput.Broadcast();
 }
 
-void ANeryPlayerController::PressedFunc(const FGameplayTag& Tag)
+void ANeryPlayerController::PressedFunc( FGameplayTag Tag)
 {
 	//在这里激活技能
 	if (UNeryAbilitySystemComponent* NeryASC = Cast<UNeryAbilitySystemComponent>(UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(GetPawn())))
 	{
-		FGameplayTagContainer Container;
-		Container.AddTag(Tag);
-		NeryASC->TryActivateAbilitiesByTag(Container);
+		NeryASC->ActiveAbilityByDynamicTag(Tag);
 	}
 }
 
-void ANeryPlayerController::HeldFunc(const FGameplayTag & Tag)
+void ANeryPlayerController::HeldFunc( FGameplayTag  Tag)
 {
 	//暂时没有用处
 }
 
-void ANeryPlayerController::ReleasedFunc(const FGameplayTag & Tag)
+void ANeryPlayerController::ReleasedFunc( FGameplayTag  Tag)
 {
 	//暂时没有用处
 }

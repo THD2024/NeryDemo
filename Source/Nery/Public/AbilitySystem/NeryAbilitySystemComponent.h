@@ -18,4 +18,6 @@ class NERY_API UNeryAbilitySystemComponent : public UAbilitySystemComponent
 
 public:
 	void GiveCharacterAbilities(const TArray<TSubclassOf<UGameplayAbility>>& BasicAbilitiesClass);//通过赋予能力，将Inuttag和能力联系起来
+	
+	void ActiveAbilityByDynamicTag(const FGameplayTag& InTag);
 };

@@ -126,9 +126,9 @@ protected:
 	void UseBuffActor();
 	void RightScroll();
 	void LeftScroll();
-	void PressedFunc(const FGameplayTag& Tag);
-	void HeldFunc(const FGameplayTag& Tag);
-	void ReleasedFunc(const FGameplayTag& Tag);
+	void PressedFunc(FGameplayTag Tag);
+	void HeldFunc(FGameplayTag Tag);
+	void ReleasedFunc(FGameplayTag Tag);
 	//	void Crouch_Hold();
 	
 	UPROPERTY(EditAnywhere, Category = "InputConfig")

@@ -27,7 +27,7 @@ inline void UNeryInputComponent::BindActionAbility(const UInputTagtoAbilityInfo*
 	{
 		for (auto& Config : InputTagConfig->InputTagtoAbility)
 		{
-			if (Config.InputAction && Config.InputTag)
+			if (Config.InputAction && Config.InputTag.IsValid())
 			{
 				if (PressedFunc)
 				{
