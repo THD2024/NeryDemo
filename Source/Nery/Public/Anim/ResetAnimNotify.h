@@ -17,4 +17,6 @@ class NERY_API UResetAnimNotify : public UAnimNotify
 public:
 	virtual void Notify(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation) override;
 	
+	
+	
 };

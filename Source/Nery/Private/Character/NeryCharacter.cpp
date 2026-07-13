@@ -121,7 +121,7 @@ void ANeryCharacter::BeginPlay()
 	if (ANeryPlayerController* PC = Cast<ANeryPlayerController>(GetController()))
 	{
 		//接收到攻击按键输入事件
-		PC->OnAttackInput.AddUObject(this, &ANeryCharacter::ReceiveAttackInput);
+		// PC->OnAttackInput.AddUObject(this, &ANeryCharacter::ReceiveAttackInput);
 	}
 	if (HasAuthority())
 	{

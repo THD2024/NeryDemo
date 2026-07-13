@@ -43,4 +43,6 @@ void FNeryGameplayTags::InitializeTags()
 	NeryGameplayTags.Damage_Normal = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Damage.Normal"), FString(TEXT("Normal Damage")));
 
 	NeryGameplayTags.Input_BasicAttack = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Input.BasicAttack"), FString(TEXT("BasicAttackInputTag")));
+	
+	NeryGameplayTags.Event_AttackInput = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Event.AttackInput"), FString(TEXT("AttackInputEvent")));
 }

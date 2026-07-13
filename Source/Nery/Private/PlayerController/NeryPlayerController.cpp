@@ -17,6 +17,7 @@
 #include"EnhancedInput/NeryInputComponent.h"
 #include"AbilitySystemBlueprintLibrary.h"
 #include"AbilitySystem/NeryAbilitySystemComponent.h"
+#include "Kismet/GameplayStatics.h"
 
 
 ANeryPlayerController::ANeryPlayerController()
@@ -325,7 +326,10 @@ void ANeryPlayerController::Attack()
 {
 	//传递当前输入了攻击指令
 	OnAttackInput.Broadcast();
-	
+	UAbilitySystemComponent* ASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(GetPawn());
+	FGameplayEventData PayLoadData;
+	PayLoadData.Instigator = this;
+	ASC->HandleGameplayEvent(FNeryGameplayTags::GetNeryGameplayTags().Event_AttackInput,&PayLoadData);
 }
 
 void ANeryPlayerController::AttributeMenuButton()
