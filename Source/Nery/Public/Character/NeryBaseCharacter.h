@@ -35,7 +35,7 @@ public:
 	UPROPERTY(EditAnywhere, Category = "Weapon")
 	TSubclassOf<AWeapon> WeaponClass;
 
-	UPROPERTY(Replicated,EditAnywhere, Category = "Weapon")
+	UPROPERTY(Replicated,EditAnywhere,BlueprintReadOnly, Category = "Weapon")
 	TObjectPtr<AWeapon> Weapon;
 
 

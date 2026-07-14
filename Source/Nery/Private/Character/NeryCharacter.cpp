@@ -27,6 +27,7 @@ ANeryCharacter::ANeryCharacter()
 	GetCharacterMovement()->MaxWalkSpeed = RunNormalWalkSpeed;
 	GetCharacterMovement()->bOrientRotationToMovement = true; //角色移动时旋转朝向
 	GetCharacterMovement()->RotationRate = FRotator(0.f, 540.f, 0.f);
+	GetCharacterMovement()->bAllowPhysicsRotationDuringAnimRootMotion = true;
 }
 
 void ANeryCharacter::InitHUD()
@@ -292,7 +293,7 @@ void ANeryCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLi
 	//将当前的锁定状态进行网络复制
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 	DOREPLIFETIME(ANeryCharacter, bIsLockOn_NetWorked);
-	DOREPLIFETIME(ANeryCharacter, AttackState);
+	// DOREPLIFETIME(ANeryCharacter, AttackState);
 	DOREPLIFETIME(ANeryCharacter, NetLockedTarget);
 	DOREPLIFETIME_CONDITION(ANeryCharacter, BuffNumberBagInfo, COND_OwnerOnly);
 }
@@ -362,31 +363,31 @@ void ANeryCharacter::Server_UpdateRotation_Implementation(float DeltaTime)
 }
 
 
-void ANeryCharacter::Server_ReceiveAttackInput_Implementation()
-{
-	if (AttackState == ECharacterAttackState::None && ClickTime < CharacterDataAsset->AttackMontages.Num())
-	{//在没有攻击状态的时候才可以播放攻击动画
-		AttackState = ECharacterAttackState::Attacking;
-		bUseControllerRotationYaw = true;
-		Multicast_PlayAttackMontage(ClickTime);
-		ClickTime++;
-	}
-	else
-	{
-		//在attacking的状态下按下攻击键，表示当前玩家需要继续连招.
-		//if(bInputBuffered == false && ClickTime < CharacterDataAsset->AttackMontages.Num())
-		//{
-		//	bInputBuffered = true;
-		//}
-
-		if (AttackState == ECharacterAttackState::Attacking && ClickTime >= CharacterDataAsset->AttackMontages.Num())
-		{//保底逻辑
-			//AttackState = ECharacterAttackState::None;
-			ClickTime = 0;
-			//bInputBuffered = false;
-		}
-	}
-}
+// void ANeryCharacter::Server_ReceiveAttackInput_Implementation()
+// {
+// 	if (AttackState == ECharacterAttackState::None && ClickTime < CharacterDataAsset->AttackMontages.Num())
+// 	{//在没有攻击状态的时候才可以播放攻击动画
+// 		AttackState = ECharacterAttackState::Attacking;
+// 		bUseControllerRotationYaw = true;
+// 		Multicast_PlayAttackMontage(ClickTime);
+// 		ClickTime++;
+// 	}
+// 	else
+// 	{
+// 		//在attacking的状态下按下攻击键，表示当前玩家需要继续连招.
+// 		//if(bInputBuffered == false && ClickTime < CharacterDataAsset->AttackMontages.Num())
+// 		//{ 
+// 		//	bInputBuffered = true;
+// 		//}
+//
+// 		if (AttackState == ECharacterAttackState::Attacking && ClickTime >= CharacterDataAsset->AttackMontages.Num())
+// 		{//保底逻辑
+// 			//AttackState = ECharacterAttackState::None;
+// 			ClickTime = 0;
+// 			//bInputBuffered = false;
+// 		}
+// 	}
+// }
 
 bool ANeryCharacter::GetIsLockOn()
 {
@@ -406,94 +407,94 @@ AActor* ANeryCharacter::GetLockOnTarget()
 	return nullptr;
 }
 
-void ANeryCharacter::SaveNotify()//动画通知的函数
-{//在这里面应该需要先判断是否进行了攻击输入
-	if (AttackState == ECharacterAttackState::Attacking)
-	{
-		//这里虽然只要动画蒙太奇播放，这个通知就会被触发，但是我怎么知道当前按了攻击输入
-		//换个思路，我不如直接在这里将状态设置为None，这样从这个触发时刻开始后，又可以开始接口攻击播放动画。
-		//而且在这个通知节点后面，只有有一下点击了输入，在下面的处理输入回掉函数中通过判断当前的clicktime来
-		//播放下一个动画，这样既不会重复播放第一个动画，也能实现连续攻击的逻辑
-		AttackState = ECharacterAttackState::None;
-		bUseControllerRotationYaw = false;
+// void ANeryCharacter::SaveNotify()//动画通知的函数
+// {//在这里面应该需要先判断是否进行了攻击输入
+// 	if (AttackState == ECharacterAttackState::Attacking)
+// 	{
+// 		//这里虽然只要动画蒙太奇播放，这个通知就会被触发，但是我怎么知道当前按了攻击输入
+// 		//换个思路，我不如直接在这里将状态设置为None，这样从这个触发时刻开始后，又可以开始接口攻击播放动画。
+// 		//而且在这个通知节点后面，只有有一下点击了输入，在下面的处理输入回掉函数中通过判断当前的clicktime来
+// 		//播放下一个动画，这样既不会重复播放第一个动画，也能实现连续攻击的逻辑
+// 		AttackState = ECharacterAttackState::None;
+// 		bUseControllerRotationYaw = false;
+//
+// 		//判断玩家是否提前就按下了攻击输入，并且缓存到了bInputBuffered中，如果是的话，就直接调用ReceiveAttackInput来播放下一个攻击动画
+// 		//if (bInputBuffered == true )
+// 		//{
+// 		//	bInputBuffered = false;
+// 		//	ReceiveAttackInput();
+// 		//}
+// 		if (ClickTime >= CharacterDataAsset->AttackMontages.Num()) { ClickTime = 0; }
+// 		if (Weapon)
+// 		{
+// 			Weapon->IgnoreActors.Empty();
+// 		}
+// 		return;
+// 	}
+// }
 
-		//判断玩家是否提前就按下了攻击输入，并且缓存到了bInputBuffered中，如果是的话，就直接调用ReceiveAttackInput来播放下一个攻击动画
-		//if (bInputBuffered == true )
-		//{
-		//	bInputBuffered = false;
-		//	ReceiveAttackInput();
-		//}
-		if (ClickTime >= CharacterDataAsset->AttackMontages.Num()) { ClickTime = 0; }
-		if (Weapon)
-		{
-			Weapon->IgnoreActors.Empty();
-		}
-		return;
-	}
-}
+// void ANeryCharacter::ResetNotify()
+// {//这个通知放到动画的最后，只要触发了这个通知，就说明当前攻击动画播放完了
+// 	//这里不考虑在该通知下还按下攻击输入的情况，这个就单纯的用来重置攻击次数和攻击状态。
+// 	ClickTime = 0;
+// 	AttackState = ECharacterAttackState::None;
+// 	GetCharacterMovement()->bAllowPhysicsRotationDuringAnimRootMotion = true;
+// 	bUseControllerRotationYaw = false;
+// 	if (Weapon)
+// 	{
+// 		Weapon->IgnoreActors.Empty();
+// 	}
+// 	
+// }
 
-void ANeryCharacter::ResetNotify()
-{//这个通知放到动画的最后，只要触发了这个通知，就说明当前攻击动画播放完了
-	//这里不考虑在该通知下还按下攻击输入的情况，这个就单纯的用来重置攻击次数和攻击状态。
-	ClickTime = 0;
-	AttackState = ECharacterAttackState::None;
-	GetCharacterMovement()->bAllowPhysicsRotationDuringAnimRootMotion = true;
-	bUseControllerRotationYaw = false;
-	if (Weapon)
-	{
-		Weapon->IgnoreActors.Empty();
-	}
-	
-}
+// void ANeryCharacter::ReceiveAttackInput()//接收到攻击输入的回调函数
+// {
+// 	if (CharacterDataAsset->AttackMontages.Num() < 1)
+// 	{
+// 		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("没有设置攻击动画蒙太奇"));
+// 		return;
+// 	}
+//
+// 	if (IsLocallyControlled())
+// 	{//本地
+// 		HandleAttackLogic();
+// 	}
+// 	if (!HasAuthority())
+// 	{//服务器
+// 		Server_ReceiveAttackInput();//在本地调用完攻击逻辑后，就通知服务器来处理攻击逻辑，这样服务器就能知道当前玩家的攻击状态和攻击次数，从而来决定是否可以播放下一个攻击动画，实现连招的逻辑。
+// 	}
+// 	
+// }
 
-void ANeryCharacter::ReceiveAttackInput()//接收到攻击输入的回调函数
-{
-	if (CharacterDataAsset->AttackMontages.Num() < 1)
-	{
-		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("没有设置攻击动画蒙太奇"));
-		return;
-	}
-
-	if (IsLocallyControlled())
-	{//本地
-		HandleAttackLogic();
-	}
-	if (!HasAuthority())
-	{//服务器
-		Server_ReceiveAttackInput();//在本地调用完攻击逻辑后，就通知服务器来处理攻击逻辑，这样服务器就能知道当前玩家的攻击状态和攻击次数，从而来决定是否可以播放下一个攻击动画，实现连招的逻辑。
-	}
-	
-}
-
-void ANeryCharacter::HandleAttackLogic()
-{
-	//本地播放逻辑
-	if (AttackState == ECharacterAttackState::None && ClickTime < CharacterDataAsset->AttackMontages.Num())
-	{//在没有攻击状态的时候才可以播放攻击动画
-		AttackState = ECharacterAttackState::Attacking;
-		//在根动画蒙太奇动画播放时，禁止物理旋转
-		GetCharacterMovement()->bAllowPhysicsRotationDuringAnimRootMotion = false;
-		bUseControllerRotationYaw = true;
-		PlayAnimMontage(CharacterDataAsset->AttackMontages[ClickTime]);
-		ClickTime++;
-		
-	}
-	else
-	{
-		//在attacking的状态下按下攻击键，表示当前玩家需要继续连招.
-		//if(bInputBuffered == false && ClickTime < CharacterDataAsset->AttackMontages.Num())
-		//{
-		//	bInputBuffered = true;
-		//}
-
-		if (AttackState == ECharacterAttackState::Attacking && ClickTime >= CharacterDataAsset->AttackMontages.Num())
-		{//保底逻辑
-			//AttackState = ECharacterAttackState::None;
-			ClickTime = 0;
-			//bInputBuffered = false;
-		}
-	}
-}
+// void ANeryCharacter::HandleAttackLogic()
+// {
+// 	//本地播放逻辑
+// 	if (AttackState == ECharacterAttackState::None && ClickTime < CharacterDataAsset->AttackMontages.Num())
+// 	{//在没有攻击状态的时候才可以播放攻击动画
+// 		AttackState = ECharacterAttackState::Attacking;
+// 		//在根动画蒙太奇动画播放时，禁止物理旋转
+// 		GetCharacterMovement()->bAllowPhysicsRotationDuringAnimRootMotion = false;
+// 		bUseControllerRotationYaw = true;
+// 		PlayAnimMontage(CharacterDataAsset->AttackMontages[ClickTime]);
+// 		ClickTime++;
+// 		
+// 	}
+// 	else
+// 	{
+// 		//在attacking的状态下按下攻击键，表示当前玩家需要继续连招.
+// 		//if(bInputBuffered == false && ClickTime < CharacterDataAsset->AttackMontages.Num())
+// 		//{
+// 		//	bInputBuffered = true;
+// 		//}
+//
+// 		if (AttackState == ECharacterAttackState::Attacking && ClickTime >= CharacterDataAsset->AttackMontages.Num())
+// 		{//保底逻辑
+// 			//AttackState = ECharacterAttackState::None;
+// 			ClickTime = 0;
+// 			//bInputBuffered = false;
+// 		}
+// 	}
+// }
 
 void ANeryCharacter::Server_SetMaxWalkSpeed_Implementation(float NewMaxWalkSpeed)
 {

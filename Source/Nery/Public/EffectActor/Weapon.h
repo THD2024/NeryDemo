@@ -65,6 +65,7 @@ public:
 	bool CanWeaponTrace = false;
 
 	//设置新的武器是注意这个忽略数组
+	UPROPERTY(BlueprintReadWrite)
 	TArray<AActor*> IgnoreActors;
 
 	
