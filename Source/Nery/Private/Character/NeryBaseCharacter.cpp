@@ -32,6 +32,24 @@ void ANeryBaseCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& O
 	DOREPLIFETIME(ANeryBaseCharacter, Weapon);
 }
 
+void ANeryBaseCharacter::AllowAttack_Implementation()
+{
+	if (Weapon)
+	{
+		Weapon->SetCanWeaponTrace(true);
+	}
+}
+
+void ANeryBaseCharacter::CloseAttack_Implementation()
+{
+	if (Weapon)
+	{
+		Weapon->SetCanWeaponTrace(false);
+		Weapon->IgnoreActors.Empty();
+	}
+}
+
+
 void ANeryBaseCharacter::InitAttribute()
 {
 	if (bInitialized == true)return;

@@ -51,11 +51,11 @@ public:
 	UFUNCTION(BlueprintCallable)
 	AActor* GetLockOnTarget();
 
-	UFUNCTION(BlueprintCallable)
-	void SaveNotify();
-
-	UFUNCTION(BlueprintCallable)
-	void ResetNotify();
+	// UFUNCTION(BlueprintCallable)
+	// void SaveNotify();
+	//
+	// UFUNCTION(BlueprintCallable)
+	// void ResetNotify();
 
 	void ReceiveAttackInput();
 
@@ -108,7 +108,7 @@ protected:
 
 	virtual TMap<FGameplayTag, int32> GetBuffNumber_Implementation()override;
 
-	virtual ECharacterAttackState GetAttackState_Implementation() override;
+	// virtual ECharacterAttackState GetAttackState_Implementation() override;
 
 	virtual void CallUpgradeAttribute_Implementation(const FGameplayTag& AttributeTag)override;
 	/*接口*/
@@ -124,8 +124,8 @@ protected:
 	UFUNCTION(Server, Reliable)
 	void Server_SetMaxWalkSpeed(float NewMaxWalkSpeed);
 
-	UFUNCTION(Server, Reliable)
-	void Server_ReceiveAttackInput();
+	// UFUNCTION(Server, Reliable)
+	// void Server_ReceiveAttackInput();
 
 	UFUNCTION(Server, Reliable)
 	void Server_SetLockStatus(bool bIsLockOn);//将锁定状态通知到服务器，然后服务器分发到客户端

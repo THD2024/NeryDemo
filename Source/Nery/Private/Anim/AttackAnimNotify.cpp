@@ -2,13 +2,30 @@
 
 
 #include "Anim/AttackAnimNotify.h"
-#include"Character/NeryCharacter.h"
+#include"Interface/CombatInterface.h"
 
-void UAttackAnimNotify::Notify(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation)
+void UAttackAnimNotify::NotifyBegin(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation, float TotalDuration,
+	const FAnimNotifyEventReference& EventReference)
 {
-	Super::Notify(MeshComp, Animation);
-	if (ANeryCharacter* OwnerActor = Cast<ANeryCharacter>(MeshComp->GetOwner()))
+	Super::NotifyBegin(MeshComp, Animation, TotalDuration, EventReference);
+	if (MeshComp->GetOwner() != nullptr)
 	{
-		OwnerActor->SaveNotify();
+		if (MeshComp->GetOwner()->Implements<UCombatInterface>())
+		{
+			ICombatInterface::Execute_AllowAttack(MeshComp->GetOwner());
+		}
+	}
+}
+
+void UAttackAnimNotify::NotifyEnd(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation,
+	const FAnimNotifyEventReference& EventReference)
+{
+	Super::NotifyEnd(MeshComp, Animation, EventReference);
+	if (MeshComp->GetOwner() != nullptr)
+	{
+		if (MeshComp->GetOwner()->Implements<UCombatInterface>())
+		{
+			ICombatInterface::Execute_CloseAttack(MeshComp->GetOwner());
+		}
 	}
 }

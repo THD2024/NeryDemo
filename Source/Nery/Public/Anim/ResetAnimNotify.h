@@ -15,7 +15,6 @@ class NERY_API UResetAnimNotify : public UAnimNotify
 	GENERATED_BODY(BlueprintType)
 
 public:
-	virtual void Notify(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation) override;
 	
 	
 	

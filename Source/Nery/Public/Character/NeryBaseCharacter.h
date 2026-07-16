@@ -45,7 +45,9 @@ protected:
 	//等待子类调用
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
-
+	virtual void AllowAttack_Implementation() override;
+	virtual void CloseAttack_Implementation() override;
+	
 	void InitAttribute();
 
 	void SpawnWeapon();

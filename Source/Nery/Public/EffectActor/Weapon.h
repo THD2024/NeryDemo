@@ -12,6 +12,7 @@ class UStaticMeshComponent;
 class UGameplayEffect;
 class USoundBase;
 
+
 UCLASS()
 class NERY_API AWeapon : public AActor
 {
@@ -58,15 +59,17 @@ public:
 	void OnBoxEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
 
 	void BoxTrace(ECollisionChannel DetectiveObjectType);
-
-
+	
 	void WeaponTrace();
-
+	
+	void SetCanWeaponTrace(const bool Inbool);
+	
 	bool CanWeaponTrace = false;
-
+	
+	bool IsOnOverlap = false;
+	
 	//设置新的武器是注意这个忽略数组
 	UPROPERTY(BlueprintReadWrite)
 	TArray<AActor*> IgnoreActors;
 
-	
 };

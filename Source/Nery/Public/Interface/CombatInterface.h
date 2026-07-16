@@ -48,5 +48,10 @@ public:
 
 	UFUNCTION(BlueprintNativeEvent,BlueprintCallable)
 	void CallUpgradeAttribute(const FGameplayTag& AttributeTag);
+	
+	UFUNCTION(BlueprintNativeEvent)
+	void AllowAttack();
 
+	UFUNCTION(BlueprintNativeEvent)
+	void CloseAttack();
 };

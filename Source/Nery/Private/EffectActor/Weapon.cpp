@@ -108,36 +108,30 @@ void AWeapon::BoxTrace(ECollisionChannel DetectiveObjectType)
 
 void AWeapon::WeaponTrace()
 {
+	if (!CanWeaponTrace)return;
 	BoxTrace(ECC_Pawn);
+}
+
+void AWeapon::SetCanWeaponTrace(const bool Inbool)
+{
+	CanWeaponTrace = Inbool;
+	
 }
 
 // Called every frame
 void AWeapon::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
-	if (CanWeaponTrace)
-	{
-		WeaponTrace();
-	}
+	WeaponTrace();
 }
 
 void AWeapon::OnBoxOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	// if (!GetOwner()->Implements<UCombatInterface>())return;
-	// if (ICombatInterface::Execute_GetAttackState(GetOwner()) == ECharacterAttackState::Attacking)
-	// {
 	
-		CanWeaponTrace = true;
-	// }
-	// else
-	// {
-	// 	CanWeaponTrace = false;
-	// }
 }
 
 void AWeapon::OnBoxEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
-	CanWeaponTrace = false;
+	
 }
 
