@@ -64,12 +64,21 @@ public:
 	
 	void SetCanWeaponTrace(const bool Inbool);
 	
+	UPROPERTY(ReplicatedUsing = OnRep_OnCanWeaponTrace)
 	bool CanWeaponTrace = false;
 	
-	bool IsOnOverlap = false;
 	
 	//设置新的武器是注意这个忽略数组
-	UPROPERTY(BlueprintReadWrite)
+	UPROPERTY(BlueprintReadOnly)
 	TArray<AActor*> IgnoreActors;
 
+	
+	/*网络复制*/
+	virtual void GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& OutLifetimeProps) const override;
+	
+	UFUNCTION()
+	void OnRep_OnCanWeaponTrace();
+	
+	UFUNCTION(Server,Reliable)
+	void Server_ApplyDamage(AActor* TargetActor,const FHitResult& HitResult);
 };

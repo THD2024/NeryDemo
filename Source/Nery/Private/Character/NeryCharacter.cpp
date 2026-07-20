@@ -16,7 +16,8 @@
 #include"Data/ItemBagDataAsset.h"
 
 
-ANeryCharacter::ANeryCharacter()
+
+ANeryCharacter::ANeryCharacter(const FObjectInitializer& ObjectInitializer):Super(ObjectInitializer)
 {
 	//防止角色跟随控制器旋转	
 	bReplicates = true;
@@ -339,6 +340,8 @@ void ANeryCharacter::TryToBroadBuffNumberInfo()
 	}
 	
 }
+
+
 
 //
 // ECharacterAttackState ANeryCharacter::GetAttackState_Implementation()

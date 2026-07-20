@@ -4,15 +4,17 @@
 #include "Character/NeryBaseCharacter.h"
 #include"EffectActor/Weapon.h"
 #include"NeryBlueprintFunction/NeryBlueprintFunctionLibrary.h"
-
+#include"Character/NeryCharacterMovementComponent.h"
 
 // Sets default values
-ANeryBaseCharacter::ANeryBaseCharacter()
+ANeryBaseCharacter::ANeryBaseCharacter(const FObjectInitializer& ObjectInitializer)
+	: Super(ObjectInitializer.SetDefaultSubobjectClass<UNeryCharacterMovementComponent>(ACharacter::CharacterMovementComponentName))
 {
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-
 }
+
+
 
 // Called when the game starts or when spawned
 void ANeryBaseCharacter::BeginPlay()
@@ -36,6 +38,7 @@ void ANeryBaseCharacter::AllowAttack_Implementation()
 {
 	if (Weapon)
 	{
+		Weapon->IgnoreActors.Empty();
 		Weapon->SetCanWeaponTrace(true);
 	}
 }
@@ -46,6 +49,14 @@ void ANeryBaseCharacter::CloseAttack_Implementation()
 	{
 		Weapon->SetCanWeaponTrace(false);
 		Weapon->IgnoreActors.Empty();
+	}
+}
+
+void ANeryBaseCharacter::BegintoTrace_Implementation()
+{
+	if (Weapon)
+	{
+		Weapon->WeaponTrace();
 	}
 }
 

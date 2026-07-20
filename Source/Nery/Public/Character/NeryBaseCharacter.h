@@ -24,8 +24,8 @@ class NERY_API ANeryBaseCharacter : public ACharacter, public IAbilitySystemInte
 
 public:
 	// Sets default values for this character's properties
-	ANeryBaseCharacter();
-
+	ANeryBaseCharacter(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
+	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	TObjectPtr<UAbilitySystemComponent> AbilitySystemComponent;
 
@@ -47,6 +47,7 @@ protected:
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 	virtual void AllowAttack_Implementation() override;
 	virtual void CloseAttack_Implementation() override;
+	virtual void BegintoTrace_Implementation() override;
 	
 	void InitAttribute();
 

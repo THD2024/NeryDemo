@@ -29,3 +29,17 @@ void UAttackAnimNotify::NotifyEnd(USkeletalMeshComponent* MeshComp, UAnimSequenc
 		}
 	}
 }
+
+// void UAttackAnimNotify::NotifyTick(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation, float FrameDeltaTime,
+// 	const FAnimNotifyEventReference& EventReference)
+// {
+// 	Super::NotifyTick(MeshComp, Animation, FrameDeltaTime, EventReference);
+// 	if (MeshComp->GetOwner() != nullptr)
+// 	{
+// 		if (MeshComp->GetOwner()->Implements<UCombatInterface>())
+// 		{
+// 			ICombatInterface::Execute_BegintoTrace(MeshComp->GetOwner());
+// 		}
+// 	}
+// }
+

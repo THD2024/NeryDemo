@@ -136,6 +136,6 @@ protected:
 
 	UFUNCTION(Server,Reliable,BlueprintCallable)
 	void Server_SetBuffWidgetTag(const FGameplayTag& Tag);
-
+	
 	
 };

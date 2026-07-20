@@ -54,4 +54,7 @@ public:
 
 	UFUNCTION(BlueprintNativeEvent)
 	void CloseAttack();
+	
+	UFUNCTION(BlueprintNativeEvent)
+	void BegintoTrace();
 };

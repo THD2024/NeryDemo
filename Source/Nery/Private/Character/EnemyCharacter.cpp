@@ -9,7 +9,7 @@
 #include"NeryBlueprintFunction/NeryBlueprintFunctionLibrary.h"
 #include"AbilitySystem/NeryAttributeSet.h"
 
-AEnemyCharacter::AEnemyCharacter()
+AEnemyCharacter::AEnemyCharacter(const FObjectInitializer& ObjectInitializer)
 {
 	AbilitySystemComponent = CreateDefaultSubobject<UNeryAbilitySystemComponent>(TEXT("AbilitySystemComponent"));
 	AttributeSet = CreateDefaultSubobject<UNeryAttributeSet>(TEXT("AttributeSet"));

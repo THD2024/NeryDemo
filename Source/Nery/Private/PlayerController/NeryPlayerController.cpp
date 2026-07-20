@@ -213,7 +213,6 @@ void ANeryPlayerController::SetupInputComponent()
 		NeryInputComponent->BindAction(BuffAction, ETriggerEvent::Started, this, &ANeryPlayerController::UseBuffActor);
 		NeryInputComponent->BindAction(RightScrollAction, ETriggerEvent::Started, this, &ANeryPlayerController::RightScroll);
 		NeryInputComponent->BindAction(LeftScrollAction, ETriggerEvent::Started, this, &ANeryPlayerController::LeftScroll);
-		NeryInputComponent->BindAction(AttackAction, ETriggerEvent::Started, this, &ANeryPlayerController::Attack);
 		NeryInputComponent->BindActionAbility(InputTagConfig, this, &ANeryPlayerController::PressedFunc, &ANeryPlayerController::HeldFunc, &ANeryPlayerController::ReleasedFunc);
 	}
 
@@ -322,15 +321,6 @@ void ANeryPlayerController::LockTarget()
 	}
 }
 
-void ANeryPlayerController::Attack()
-{
-	//传递当前输入了攻击指令
-	OnAttackInput.Broadcast();
-	UAbilitySystemComponent* ASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(GetPawn());
-	FGameplayEventData PayLoadData;
-	PayLoadData.Instigator = this;
-	ASC->HandleGameplayEvent(FNeryGameplayTags::GetNeryGameplayTags().Event_AttackInput,&PayLoadData);
-}
 
 void ANeryPlayerController::AttributeMenuButton()
 {
@@ -380,7 +370,21 @@ void ANeryPlayerController::PressedFunc( FGameplayTag Tag)
 	//在这里激活技能
 	if (UNeryAbilitySystemComponent* NeryASC = Cast<UNeryAbilitySystemComponent>(UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(GetPawn())))
 	{
-		NeryASC->ActiveAbilityByDynamicTag(Tag);
+		if (Tag == FNeryGameplayTags::GetNeryGameplayTags().Input_BasicAttack)
+		{
+			NeryASC->ActiveCommonAttackAbility(Tag);
+			FGameplayEventData Payload;
+			Payload.EventTag = Tag;
+			NeryASC->HandleGameplayEvent(Tag,&Payload);
+			if (!HasAuthority())
+			{
+				NeryASC->Server_SentEvent(Tag);
+			}
+		}
+		else
+		{
+			NeryASC->ActiveAbilityByDynamicTag(Tag);
+		}
 	}
 }
 
@@ -393,6 +397,8 @@ void ANeryPlayerController::ReleasedFunc( FGameplayTag  Tag)
 {
 	//暂时没有用处
 }
+
+
 
 void ANeryPlayerController::Server_SetBuffWidgetTag_Implementation(const FGameplayTag& Tag)
 {

@@ -20,4 +20,9 @@ public:
 	void GiveCharacterAbilities(const TArray<TSubclassOf<UGameplayAbility>>& BasicAbilitiesClass);//通过赋予能力，将Inuttag和能力联系起来
 	
 	void ActiveAbilityByDynamicTag(const FGameplayTag& InTag);
+	
+	void ActiveCommonAttackAbility(const FGameplayTag& InTag);
+
+	UFUNCTION(Server,Reliable)
+	void Server_SentEvent(const FGameplayTag& InTag);
 };

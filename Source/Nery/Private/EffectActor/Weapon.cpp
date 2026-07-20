@@ -15,6 +15,7 @@
 #include"Components/StaticMeshComponent.h"
 #include "AbilitySystemBlueprintLibrary.h"
 #include"NeryBlueprintFunction/NeryBlueprintFunctionLibrary.h"
+#include "Net/UnrealNetwork.h"
 
 // Sets default values
 AWeapon::AWeapon()
@@ -98,7 +99,14 @@ void AWeapon::BoxTrace(ECollisionChannel DetectiveObjectType)
 		{
 			if (!IgnoreActors.Contains(HitResult.GetActor()))
 			{
-				ApplyAttackEffect(HitResult.GetActor(),HitResult);//在确定检测有效后，尝试添加游戏效果
+				if (HasAuthority())
+				{
+					ApplyAttackEffect(HitResult.GetActor(),HitResult);//在确定检测有效后，尝试添加游戏效果
+				}
+				if (!HasAuthority())
+				{
+					Server_ApplyDamage(HitResult.GetActor(),HitResult);
+				}
 			}
 			IgnoreActors.AddUnique(HitResult.GetActor());
 
@@ -114,8 +122,25 @@ void AWeapon::WeaponTrace()
 
 void AWeapon::SetCanWeaponTrace(const bool Inbool)
 {
+	if (!HasAuthority())return;
 	CanWeaponTrace = Inbool;
+}
+
+void AWeapon::GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+	DOREPLIFETIME(AWeapon,CanWeaponTrace);
+}
+
+void AWeapon::OnRep_OnCanWeaponTrace()
+{
+	//在这里，当同步成功后，播放武器特效或者生效，不过按需写。
 	
+}
+
+void AWeapon::Server_ApplyDamage_Implementation(AActor* TargetActor,const FHitResult& HitResult)
+{
+	ApplyAttackEffect(TargetActor,HitResult);
 }
 
 // Called every frame

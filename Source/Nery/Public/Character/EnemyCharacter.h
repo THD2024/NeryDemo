@@ -20,7 +20,7 @@ class NERY_API AEnemyCharacter : public ANeryBaseCharacter
 	GENERATED_BODY()
 
 public:
-	AEnemyCharacter();
+	AEnemyCharacter(const FObjectInitializer& ObjectInitializer);
 
 	void BindCallbacks();
 
