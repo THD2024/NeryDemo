@@ -57,6 +57,10 @@ public:
 	
 	/*EventTag*/
 	FGameplayTag Event_AttackInput;
+	
+	/*Ability*/
+
+	
 
 private:
 	static  FNeryGameplayTags NeryGameplayTags;

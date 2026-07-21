@@ -23,6 +23,21 @@ public:
 
 };
 
+USTRUCT(BlueprintType)
+struct FAbilityWidgetSlotTag
+{
+	GENERATED_BODY()
+public:
+	UPROPERTY(EditDefaultsOnly)
+	FGameplayTag InputTag;//表示当前按的是哪个插槽
+	
+	UPROPERTY(EditDefaultsOnly)
+	FGameplayTag TypeTag;//用来过滤是不是对应的类型的技能比如物理和法术
+	
+	UPROPERTY(EditDefaultsOnly)
+	FGameplayTag AbilitySlotTag;//对应插槽内部显示的技能,这里ui和内部能力逻辑分开，直接通过获取到技能然后就可以激活
+};
+
 UCLASS(BlueprintType,Blueprintable)
 class NERY_API UWidgetSlotTagInfo: public UObject
 {
@@ -36,17 +51,23 @@ public:
 	const FGameplayTag GetBuffWidgetTag();//这里先就只写获取到buffactorwidget的逻辑
 
 	void SetBuffActorWidgetTagByTag(const FGameplayTag& WidgetTag);//这里先就只写设置到buffactorwidget的逻辑
-
-
+	
+	void SetMagicAbilitySlotTag(const FGameplayTag& AbilitySlotTag);//因为只有一个法术插槽，所以这里不需要通过inputtag来区分，如果后面需要扩展，参考物理插槽
+	
+	void SerPhysicalAbilitySlotTag(const FGameplayTag& InInputTag,const FGameplayTag& AbilitySlotTag);
+	
+	FGameplayTag GetAbilitySlotTagByInputTag(const FGameplayTag& InInputTag);//这里是法术和物理通用的，都是通过唯一的inputtag来区分插槽
+	
+	
 protected:
 	//这三个的key在蓝图中进行填充。因为是固定的，只有value是变化的，通过代码实现变化
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite,Replicated)
 	FWidgetSlotTag BuffSlotTags;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Replicated)
-	FWidgetSlotTag PhysicalAbilitySlotTags;
-
+	TArray<FAbilityWidgetSlotTag>  PhysicalAbilitySlotTags;
+	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Replicated)
-	FWidgetSlotTag MagicBuffSlotTags;
+	FAbilityWidgetSlotTag MagicAbilitySlotTags;//这个只有一个
 	
 };

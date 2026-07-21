@@ -23,6 +23,18 @@ public:
 	int32 BuffNumber = 0;
 };
 
+USTRUCT(BlueprintType)
+struct FOwningAbilities
+{
+	GENERATED_BODY()
+public:
+	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly)//这里的Inputag是固定的，变化的是下面的abilitytag，因为按技能永远都是那几个键
+	FGameplayTag InputTag;//直接在蓝图中填充,注意这里不要填充普攻技能的输入标签
+	
+	UPROPERTY()
+	FGameplayTag AbilityTag;
+};
+
 /**
  * 
  */
@@ -51,16 +63,6 @@ public:
 	UFUNCTION(BlueprintCallable)
 	AActor* GetLockOnTarget();
 
-	// UFUNCTION(BlueprintCallable)
-	// void SaveNotify();
-	//
-	// UFUNCTION(BlueprintCallable)
-	// void ResetNotify();
-
-	void ReceiveAttackInput();
-
-	void HandleAttackLogic();
-
 	UPROPERTY(ReplicatedUsing = OnRep_LockOn)
 	bool bIsLockOn_NetWorked;
 
@@ -82,6 +84,8 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, ReplicatedUsing = OnRep_BuffNumberChanged)//在蓝图中添加基本的buff标签，然后value的动态变化通过代码来实现
 	TArray<FBuffNumberBagInfo> BuffNumberBagInfo;
 
+	UPROPERTY(EditAnywhere,BlueprintReadOnly,Replicated)
+	TArray<FOwningAbilities> OwningAbilities;	
 
 protected:
 	virtual void BeginPlay() override;
@@ -95,6 +99,8 @@ protected:
 	void PossessedBy(AController* NewController) override;
 
 	void GiveBasicAbilities();
+	
+	void GiveOwningAbilities();
 
 	void OnRep_PlayerState() override;
 	
@@ -124,9 +130,6 @@ protected:
 	UFUNCTION(Server, Reliable)
 	void Server_SetMaxWalkSpeed(float NewMaxWalkSpeed);
 
-	// UFUNCTION(Server, Reliable)
-	// void Server_ReceiveAttackInput();
-
 	UFUNCTION(Server, Reliable)
 	void Server_SetLockStatus(bool bIsLockOn);//将锁定状态通知到服务器，然后服务器分发到客户端
 
@@ -152,6 +155,7 @@ protected:
 
 	UFUNCTION()
 	void OnRep_BuffNumberChanged();
+	
 
 	UFUNCTION(Server,Reliable)
 	void Server_UpgradeBasicAttributebyPoints(const FGameplayTag& AttributeTag);

@@ -14,17 +14,9 @@ void UNeryAbilitySystemComponent::GiveCharacterAbilities(const TArray<TSubclassO
 	for (auto& BasicAbilityClass : BasicAbilitiesClass)
 	{
 		const UNeryGameplayAbility* AbilityCDO = Cast<UNeryGameplayAbility>(BasicAbilityClass.GetDefaultObject());
-		FGameplayAbilitySpec AbilitySpec ;
+		FGameplayAbilitySpec AbilitySpec  = FGameplayAbilitySpec(BasicAbilityClass,1);
 		if (AbilityCDO && AbilityCDO->InputTag.IsValid())
 		{
-			if (AbilityCDO->InputTag == FNeryGameplayTags::GetNeryGameplayTags().Input_BasicAttack)
-			{
-				AbilitySpec = FGameplayAbilitySpec(BasicAbilityClass,1,1,GetAvatarActor());
-			}
-			else
-			{
-				AbilitySpec = FGameplayAbilitySpec(BasicAbilityClass,1,INDEX_NONE,GetAvatarActor());
-			}
 			AbilitySpec.DynamicAbilityTags.AddTag(AbilityCDO->InputTag);
 			GiveAbility(AbilitySpec);
 		}
@@ -41,7 +33,6 @@ void UNeryAbilitySystemComponent::ActiveAbilityByDynamicTag(const FGameplayTag& 
 			if (AbilitySpec.DynamicAbilityTags.HasTagExact(InTag))
 			{
 				TryActivateAbility(AbilitySpec.Handle);
-				
 			}
 		}
 	}
@@ -60,6 +51,16 @@ void UNeryAbilitySystemComponent::ActiveCommonAttackAbility(const FGameplayTag& 
 				
 			}
 		}
+	}
+}
+
+void UNeryAbilitySystemComponent::GiveCharacterOwningAbility(const FGameplayTag& InAbilityTag/*用来查询dataasset中的abilityclass*/)
+{
+	if (TSubclassOf<UNeryGameplayAbility>AbilityClass = AbilityDataAsset->GetAbilityClassByTag(InAbilityTag))
+	{
+		FGameplayAbilitySpec AbilitySpec = FGameplayAbilitySpec(AbilityClass,1);
+		AbilitySpec.DynamicAbilityTags.AddTag(InAbilityTag);
+		GiveAbility(AbilitySpec);
 	}
 }
 

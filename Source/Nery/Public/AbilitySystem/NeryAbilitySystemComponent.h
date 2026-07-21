@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "AbilitySystemComponent.h"
+#include "Data/NeryAbilityDataAsset.h"
 #include "NeryAbilitySystemComponent.generated.h"
 
 
@@ -22,7 +23,12 @@ public:
 	void ActiveAbilityByDynamicTag(const FGameplayTag& InTag);
 	
 	void ActiveCommonAttackAbility(const FGameplayTag& InTag);
+	
+	void GiveCharacterOwningAbility(const FGameplayTag& InTag);
 
 	UFUNCTION(Server,Reliable)
 	void Server_SentEvent(const FGameplayTag& InTag);
+	
+	UPROPERTY(EditDefaultsOnly)
+	TObjectPtr <UNeryAbilityDataAsset> AbilityDataAsset;
 };

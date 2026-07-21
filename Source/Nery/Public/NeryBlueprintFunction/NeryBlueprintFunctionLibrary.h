@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "GameplayTagContainer.h"
 #include "Kismet/BlueprintFunctionLibrary.h"
 #include "NeryBlueprintFunctionLibrary.generated.h"
 
@@ -75,6 +76,16 @@ public:
 	UFUNCTION(BlueprintCallable)
 	static void AddBasicAttributePoints(const UObject* WorldContextObject, const FGameplayTag& AttributeTag, AActor* InActor);
 
+	UFUNCTION(BlueprintCallable)
+	static void SetMagicSlotAbilitySlotTag(const UObject* WorldContextObject,const FGameplayTag& InAbilitySlotTag);
+	
+	UFUNCTION(BlueprintCallable)
+	static void SetPhysicalAbilitySlotTag(const UObject* WorldContextObject,const FGameplayTag& InputTag,const FGameplayTag& InAbilitySlotTag);
+	
+	UFUNCTION(BlueprintPure,BlueprintCallable)
+	static FGameplayTag GetCurrentAbilitySlotTagByInputTag(const UObject* WorldContextObject,const FGameplayTag& InputTag);
+	
 	static void ApplyEffectToSelfBySetByCaller(AActor* InActor, TSubclassOf<UGameplayEffect> InGameplayEffectClass, const FGameplayTag& AttributeTag);//注意，如果是用在除了属性加点之外的，那么需要注意这里的setbycaller设置改为从曲线表来获取数据，更加灵活。
 
+	
 };

@@ -225,8 +225,39 @@ void UNeryBlueprintFunctionLibrary::AddBasicAttributePoints(const UObject* World
 			ApplyEffectToSelfBySetByCaller(InActor, NeryGameState->LevelUpInfo->GetUpgradeBasicAttributeEffect(), AttributeTag);
 		}
 	}
-	
 }
+
+void UNeryBlueprintFunctionLibrary::SetMagicSlotAbilitySlotTag(const UObject* WorldContextObject,
+	const FGameplayTag& InAbilitySlotTag)
+{
+	ANeryGameStateBase* NeryGameState = GetGameState(WorldContextObject);
+	if (NeryGameState->WidgetTagInfo)
+	{
+		NeryGameState->WidgetTagInfo->SetMagicAbilitySlotTag(InAbilitySlotTag);
+	}
+}
+
+void UNeryBlueprintFunctionLibrary::SetPhysicalAbilitySlotTag(const UObject* WorldContextObject,
+	const FGameplayTag& InputTag, const FGameplayTag& InAbilitySlotTag)
+{
+	ANeryGameStateBase* NeryGameState = GetGameState(WorldContextObject);
+	if (NeryGameState->WidgetTagInfo)
+	{
+		NeryGameState->WidgetTagInfo->SerPhysicalAbilitySlotTag(InputTag, InAbilitySlotTag);
+	}
+}
+
+FGameplayTag UNeryBlueprintFunctionLibrary::GetCurrentAbilitySlotTagByInputTag(const UObject* WorldContextObject,
+                                                                               const FGameplayTag& InputTag)
+{
+	ANeryGameStateBase* NeryGameState = GetGameState(WorldContextObject);
+	if (NeryGameState->WidgetTagInfo)
+	{
+		NeryGameState->WidgetTagInfo->GetAbilitySlotTagByInputTag(InputTag);
+	}
+	return FGameplayTag();
+}
+
 
 void UNeryBlueprintFunctionLibrary::ApplyEffectToSelfBySetByCaller(AActor* InActor, TSubclassOf<UGameplayEffect> InGameplayEffectClass, const FGameplayTag& AttributeTag)
 {
@@ -236,7 +267,6 @@ void UNeryBlueprintFunctionLibrary::ApplyEffectToSelfBySetByCaller(AActor* InAct
 	FGameplayEffectSpecHandle SpecHandle = InASC->MakeOutgoingSpec(InGameplayEffectClass, 1, ContextHandle);
 	SpecHandle.Data->SetSetByCallerMagnitude(AttributeTag, 1.f);
 	InASC->ApplyGameplayEffectSpecToSelf(*SpecHandle.Data.Get());
-
 }
 
 
