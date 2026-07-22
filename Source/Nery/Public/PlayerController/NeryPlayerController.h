@@ -110,9 +110,20 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Input")
 	TObjectPtr<UInputAction> RightScrollAction;//右切换
 
+	UPROPERTY(EditDefaultsOnly,Category = "Input")
+	TObjectPtr<UInputAction> PhysicalAbility1;
+	
+	UPROPERTY(EditDefaultsOnly,Category = "Input")
+	TObjectPtr<UInputAction> PhysicalAbility2;
+	
+	UPROPERTY(EditDefaultsOnly,Category = "Input")
+	TObjectPtr<UInputAction> MagicAbility;
+	
 	UPROPERTY(EditDefaultsOnly, Category = "Input")
 	TObjectPtr<UInputMappingContext> DefaultMappingContext;
 
+	
+	
 	//输入回调函数
 	void Move(const FInputActionValue& Value);
 	void Look(const FInputActionValue& Value);

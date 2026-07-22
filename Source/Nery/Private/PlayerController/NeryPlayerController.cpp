@@ -214,6 +214,7 @@ void ANeryPlayerController::SetupInputComponent()
 		NeryInputComponent->BindAction(RightScrollAction, ETriggerEvent::Started, this, &ANeryPlayerController::RightScroll);
 		NeryInputComponent->BindAction(LeftScrollAction, ETriggerEvent::Started, this, &ANeryPlayerController::LeftScroll);
 		NeryInputComponent->BindActionAbility(InputTagConfig, this, &ANeryPlayerController::PressedFunc, &ANeryPlayerController::HeldFunc, &ANeryPlayerController::ReleasedFunc);
+		
 	}
 
 }

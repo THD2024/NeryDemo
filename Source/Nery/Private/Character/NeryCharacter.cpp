@@ -221,9 +221,9 @@ void ANeryCharacter::GiveOwningAbilities()
 	{
 		for (const auto& Abilities : OwningAbilities)
 		{
-			if (Abilities.AbilityTag.IsValid())
+			if (Abilities.IsValid())
 			{
-				ASC->GiveCharacterOwningAbility(Abilities.AbilityTag);
+				ASC->GiveCharacterOwningAbility(Abilities);
 			}
 		}
 	}
@@ -368,6 +368,15 @@ void ANeryCharacter::CallUpgradeAttribute_Implementation(const FGameplayTag& Att
 			Server_UpgradeBasicAttributebyPoints(AttributeTag);
 		}
 	}
+}
+
+TArray<FGameplayTag>  ANeryCharacter::GetCharacterActivateAbilities_Implementation()
+{
+	if (OwningAbilities.Num() > 0)
+	{
+		return OwningAbilities;
+	}
+	return TArray<FGameplayTag>();
 }
 
 void ANeryCharacter::Server_UpdateRotation_Implementation(float DeltaTime)

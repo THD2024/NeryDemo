@@ -14,6 +14,7 @@
 #include"Interface/CombatInterface.h"
 #include"Data/WidgetSlotTagInfo.h"
 #include"AbilitySystem/NeryAttributeSet.h"
+#include"UI/Controller/AbilityWidgetController.h"
 
 TSubclassOf<UGameplayEffect> UNeryBlueprintFunctionLibrary::GetCharacterAttackEffect(const UObject* WorldContextObject)
 {
@@ -135,6 +136,27 @@ UAttributeWidgetController* UNeryBlueprintFunctionLibrary::GetAttributeWigetCont
 
 }
 
+UAbilityWidgetController* UNeryBlueprintFunctionLibrary::GetAbilityWidgetController(const UObject* WorldContextObject,
+	APlayerController* PlayerController)
+{
+	if (APlayerController* PC = Cast<APlayerController>(PlayerController)) 
+	{
+		if (ANeryPlayerState* PS = PC->GetPlayerState<ANeryPlayerState>())
+		{
+			UAbilitySystemComponent* ASC = PS->AbilitySystemComponent;
+			UAttributeSet* AS = PS->AttributeSet;
+			if (ANeryHUD* NeryHUD = Cast<ANeryHUD>(PC->GetHUD()))
+			{
+				FWidgetControllerParams Params(PS,PC,ASC,AS);
+				UAbilityWidgetController* AbilityWidgetController = NeryHUD->GetAbilityWidgetController(Params);
+				AbilityWidgetController->BroadInitValue();
+				return AbilityWidgetController;
+			}
+		}
+	}
+	return nullptr;
+}
+
 bool UNeryBlueprintFunctionLibrary::bIsEnemy(AActor* InActor)
 {
 	if (InActor->ActorHasTag(FName(TEXT("Enemy"))))
@@ -243,7 +265,7 @@ void UNeryBlueprintFunctionLibrary::SetPhysicalAbilitySlotTag(const UObject* Wor
 	ANeryGameStateBase* NeryGameState = GetGameState(WorldContextObject);
 	if (NeryGameState->WidgetTagInfo)
 	{
-		NeryGameState->WidgetTagInfo->SerPhysicalAbilitySlotTag(InputTag, InAbilitySlotTag);
+		NeryGameState->WidgetTagInfo->SetPhysicalAbilitySlotTag(InputTag, InAbilitySlotTag);
 	}
 }
 
@@ -267,6 +289,16 @@ void UNeryBlueprintFunctionLibrary::ApplyEffectToSelfBySetByCaller(AActor* InAct
 	FGameplayEffectSpecHandle SpecHandle = InASC->MakeOutgoingSpec(InGameplayEffectClass, 1, ContextHandle);
 	SpecHandle.Data->SetSetByCallerMagnitude(AttributeTag, 1.f);
 	InASC->ApplyGameplayEffectSpecToSelf(*SpecHandle.Data.Get());
+}
+
+UWidgetSlotTagInfo* UNeryBlueprintFunctionLibrary::GetWidgeetSlotTagInfo(const UObject* WorldContextObject)
+{
+	ANeryGameStateBase* NeryGameState = GetGameState(WorldContextObject);
+	if (NeryGameState->WidgetTagInfo)
+	{
+		return NeryGameState->WidgetTagInfo;
+	}
+	return nullptr;
 }
 
 

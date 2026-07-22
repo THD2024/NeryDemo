@@ -57,4 +57,7 @@ public:
 	
 	UFUNCTION(BlueprintNativeEvent)
 	void BegintoTrace();
+	
+	UFUNCTION(BlueprintNativeEvent)
+	TArray<FGameplayTag> GetCharacterActivateAbilities();
 };

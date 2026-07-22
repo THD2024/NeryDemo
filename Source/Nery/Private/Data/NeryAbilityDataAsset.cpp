@@ -27,5 +27,5 @@ TSubclassOf<UNeryGameplayAbility> UNeryAbilityDataAsset::GetAbilityClassByTag(co
 			}
 		}
 	}
-	return TSubclassOf<UGameplayAbility>();
+	return TSubclassOf<UNeryGameplayAbility>();
 }

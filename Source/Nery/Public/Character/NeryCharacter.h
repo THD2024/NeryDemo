@@ -23,17 +23,6 @@ public:
 	int32 BuffNumber = 0;
 };
 
-USTRUCT(BlueprintType)
-struct FOwningAbilities
-{
-	GENERATED_BODY()
-public:
-	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly)//这里的Inputag是固定的，变化的是下面的abilitytag，因为按技能永远都是那几个键
-	FGameplayTag InputTag;//直接在蓝图中填充,注意这里不要填充普攻技能的输入标签
-	
-	UPROPERTY()
-	FGameplayTag AbilityTag;
-};
 
 /**
  * 
@@ -85,7 +74,7 @@ public:
 	TArray<FBuffNumberBagInfo> BuffNumberBagInfo;
 
 	UPROPERTY(EditAnywhere,BlueprintReadOnly,Replicated)
-	TArray<FOwningAbilities> OwningAbilities;	
+	TArray<FGameplayTag> OwningAbilities;	//需要给Ui传递信息的情况就只有当玩家打开装备栏时，将这些技能信息传递到ui。
 
 protected:
 	virtual void BeginPlay() override;
@@ -117,6 +106,8 @@ protected:
 	// virtual ECharacterAttackState GetAttackState_Implementation() override;
 
 	virtual void CallUpgradeAttribute_Implementation(const FGameplayTag& AttributeTag)override;
+	
+	virtual TArray<FGameplayTag>  GetCharacterActivateAbilities_Implementation() override;
 	/*接口*/
 
 

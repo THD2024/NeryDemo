@@ -9,6 +9,8 @@
 /**
  * 
  */
+DECLARE_MULTICAST_DELEGATE(FOnAbilityWidgetChangeDelegate);
+
 USTRUCT(BlueprintType)
 struct FWidgetSlotTag
 {
@@ -54,10 +56,11 @@ public:
 	
 	void SetMagicAbilitySlotTag(const FGameplayTag& AbilitySlotTag);//因为只有一个法术插槽，所以这里不需要通过inputtag来区分，如果后面需要扩展，参考物理插槽
 	
-	void SerPhysicalAbilitySlotTag(const FGameplayTag& InInputTag,const FGameplayTag& AbilitySlotTag);
+	void SetPhysicalAbilitySlotTag(const FGameplayTag& InInputTag,const FGameplayTag& AbilitySlotTag);
 	
 	FGameplayTag GetAbilitySlotTagByInputTag(const FGameplayTag& InInputTag);//这里是法术和物理通用的，都是通过唯一的inputtag来区分插槽
 	
+	FOnAbilityWidgetChangeDelegate OnAbilitySlotTagChanged;
 	
 protected:
 	//这三个的key在蓝图中进行填充。因为是固定的，只有value是变化的，通过代码实现变化

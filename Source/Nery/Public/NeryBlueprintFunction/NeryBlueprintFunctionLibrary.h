@@ -18,6 +18,7 @@ class UCharacterDataAsset;
 struct FBuffNumberInfo;
 class UItemBagDataAsset;
 class UWidgetSlotTagInfo;
+class UAbilityWidgetController;
 
 UCLASS()
 class NERY_API UNeryBlueprintFunctionLibrary : public UBlueprintFunctionLibrary
@@ -49,6 +50,9 @@ public:
 	UFUNCTION(BlueprintPure,BlueprintCallable)
 	static UAttributeWidgetController* GetAttributeWigetController(const UObject* WorldContextObject, APlayerController* PlayerController);
 
+	UFUNCTION(BlueprintCallable,BlueprintCallable)
+	static UAbilityWidgetController* GetAbilityWidgetController(const UObject* WorldContextObject,APlayerController* PlayerController);
+	
 	UFUNCTION(BlueprintPure,BlueprintCallable)
 	static bool bIsEnemy(AActor* InActor);
 
@@ -87,5 +91,5 @@ public:
 	
 	static void ApplyEffectToSelfBySetByCaller(AActor* InActor, TSubclassOf<UGameplayEffect> InGameplayEffectClass, const FGameplayTag& AttributeTag);//注意，如果是用在除了属性加点之外的，那么需要注意这里的setbycaller设置改为从曲线表来获取数据，更加灵活。
 
-	
+	static UWidgetSlotTagInfo* GetWidgeetSlotTagInfo(const UObject* WorldContextObject);
 };

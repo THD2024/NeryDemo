@@ -2,9 +2,6 @@
 
 
 #include "Data/WidgetSlotTagInfo.h"
-
-#include "../../../../../../../source/UE_5.2/Engine/Plugins/Importers/USDImporter/Source/ThirdParty/USD/include/pxr/usd/usdShade/types.h"
-#include "../../../../../../../source/UE_5.2/Engine/Plugins/Importers/USDImporter/Source/ThirdParty/USD/include/pxr/usd/usdShade/types.h"
 #include"Net/UnrealNetwork.h"
 
 
@@ -35,16 +32,18 @@ void UWidgetSlotTagInfo::SetMagicAbilitySlotTag(const FGameplayTag& AbilitySlotT
 	if (MagicAbilitySlotTags.TypeTag.MatchesTag(AbilitySlotTag))
 	{
 		MagicAbilitySlotTags.AbilitySlotTag = AbilitySlotTag;
+		OnAbilitySlotTagChanged.Broadcast();
 	}
 }
 
-void UWidgetSlotTagInfo::SerPhysicalAbilitySlotTag(const FGameplayTag& InInputTag, const FGameplayTag& AbilitySlotTag)
+void UWidgetSlotTagInfo::SetPhysicalAbilitySlotTag(const FGameplayTag& InInputTag, const FGameplayTag& AbilitySlotTag)
 {
 	for (auto& PhysicalAbilitySlotTag : PhysicalAbilitySlotTags)
 	{
 		if (PhysicalAbilitySlotTag.InputTag.MatchesTagExact(InInputTag))
 		{
 			PhysicalAbilitySlotTag.AbilitySlotTag = AbilitySlotTag;
+			OnAbilitySlotTagChanged.Broadcast();
 		}
 	}
 }

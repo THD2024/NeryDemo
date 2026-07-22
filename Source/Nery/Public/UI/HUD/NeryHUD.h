@@ -13,6 +13,7 @@ struct FWidgetControllerParams;//在这里是需要声明父类控制器的参�
 class UWidgetController;//在这里是需要声明父类控制器，这里不需要调用到具体控制器的函数
 class UNeryUserWidget;//在这里是需要声明父类控制器的参数结构体，这里不需要调用到具体控制器的函数
 class UAttributeWidgetController;
+class UAbilityWidgetController;
 
 UCLASS()
 class NERY_API ANeryHUD : public AHUD
@@ -23,6 +24,7 @@ public:
 	//todo
 	void InitWidgetAndController(const FWidgetControllerParams& Params);//在character中调用这个函数来初始化hud
 	UAttributeWidgetController* GetAttributeWidgetController(const FWidgetControllerParams& Params);
+	UAbilityWidgetController* GetAbilityWidgetController(const FWidgetControllerParams& Params);
 	UNeryUserWidget* GetOverlayWidget();
 	//属性菜单的生成在蓝图中进行，不在这里。因为属性菜单是一中动态生成的，不想血量。所以控制器的分配在蓝图中，不在代码中
 protected:
@@ -31,7 +33,7 @@ protected:
 	void InitWidget();
 
 	UWidgetController* GetOverlayWidgetController(const FWidgetControllerParams& Params);
-
+	
 	UPROPERTY(EditDefaultsOnly, Category = "Controller")
 	TObjectPtr<UNeryUserWidget> OverlayWidget;
 
@@ -41,6 +43,9 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Controller")
 	TObjectPtr<UAttributeWidgetController> AttributeWidgetController;
 	
+	UPROPERTY(EditDefaultsOnly,Category = "Controller")
+	TObjectPtr<UAbilityWidgetController> AbilityWidgetController;
+	
 	UPROPERTY(EditDefaultsOnly, Category = "Controller")
 	TSubclassOf<UNeryUserWidget> OverlayWidgetClass;
 
@@ -49,4 +54,7 @@ protected:
 	
 	UPROPERTY(EditDefaultsOnly, Category = "Controller")
 	TSubclassOf<UAttributeWidgetController> AttributeWidgetControllerClass;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Controller")
+	TSubclassOf<UAbilityWidgetController> AbilityWidgetControllerClass;
 };

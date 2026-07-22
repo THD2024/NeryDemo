@@ -2,6 +2,8 @@
 
 
 #include "UI/HUD/NeryHUD.h"
+
+#include "UI/Controller/AbilityWidgetController.h"
 #include"UI/Widget/NeryUserWidget.h"
 #include"UI/Controller/OverlayWidgetController.h"
 #include"UI/Controller/AttributeWidgetController.h"
@@ -31,7 +33,6 @@ void ANeryHUD::InitWidget()
 	if (OverlayWidget == nullptr)
 	{
 		check(OverlayWidgetClass);
-		//显示到世界中，所以第一个参数是GetWorld()，第二个参数是要创建的widget的类
 		OverlayWidget = CreateWidget<UNeryUserWidget>(GetOwningPlayerController(), OverlayWidgetClass);
 	}
 }
@@ -41,20 +42,30 @@ void ANeryHUD::InitWidget()
 UWidgetController* ANeryHUD::GetOverlayWidgetController(const FWidgetControllerParams& Params) 
 {
 	if (!OverlayWidgetController)
-	{//判断当前的控制器是否是空的，如果是就创建一个控制器并且赋值。
+	{
 		OverlayWidgetController = NewObject<UOverlayWidgetController>(this, OverlayWidgetControllerClass);
 		OverlayWidgetController->InitWidgetController(Params);
 	}
 	return OverlayWidgetController;
 }
 
+UAbilityWidgetController* ANeryHUD::GetAbilityWidgetController(const FWidgetControllerParams& Params)
+{
+	if (!AbilityWidgetController)
+	{
+		AbilityWidgetController = NewObject<UAbilityWidgetController>(this, AbilityWidgetControllerClass);
+		AbilityWidgetController->InitWidgetController(Params);
+	}
+	return AbilityWidgetController;
+}
+
 UAttributeWidgetController* ANeryHUD::GetAttributeWidgetController(const FWidgetControllerParams& Params)
 {
 	if (!AttributeWidgetController)
-	{//判断当前的控制器是否是空的，如果是就创建一个控制器并且赋值。
+	{
 		AttributeWidgetController = NewObject<UAttributeWidgetController>(this, AttributeWidgetControllerClass);
 		AttributeWidgetController->InitWidgetController(Params);
-		AttributeWidgetController->BindCallBacks();//创建成功后就绑定委托。
+		AttributeWidgetController->BindCallBacks();
 	}
 	return AttributeWidgetController;
 
