@@ -21,8 +21,10 @@ class NERY_API AWeapon : public AActor
 public:	
 	// Sets default values for this actor's properties
 	AWeapon();
-
-
+	
+	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly)
+	TObjectPtr<USceneComponent> ScenePoint;
+	
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;	

@@ -115,6 +115,17 @@ void UNeryBlueprintFunctionLibrary::ApplyBasicEffectToSelf(AActor* InActor, TSub
 	InASC->ApplyGameplayEffectSpecToSelf(*SpecHandle.Data.Get());
 }
 
+void UNeryBlueprintFunctionLibrary::ApplyEffectToActor(AActor* InActor,
+	TSubclassOf<UGameplayEffect> InGameplayEffectClass, const FHitResult& HitResult)
+{
+	UAbilitySystemComponent* InASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(InActor);
+	if (!InASC)return;
+	FGameplayEffectContextHandle ContextHandle = InASC->MakeEffectContext();
+	ContextHandle.AddHitResult(HitResult);
+	FGameplayEffectSpecHandle SpecHandle = InASC->MakeOutgoingSpec(InGameplayEffectClass, GetLevel(InASC), ContextHandle);
+	InASC->ApplyGameplayEffectSpecToSelf(*SpecHandle.Data.Get());
+}
+
 UAttributeWidgetController* UNeryBlueprintFunctionLibrary::GetAttributeWigetController(const UObject* WorldContextObject, APlayerController* PlayerController)
 {//这个扔到蓝图中去
 	if (APlayerController* PC = Cast<APlayerController>(PlayerController)) 
@@ -297,6 +308,16 @@ UWidgetSlotTagInfo* UNeryBlueprintFunctionLibrary::GetWidgeetSlotTagInfo(const U
 	if (NeryGameState->WidgetTagInfo)
 	{
 		return NeryGameState->WidgetTagInfo;
+	}
+	return nullptr;
+}
+
+UNeryAbilityDataAsset* UNeryBlueprintFunctionLibrary::GetAbilityDataAsset(const UObject* WorldContextObject)
+{
+	ANeryGameStateBase* NeryGameState = GetGameState(WorldContextObject);
+	if (NeryGameState->AbilityDataAsset)
+	{
+		return NeryGameState->AbilityDataAsset;
 	}
 	return nullptr;
 }

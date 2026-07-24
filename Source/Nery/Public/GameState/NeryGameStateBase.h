@@ -7,6 +7,7 @@
 #include"Data/CharacterDataAsset.h"
 #include"Data/WidgetSlotTagInfo.h"
 #include"Data/LevelUpInfo.h"
+#include "Data/NeryAbilityDataAsset.h"
 #include "NeryGameStateBase.generated.h"
 
 /**
@@ -38,5 +39,7 @@ public:
 
 	UPROPERTY(EditAnywhere, Category = "LevelUp")
 	TObjectPtr<ULevelUpInfo> LevelUpInfo;
-
+	
+	UPROPERTY(EditAnywhere,Category = "Abilities")
+	TObjectPtr<UNeryAbilityDataAsset> AbilityDataAsset;
 };

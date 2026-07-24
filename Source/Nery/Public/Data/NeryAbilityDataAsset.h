@@ -24,6 +24,9 @@ public:
 	FGameplayTag AbilityTag;//这里的abilitytag，同时需要在赋予能力的时候添加到dynamictag，摆脱inputtag的束缚
 	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	TObjectPtr<UAnimMontage> AbilityMontage;
+	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	TObjectPtr<UTexture2D> AbilityIcon;
 	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
@@ -42,6 +45,7 @@ public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	TArray<FNeryAbilityInfo> AbilityInfos;
 	
+	UFUNCTION(BlueprintCallable)
 	FNeryAbilityInfo GetAbilityInfoByTag(const FGameplayTag& AbilityTag) const;
 	
 	TSubclassOf<UNeryGameplayAbility> GetAbilityClassByTag(const FGameplayTag& AbilityTag) const;

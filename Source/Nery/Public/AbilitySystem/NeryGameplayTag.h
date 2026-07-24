@@ -43,7 +43,10 @@ public:
 	FGameplayTag GameplayCue_Buff_ArmorPenetration;
 	FGameplayTag GameplayCue_Buff_CriticalHitChance;
 	FGameplayTag GameplayCue_Trap_FireDamage;
-
+	FGameplayTag GameplayCue_AbilityMoon_Begin;//刚释放技能
+	FGameplayTag GameplayCue_AbilityMoon_Hit;//刚击中
+	
+	
 	/*BuffActor*/
 	FGameplayTag Buff_Good_Health;
 	FGameplayTag Buff_Good_ArmorPenetration;
@@ -57,9 +60,10 @@ public:
 	
 	/*EventTag*/
 	FGameplayTag Event_AttackInput;
+	FGameplayTag Event_AbilityBegin;
 	
 	/*Ability*/
-
+	FGameplayTag Ability_MoonCrescent;
 	
 
 private:

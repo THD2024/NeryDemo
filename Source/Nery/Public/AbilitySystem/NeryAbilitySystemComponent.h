@@ -11,7 +11,7 @@
 /**
  * 
  */
-UCLASS()
+UCLASS(Blueprintable,BlueprintType)
 class NERY_API UNeryAbilitySystemComponent : public UAbilitySystemComponent
 {
 	GENERATED_BODY()
@@ -29,6 +29,4 @@ public:
 	UFUNCTION(Server,Reliable)
 	void Server_SentEvent(const FGameplayTag& InTag);
 	
-	UPROPERTY(EditDefaultsOnly)
-	TObjectPtr <UNeryAbilityDataAsset> AbilityDataAsset;
 };

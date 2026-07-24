@@ -28,6 +28,7 @@ AWeapon::AWeapon()
 	TraceStart = CreateDefaultSubobject<USceneComponent>("TraceStart");
 	TraceEnd = CreateDefaultSubobject<USceneComponent>("TraceEnd");
 	WeaponShape = CreateDefaultSubobject<UStaticMeshComponent>("WeaponShape");
+	ScenePoint = CreateDefaultSubobject<USceneComponent>("ScenePoint");
 	SetRootComponent(PivotRoot);
 	TraceBox->SetupAttachment(RootComponent);
 	TraceStart->SetupAttachment(RootComponent);

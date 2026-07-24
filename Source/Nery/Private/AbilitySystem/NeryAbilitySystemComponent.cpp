@@ -7,6 +7,7 @@
 #include"AbilitySystem/GameplayAbility/NeryGameplayAbility.h"
 #include"GameplayAbilitySpec.h"
 #include"AbilitySystem/NeryGameplayTag.h"
+#include "NeryBlueprintFunction/NeryBlueprintFunctionLibrary.h"
 
 void UNeryAbilitySystemComponent::GiveCharacterAbilities(const TArray<TSubclassOf<UGameplayAbility>>& BasicAbilitiesClass)
 {
@@ -15,9 +16,9 @@ void UNeryAbilitySystemComponent::GiveCharacterAbilities(const TArray<TSubclassO
 	{
 		const UNeryGameplayAbility* AbilityCDO = Cast<UNeryGameplayAbility>(BasicAbilityClass.GetDefaultObject());
 		FGameplayAbilitySpec AbilitySpec  = FGameplayAbilitySpec(BasicAbilityClass,1);
-		if (AbilityCDO && AbilityCDO->InputTag.IsValid())
+		if (AbilityCDO && AbilityCDO->DynamicTag.IsValid())
 		{
-			AbilitySpec.DynamicAbilityTags.AddTag(AbilityCDO->InputTag);
+			AbilitySpec.DynamicAbilityTags.AddTag(AbilityCDO->DynamicTag);
 			GiveAbility(AbilitySpec);
 		}
 		
@@ -56,7 +57,7 @@ void UNeryAbilitySystemComponent::ActiveCommonAttackAbility(const FGameplayTag& 
 
 void UNeryAbilitySystemComponent::GiveCharacterOwningAbility(const FGameplayTag& InAbilityTag/*用来查询dataasset中的abilityclass*/)
 {
-	if (TSubclassOf<UNeryGameplayAbility>AbilityClass = AbilityDataAsset->GetAbilityClassByTag(InAbilityTag))
+	if (TSubclassOf<UNeryGameplayAbility>AbilityClass = UNeryBlueprintFunctionLibrary::GetAbilityDataAsset(this)->GetAbilityClassByTag(InAbilityTag))
 	{
 		FGameplayAbilitySpec AbilitySpec = FGameplayAbilitySpec(AbilityClass,1);
 		AbilitySpec.DynamicAbilityTags.AddTag(InAbilityTag);

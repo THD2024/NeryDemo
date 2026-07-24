@@ -17,5 +17,5 @@ class NERY_API UNeryGameplayAbility : public UGameplayAbility
 	
 public:
 	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly)
-	FGameplayTag InputTag;
+	FGameplayTag DynamicTag;
 };

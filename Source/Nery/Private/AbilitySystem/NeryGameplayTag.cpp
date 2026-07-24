@@ -34,15 +34,19 @@ void FNeryGameplayTags::InitializeTags()
 	NeryGameplayTags.GameplayCue_Buff_CriticalHitChance = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("GameplayCue.Buff.CriticalHitChance"), FString(TEXT("Be Easier to Criticalhit")));
 	NeryGameplayTags.GameplayCue_Buff_Health = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("GameplayCue.Buff.Health"), FString(TEXT("Recover your Health")));
 	NeryGameplayTags.GameplayCue_Trap_FireDamage = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("GameplayCue.Trap.FireDamage"), FString(TEXT("Fire Damage")));
-
+	NeryGameplayTags.GameplayCue_AbilityMoon_Begin = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("GameplayCue.AbilityMoon.Begin"),FString(TEXT("Begin")));
+	NeryGameplayTags.GameplayCue_AbilityMoon_Hit = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("GameplayCue.AbilityMoon.Hit"),FString(TEXT("Hit")));
 
 	NeryGameplayTags.Buff_Good_ArmorPenetration = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Buff.Good.ArmorPenetration"), FString(TEXT("Strengthen ArmorPenetration")));
 	NeryGameplayTags.Buff_Good_Health = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Buff.Good.Health"), FString(TEXT("Recover Health")));
 	NeryGameplayTags.Buff_Good_CriticalHitChance = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Buff.Good.CriticalHitChance"), FString(TEXT("Strengthen CriticalHitChance")));
 
 	NeryGameplayTags.Damage_Normal = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Damage.Normal"), FString(TEXT("Normal Damage")));
-
+	
 	NeryGameplayTags.Input_BasicAttack = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Input.BasicAttack"), FString(TEXT("BasicAttackInputTag")));
 	
 	NeryGameplayTags.Event_AttackInput = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Event.AttackInput"), FString(TEXT("AttackInputEvent")));
+	NeryGameplayTags.Event_AbilityBegin = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Event.AbilityBegin"),FString(TEXT("First Moment to Spawn Niagara")));
+	
+	NeryGameplayTags.Ability_MoonCrescent = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Ability.MoonCrescent"),FString(TEXT("First Ability")));
 }

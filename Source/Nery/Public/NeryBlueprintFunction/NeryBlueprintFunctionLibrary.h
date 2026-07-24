@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameplayTagContainer.h"
+#include "Data/NeryAbilityDataAsset.h"
 #include "Kismet/BlueprintFunctionLibrary.h"
 #include "NeryBlueprintFunctionLibrary.generated.h"
 
@@ -46,7 +47,10 @@ public:
 	static void InitVitalAttribute(const UObject* WorldContextObject, AActor* InActor);
 
 	static void ApplyBasicEffectToSelf(AActor* InActor, TSubclassOf<UGameplayEffect> InGameplayEffectClass);
-
+	
+	//改函数可以选择填充fhitresult对需要通过游戏效果出发gameplaycue的情况友好
+	static void ApplyEffectToActor(AActor* InActor,TSubclassOf<UGameplayEffect> InGameplayEffectClass,const FHitResult& HitResult = FHitResult());
+	
 	UFUNCTION(BlueprintPure,BlueprintCallable)
 	static UAttributeWidgetController* GetAttributeWigetController(const UObject* WorldContextObject, APlayerController* PlayerController);
 
@@ -92,4 +96,6 @@ public:
 	static void ApplyEffectToSelfBySetByCaller(AActor* InActor, TSubclassOf<UGameplayEffect> InGameplayEffectClass, const FGameplayTag& AttributeTag);//注意，如果是用在除了属性加点之外的，那么需要注意这里的setbycaller设置改为从曲线表来获取数据，更加灵活。
 
 	static UWidgetSlotTagInfo* GetWidgeetSlotTagInfo(const UObject* WorldContextObject);
+	
+	static UNeryAbilityDataAsset* GetAbilityDataAsset(const UObject* WorldContextObject);
 };

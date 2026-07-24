@@ -60,6 +60,15 @@ void ANeryBaseCharacter::BegintoTrace_Implementation()
 	}
 }
 
+FVector ANeryBaseCharacter::GetWeaponLocation_Implementation()
+{
+	if (Weapon && Weapon->ScenePoint)
+	{
+		return Weapon->ScenePoint->GetComponentLocation();
+	}
+	return FVector();
+}
+
 
 void ANeryBaseCharacter::InitAttribute()
 {

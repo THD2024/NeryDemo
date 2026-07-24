@@ -198,6 +198,7 @@ void ANeryCharacter::PossessedBy(AController* NewController)
 		InitAttribute();
 	}
 	GiveBasicAbilities();
+	GiveOwningAbilities();
 }
 
 void ANeryCharacter::GiveBasicAbilities()
