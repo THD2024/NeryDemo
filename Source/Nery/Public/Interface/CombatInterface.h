@@ -62,5 +62,5 @@ public:
 	TArray<FGameplayTag> GetCharacterActivateAbilities();
 
 	UFUNCTION(BlueprintNativeEvent,BlueprintCallable)
-	FVector GetWeaponLocation();
+	FTransform GetWeaponLocation();
 };

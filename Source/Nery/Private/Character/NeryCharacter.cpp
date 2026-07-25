@@ -9,7 +9,7 @@
 #include"UI/Controller/WidgetController.h"
 #include"Data/CharacterDataAsset.h"
 #include"EffectActor/Weapon.h"
-
+#include "Kismet/KismetMathLibrary.h"
 #include"NeryBlueprintFunction/NeryBlueprintFunctionLibrary.h"
 #include"UI/HUD/NeryHUD.h"
 #include"AbilitySystem/NeryAttributeSet.h"
@@ -378,6 +378,29 @@ TArray<FGameplayTag>  ANeryCharacter::GetCharacterActivateAbilities_Implementati
 		return OwningAbilities;
 	}
 	return TArray<FGameplayTag>();
+}
+
+FTransform ANeryCharacter::GetWeaponLocation_Implementation()
+{
+	FTransform Transform = FTransform();
+	if (Weapon && Weapon->ScenePoint)
+	{
+		Transform.SetLocation(Weapon->ScenePoint->GetComponentLocation());
+		FRotator Rotation = UKismetMathLibrary::FindLookAtRotation(GetActorLocation(),Transform.GetLocation());
+		Rotation.Pitch = 0.0f;
+		Transform.SetRotation(Rotation.Quaternion());
+	}
+	if (GetIsLockOn())
+	{
+		if (AActor* LockActor = GetLockOnTarget())
+		{
+			FVector TargetLocation = LockActor->GetActorLocation() + FVector(0.f,0.f,50.f);
+			FRotator Rotation = UKismetMathLibrary::FindLookAtRotation(GetActorLocation(),TargetLocation);
+			Rotation.Pitch = 0.f;//设置为水平，没有角度
+			Transform.SetRotation(Rotation.Quaternion());
+		}
+	}
+	return Transform;
 }
 
 void ANeryCharacter::Server_UpdateRotation_Implementation(float DeltaTime)

@@ -8,7 +8,7 @@
 ANeryProjectileActor::ANeryProjectileActor()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = false;
+	PrimaryActorTick.bCanEverTick = true;
 	Sphere = CreateDefaultSubobject<USphereComponent>(FName("Sphere"));
 	SetRootComponent(Sphere);
 	ProjectileMovementComponent = CreateDefaultSubobject<UProjectileMovementComponent>(FName("ProjectileMovementComponent"));
@@ -27,6 +27,7 @@ void ANeryProjectileActor::BeginPlay()
 	Super::BeginPlay();
 	Sphere->OnComponentBeginOverlap.AddDynamic(this,&ANeryProjectileActor::OnBoxOverlap);
 	SetLifeSpan(LifeSpan);
+	
 }
 
 // Called every frame
@@ -40,7 +41,7 @@ void ANeryProjectileActor::OnBoxOverlap(UPrimitiveComponent* OverlappedComponent
 	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
 	//这里用来写伤害逻辑
-	if (OtherActor->ActorHasTag(FName("Enmey")))
+	if (OtherActor->Tags.Contains(FName("Enemy")))
 	{
 		//这里会自动触发gameplaycue实现集中效果
 		UNeryBlueprintFunctionLibrary::ApplyEffectToActor(OtherActor,PAGameplayEffect,SweepResult);

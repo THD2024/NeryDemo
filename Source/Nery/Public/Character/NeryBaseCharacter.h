@@ -48,7 +48,7 @@ protected:
 	virtual void AllowAttack_Implementation() override;
 	virtual void CloseAttack_Implementation() override;
 	virtual void BegintoTrace_Implementation() override;
-	virtual FVector GetWeaponLocation_Implementation() override;
+	virtual FTransform GetWeaponLocation_Implementation() override;
 	
 	void InitAttribute();
 

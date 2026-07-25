@@ -35,6 +35,7 @@ AWeapon::AWeapon()
 	TraceEnd->SetupAttachment(RootComponent);
 	WeaponShape->SetupAttachment(RootComponent);
 	TraceBox->SetCollisionObjectType(ECC_GameTraceChannel1);
+	ScenePoint->SetupAttachment(RootComponent);
 
 }
 

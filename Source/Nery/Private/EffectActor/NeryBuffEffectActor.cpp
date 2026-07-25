@@ -29,6 +29,7 @@ void ANeryBuffEffectActor::SphereBeginOverlap(UPrimitiveComponent* OverlappedCom
 	if (!PC)
 	{
 		APawn* Pawn = Cast<APawn>(OtherActor);
+		if (!Pawn)return;
 		PC = Cast<ANeryPlayerController>(Pawn->GetController());
 		if (!PC ||PC->IsLocalController() == false)return;
 		if (PC && PC->OnPickAction.IsBoundToObject(this) == false)

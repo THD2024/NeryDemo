@@ -108,6 +108,8 @@ protected:
 	virtual void CallUpgradeAttribute_Implementation(const FGameplayTag& AttributeTag)override;
 	
 	virtual TArray<FGameplayTag>  GetCharacterActivateAbilities_Implementation() override;
+	
+	virtual FTransform GetWeaponLocation_Implementation() override;
 	/*接口*/
 
 
