@@ -45,7 +45,8 @@ public:
 	FGameplayTag GameplayCue_Trap_FireDamage;
 	FGameplayTag GameplayCue_AbilityMoon_Begin;//刚释放技能
 	FGameplayTag GameplayCue_AbilityMoon_Hit;//刚击中
-	FGameplayTag GameplayCue_AbilitySamsara_Hit;
+	FGameplayTag GameplayCue_AbilitySamsara_OuterHit;
+	FGameplayTag GameplayCue_AbilitySamsara_InnerHit;
 	
 	
 	/*BuffActor*/
@@ -62,6 +63,7 @@ public:
 	/*EventTag*/
 	FGameplayTag Event_AttackInput;
 	FGameplayTag Event_AbilityBegin;
+	
 	
 	/*Ability*/
 	FGameplayTag Ability_MoonCrescent;//月光斩

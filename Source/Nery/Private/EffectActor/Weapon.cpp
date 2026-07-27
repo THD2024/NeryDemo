@@ -91,7 +91,7 @@ void AWeapon::BoxTrace(ECollisionChannel DetectiveObjectType)
 		TraceChannel,
 		false,
 		IgnoreActors,
-		EDrawDebugTrace::ForDuration,
+		EDrawDebugTrace::None,
 		HitResults,
 		true
 	);

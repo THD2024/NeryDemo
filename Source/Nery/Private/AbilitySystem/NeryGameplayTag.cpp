@@ -36,7 +36,9 @@ void FNeryGameplayTags::InitializeTags()
 	NeryGameplayTags.GameplayCue_Trap_FireDamage = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("GameplayCue.Trap.FireDamage"), FString(TEXT("Fire Damage")));
 	NeryGameplayTags.GameplayCue_AbilityMoon_Begin = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("GameplayCue.AbilityMoon.Begin"),FString(TEXT("Begin")));
 	NeryGameplayTags.GameplayCue_AbilityMoon_Hit = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("GameplayCue.AbilityMoon.Hit"),FString(TEXT("Hit")));
-	NeryGameplayTags.GameplayCue_AbilitySamsara_Hit = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("GameplayCue.AbilitySamsara.Hit"),FString(TEXT("Hit")));
+	NeryGameplayTags.GameplayCue_AbilitySamsara_OuterHit = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("GameplayCue.AbilitySamsara.Outerhit"),FString(TEXT("OuterHit")));
+	NeryGameplayTags.GameplayCue_AbilitySamsara_InnerHit = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("GameplayCue.AbilitySamsara.InnerHit"),FString(TEXT("InnerHit")));
+	
 	
 	NeryGameplayTags.Buff_Good_ArmorPenetration = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Buff.Good.ArmorPenetration"), FString(TEXT("Strengthen ArmorPenetration")));
 	NeryGameplayTags.Buff_Good_Health = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Buff.Good.Health"), FString(TEXT("Recover Health")));
@@ -50,5 +52,5 @@ void FNeryGameplayTags::InitializeTags()
 	NeryGameplayTags.Event_AbilityBegin = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Event.AbilityBegin"),FString(TEXT("First Moment to Spawn Niagara")));
 	
 	NeryGameplayTags.Ability_MoonCrescent = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Ability.MoonCrescent"),FString(TEXT("First Ability")));
-	NeryGameplayTags.Ability_Samsara = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Abiity.Samsara"),FString(TEXT("Second Ability")));
+	NeryGameplayTags.Ability_Samsara = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Ability.Samsara"),FString(TEXT("Second Ability")));
 }
