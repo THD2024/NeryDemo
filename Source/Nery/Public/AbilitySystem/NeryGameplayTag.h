@@ -53,6 +53,7 @@ public:
 	FGameplayTag Buff_Good_Health;
 	FGameplayTag Buff_Good_ArmorPenetration;
 	FGameplayTag Buff_Good_CriticalHitChance;
+	
 
 	/*Damage*/
 	FGameplayTag Damage_Normal;
@@ -68,6 +69,7 @@ public:
 	/*Ability*/
 	FGameplayTag Ability_MoonCrescent;//月光斩
 	FGameplayTag Ability_Samsara;//冥紫色轮 
+	FGameplayTag Ability_Magic_Scorch;//坠击火焰阵
 
 private:
 	static  FNeryGameplayTags NeryGameplayTags;
