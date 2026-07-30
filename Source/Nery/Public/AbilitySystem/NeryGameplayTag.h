@@ -47,6 +47,7 @@ public:
 	FGameplayTag GameplayCue_AbilityMoon_Hit;//刚击中
 	FGameplayTag GameplayCue_AbilitySamsara_OuterHit;
 	FGameplayTag GameplayCue_AbilitySamsara_InnerHit;
+	FGameplayTag GameplayCue_AbilityMagic_ScorchHit;
 	
 	
 	/*BuffActor*/

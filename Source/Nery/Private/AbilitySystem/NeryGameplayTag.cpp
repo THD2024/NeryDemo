@@ -38,7 +38,7 @@ void FNeryGameplayTags::InitializeTags()
 	NeryGameplayTags.GameplayCue_AbilityMoon_Hit = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("GameplayCue.AbilityMoon.Hit"),FString(TEXT("Hit")));
 	NeryGameplayTags.GameplayCue_AbilitySamsara_OuterHit = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("GameplayCue.AbilitySamsara.Outerhit"),FString(TEXT("OuterHit")));
 	NeryGameplayTags.GameplayCue_AbilitySamsara_InnerHit = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("GameplayCue.AbilitySamsara.InnerHit"),FString(TEXT("InnerHit")));
-	
+	NeryGameplayTags.GameplayCue_AbilityMagic_ScorchHit = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("GameplayCue.AbilityMagic.ScorchHit"),FString(TEXT("when Scorch Hits")));
 	
 	NeryGameplayTags.Buff_Good_ArmorPenetration = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Buff.Good.ArmorPenetration"), FString(TEXT("Strengthen ArmorPenetration")));
 	NeryGameplayTags.Buff_Good_Health = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Buff.Good.Health"), FString(TEXT("Recover Health")));
