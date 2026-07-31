@@ -72,6 +72,11 @@ public:
 	FGameplayTag Ability_Samsara;//冥紫色轮 
 	FGameplayTag Ability_Magic_Scorch;//坠击火焰阵
 
+	/*CoolDown*/
+	FGameplayTag Ability_CoolDown_Crescent;
+	FGameplayTag Ability_CoolDown_Samsara;
+	FGameplayTag Ability_CoolDown_Scorch;
+	
 private:
 	static  FNeryGameplayTags NeryGameplayTags;
 };

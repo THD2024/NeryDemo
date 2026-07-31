@@ -21,6 +21,7 @@
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnWidgetSlotDelegate,FNeryAbilityInfo,AbilityInfo);
 
+
 UCLASS()
 class NERY_API UAbilityWidgetController : public UWidgetController
 {
@@ -31,6 +32,8 @@ public:
 	virtual void BroadInitValue() override;
 	
 	virtual void BindCallBacks() override;
+	
+	
 	
 protected:
 	UPROPERTY(EditDefaultsOnly,Category = "AbiityWidget")

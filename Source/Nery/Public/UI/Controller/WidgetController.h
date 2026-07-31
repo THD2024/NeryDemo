@@ -43,7 +43,7 @@ public:
 	UPROPERTY(BlueprintReadOnly)
 	TObjectPtr<APlayerController> PlayerController = nullptr;
 
-	UPROPERTY()
+	UPROPERTY(BlueprintReadOnly)
 	TObjectPtr<UAbilitySystemComponent> AbilitySystemComponent = nullptr;
 
 	UPROPERTY()

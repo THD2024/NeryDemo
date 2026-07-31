@@ -54,4 +54,9 @@ void FNeryGameplayTags::InitializeTags()
 	NeryGameplayTags.Ability_MoonCrescent = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Ability.MoonCrescent"),FString(TEXT("First Ability")));
 	NeryGameplayTags.Ability_Samsara = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Ability.Samsara"),FString(TEXT("Second Ability")));
 	NeryGameplayTags.Ability_Magic_Scorch = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Ability.Magic.Scorch"),FString(TEXT("Magic Ability")));
+
+
+	NeryGameplayTags.Ability_CoolDown_Crescent = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Ability.CoolDown.Crescent"),FString(TEXT("CoolDown to Crescent")));
+	NeryGameplayTags.Ability_CoolDown_Samsara = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Ability.CoolDown.Samsara"),FString(TEXT("CoolDown to Samsara")));
+	NeryGameplayTags.Ability_CoolDown_Scorch = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Ability.CoolDown.Scorch"),FString(TEXT("CoolDown to Scorch")));
 }

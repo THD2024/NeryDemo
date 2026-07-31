@@ -34,6 +34,12 @@ public:
 	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	FText AbilityDescription = FText();
+	
+	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly)
+	FGameplayTag AbilityCoolDownTag;
+	
+	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly)
+	FGameplayTag AbilityCostsTag;
 };
 
 UCLASS(Blueprintable,BlueprintType)
