@@ -19,7 +19,7 @@ class NERY_API UAsyncAction_WaitCoolDownChange : public UBlueprintAsyncActionBas
 	GENERATED_BODY()
 public:
 	
-	UFUNCTION(BlueprintCallable, meta = (BlueprintInternalUseOnly = "true",Category = "AsnycAction"), meta = (DefaultToSelf = "Target"))
+	UFUNCTION(BlueprintCallable, meta = (BlueprintInternalUseOnly = "true",Category = "AsnycAction"))
 	static UAsyncAction_WaitCoolDownChange* WaitCoolDownChange( UAbilitySystemComponent* InASC, const FGameplayTag& InCoolDownTag);
 	
 	virtual void Activate() override;

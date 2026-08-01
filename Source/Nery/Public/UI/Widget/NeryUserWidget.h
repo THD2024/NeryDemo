@@ -30,15 +30,24 @@ public:
 
 	UFUNCTION(BlueprintImplementableEvent)
 	void OnOpenMenuChange();
+	
+	UFUNCTION(BlueprintImplementableEvent)
+	void OnOpenAbilityMenuChanged();
 
+	//接口
 	virtual void UpdateAttributeMenu_Implementation(bool CanOpen) override;
-
+	virtual void UpdateAbiltyMenu_Implementation(bool InCanOpenAbilityMenu) override;
+	//接口
+	
 protected:
 	UPROPERTY(BlueprintReadOnly, Category = "Controller")
 	TObjectPtr<UWidgetController> WidgetController;
 
 	UPROPERTY(BlueprintReadWrite)
 	bool CanOpenMenu = false;
+	
+	UPROPERTY(BlueprintReadWrite)
+	bool CanOpenAbilityMenu = false;//目前就只有一个属性菜单和一个技能菜单，所以这里不扩展写技能唤醒菜单的通用逻辑。这里就两个分开写
 
 
 

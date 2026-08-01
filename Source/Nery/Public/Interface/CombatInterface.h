@@ -63,4 +63,7 @@ public:
 
 	UFUNCTION(BlueprintNativeEvent,BlueprintCallable)
 	FTransform GetWeaponLocation();
+	
+	UFUNCTION(BlueprintNativeEvent)
+	void UpdateAbiltyMenu(bool InCanOpenAbilityMenu);
 };

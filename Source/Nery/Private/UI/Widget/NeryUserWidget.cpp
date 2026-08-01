@@ -10,7 +10,7 @@ void UNeryUserWidget::SetWidgetController(UWidgetController* InWidgetController)
 	OnWidgetControllerSet();
 }
 
-void UNeryUserWidget::SetOpenMenuValue()
+void UNeryUserWidget::SetOpenMenuValue()//统一的按键唤醒菜单入口
 {
 	OnOpenMenuChange();
 }
@@ -19,6 +19,12 @@ void UNeryUserWidget::UpdateAttributeMenu_Implementation(bool CanOpen)
 {
 	CanOpenMenu = CanOpen;
 	SetOpenMenuValue();
+}
+
+void UNeryUserWidget::UpdateAbiltyMenu_Implementation(bool InCanOpenAbilityMenu)
+{
+	CanOpenAbilityMenu = InCanOpenAbilityMenu;
+	OnOpenAbilityMenuChanged();
 }
 
 

@@ -213,6 +213,7 @@ void ANeryPlayerController::SetupInputComponent()
 		NeryInputComponent->BindAction(BuffAction, ETriggerEvent::Started, this, &ANeryPlayerController::UseBuffActor);
 		NeryInputComponent->BindAction(RightScrollAction, ETriggerEvent::Started, this, &ANeryPlayerController::RightScroll);
 		NeryInputComponent->BindAction(LeftScrollAction, ETriggerEvent::Started, this, &ANeryPlayerController::LeftScroll);
+		NeryInputComponent->BindAction(AbilityMenuButtonAction,ETriggerEvent::Started,this,&ANeryPlayerController::AbilityMenuButton);
 		NeryInputComponent->BindActionAbility(InputTagConfig, this, &ANeryPlayerController::PressedFunc, &ANeryPlayerController::HeldFunc, &ANeryPlayerController::ReleasedFunc);
 		
 	}
@@ -399,17 +400,30 @@ void ANeryPlayerController::ReleasedFunc( FGameplayTag  Tag)
 	//暂时没有用处
 }
 
+void ANeryPlayerController::AbilityMenuButton()
+{
+	if (CanOpenAbilityMenu)
+	{
+		CanOpenAbilityMenu = false;
+	}
+	else
+	{
+		CanOpenAbilityMenu = true;
+	}
+	if (ANeryHUD* NeryHUD = Cast<ANeryHUD>(GetHUD()))
+	{
+		if (NeryHUD->GetOverlayWidget() && NeryHUD->GetOverlayWidget()->Implements<UCombatInterface>())
+		{
+			ICombatInterface::Execute_UpdateAbiltyMenu(NeryHUD->GetOverlayWidget(),CanOpenAbilityMenu);
+		}
+	}
+}
 
 
 void ANeryPlayerController::Server_SetBuffWidgetTag_Implementation(const FGameplayTag& Tag)
 {
 	UNeryBlueprintFunctionLibrary::SetCurrentBuffWidgetTag(this,Tag);
 }
-
-
-
-
-
 
 
 

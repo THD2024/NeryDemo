@@ -64,6 +64,7 @@ protected:
 	void Lock(AActor* InActor);//取消锁定特效
 	
 	bool CanOpenMenu = false;
+	bool CanOpenAbilityMenu = false;
 	bool IsTargetValid(AActor* InActor) const ;//判断当前检测到的对象是否有效，是否超出距离，是否中间有阻挡
 
 	//根据对象类型来检测一定范围内的目标,忽略目标自动设置为当前本身
@@ -109,15 +110,9 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, Category = "Input")
 	TObjectPtr<UInputAction> RightScrollAction;//右切换
-
-	UPROPERTY(EditDefaultsOnly,Category = "Input")
-	TObjectPtr<UInputAction> PhysicalAbility1;
 	
 	UPROPERTY(EditDefaultsOnly,Category = "Input")
-	TObjectPtr<UInputAction> PhysicalAbility2;
-	
-	UPROPERTY(EditDefaultsOnly,Category = "Input")
-	TObjectPtr<UInputAction> MagicAbility;
+	TObjectPtr<UInputAction> AbilityMenuButtonAction;
 	
 	UPROPERTY(EditDefaultsOnly, Category = "Input")
 	TObjectPtr<UInputMappingContext> DefaultMappingContext;
@@ -140,6 +135,7 @@ protected:
 	void PressedFunc(FGameplayTag Tag);
 	void HeldFunc(FGameplayTag Tag);
 	void ReleasedFunc(FGameplayTag Tag);
+	void AbilityMenuButton();
 	//	void Crouch_Hold();
 	
 	UPROPERTY(EditAnywhere, Category = "InputConfig")

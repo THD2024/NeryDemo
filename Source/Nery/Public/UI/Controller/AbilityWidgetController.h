@@ -19,7 +19,7 @@
  */
 
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnWidgetSlotDelegate,FNeryAbilityInfo,AbilityInfo);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnAbilityWidgetDelegate,FNeryAbilityInfo,AbilityInfo);
 
 
 UCLASS()
@@ -33,8 +33,8 @@ public:
 	
 	virtual void BindCallBacks() override;
 	
-	
-	
+	void BroadInfoByDelegateType(FOnAbilityWidgetDelegate DelegateType);
+
 protected:
 	UPROPERTY(EditDefaultsOnly,Category = "AbiityWidget")
 	TObjectPtr<UWidgetSlotTagInfo> WidgetSlotTagInfo;
@@ -43,7 +43,13 @@ protected:
 	TObjectPtr<UNeryAbilityDataAsset> AbilityDataAsset;
 	
 	UPROPERTY(BlueprintAssignable,Category = "AbilityChanged")
-	FOnWidgetSlotDelegate OnWidgetSlotDelegate;
+	FOnAbilityWidgetDelegate OnWidgetSlotDelegate;
+	
+	UPROPERTY(BlueprintAssignable,Category = "AbilityChanged")
+	FOnAbilityWidgetDelegate OnAbilityMenuDelegate;
 	
 	void BroadWidgetAbilityInfo();
+	
+	UFUNCTION(BlueprintCallable)
+	void BroadAbilityMenuInfo();//手动调用
 };
