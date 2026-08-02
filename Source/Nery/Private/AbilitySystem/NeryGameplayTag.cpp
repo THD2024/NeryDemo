@@ -59,4 +59,9 @@ void FNeryGameplayTags::InitializeTags()
 	NeryGameplayTags.Ability_CoolDown_Crescent = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Ability.CoolDown.Crescent"),FString(TEXT("CoolDown to Crescent")));
 	NeryGameplayTags.Ability_CoolDown_Samsara = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Ability.CoolDown.Samsara"),FString(TEXT("CoolDown to Samsara")));
 	NeryGameplayTags.Ability_CoolDown_Scorch = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Ability.CoolDown.Scorch"),FString(TEXT("CoolDown to Scorch")));
+
+
+	NeryGameplayTags.Input_1 = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Input.1"),FString(TEXT("KeyBoard1")));
+	NeryGameplayTags.Input_2 = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Input.2"),FString(TEXT("KeyBoard2")));
+	NeryGameplayTags.Input_3 = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Input.3"),FString(TEXT("KeyBoard3")));
 }

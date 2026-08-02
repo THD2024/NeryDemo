@@ -9,6 +9,9 @@
 /**
  * 
  */
+
+//重大问题，玩家个人的技能分配和增益道具怎么能够放到gamestate作为全局单例存在。
+//不过因为时间问题，增益道具全服就全服吧，但是这里关于前面写的ability的代码全部报废。
 DECLARE_MULTICAST_DELEGATE(FOnAbilityWidgetChangeDelegate);
 
 USTRUCT(BlueprintType)

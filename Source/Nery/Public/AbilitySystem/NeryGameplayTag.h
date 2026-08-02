@@ -77,6 +77,11 @@ public:
 	FGameplayTag Ability_CoolDown_Samsara;
 	FGameplayTag Ability_CoolDown_Scorch;
 	
+	/*InputTag*/
+	FGameplayTag Input_1;
+	FGameplayTag Input_2;
+	FGameplayTag Input_3;
+	
 private:
 	static  FNeryGameplayTags NeryGameplayTags;
 };

@@ -66,4 +66,7 @@ public:
 	
 	UFUNCTION(BlueprintNativeEvent)
 	void UpdateAbiltyMenu(bool InCanOpenAbilityMenu);
+	
+	UFUNCTION(BlueprintNativeEvent)
+	void UpdateAbilityWidgetSlot();
 };

@@ -36,8 +36,6 @@ public:
 	void BroadInfoByDelegateType(FOnAbilityWidgetDelegate DelegateType);
 
 protected:
-	UPROPERTY(EditDefaultsOnly,Category = "AbiityWidget")
-	TObjectPtr<UWidgetSlotTagInfo> WidgetSlotTagInfo;
 	
 	UPROPERTY(EditDefaultsOnly,Category = "AbiityAsset")
 	TObjectPtr<UNeryAbilityDataAsset> AbilityDataAsset;
@@ -47,6 +45,7 @@ protected:
 	
 	UPROPERTY(BlueprintAssignable,Category = "AbilityChanged")
 	FOnAbilityWidgetDelegate OnAbilityMenuDelegate;
+	
 	
 	void BroadWidgetAbilityInfo();
 	

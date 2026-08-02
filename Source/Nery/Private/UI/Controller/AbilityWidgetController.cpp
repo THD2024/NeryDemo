@@ -8,7 +8,7 @@
 #include"Interface/CombatInterface.h"
 #include"NeryBlueprintFunction/NeryBlueprintFunctionLibrary.h"
 #include"AbilitySystemBlueprintLibrary.h"
-
+#include "PlayerState/NeryPlayerState.h"
 
 
 void UAbilityWidgetController::BroadInitValue()
@@ -18,14 +18,11 @@ void UAbilityWidgetController::BroadInitValue()
 
 void UAbilityWidgetController::BindCallBacks()
 {
-	if (!WidgetSlotTagInfo)
+	if (ANeryPlayerState* PS = Cast<ANeryPlayerState>(PlayerState))
 	{
-		WidgetSlotTagInfo = UNeryBlueprintFunctionLibrary::GetWidgeetSlotTagInfo(this);
+		PS->OnAbilityWidgetChanged.AddUObject(this,&UAbilityWidgetController::BroadWidgetAbilityInfo);
 	}
-	if (WidgetSlotTagInfo)
-	{
-		WidgetSlotTagInfo->OnAbilitySlotTagChanged.AddUObject(this, &UAbilityWidgetController::BroadWidgetAbilityInfo);
-	}
+	
 }
 
 void UAbilityWidgetController::BroadInfoByDelegateType(FOnAbilityWidgetDelegate DelegateType)
