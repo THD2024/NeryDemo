@@ -46,7 +46,7 @@ protected:
 	UPROPERTY(BlueprintAssignable,Category = "AbilityChanged")
 	FOnAbilityWidgetDelegate OnAbilityMenuDelegate;
 	
-	
+	UFUNCTION(BlueprintCallable)
 	void BroadWidgetAbilityInfo();
 	
 	UFUNCTION(BlueprintCallable)

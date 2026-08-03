@@ -18,6 +18,7 @@
 #include"AbilitySystemBlueprintLibrary.h"
 #include"AbilitySystem/NeryAbilitySystemComponent.h"
 #include "Kismet/GameplayStatics.h"
+#include "PlayerState/NeryPlayerState.h"
 
 
 ANeryPlayerController::ANeryPlayerController()
@@ -371,7 +372,7 @@ void ANeryPlayerController::PressedFunc( FGameplayTag Tag)
 {
 	//在这里激活技能
 	if (UNeryAbilitySystemComponent* NeryASC = Cast<UNeryAbilitySystemComponent>(UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(GetPawn())))
-	{
+	{//普通
 		if (Tag == FNeryGameplayTags::GetNeryGameplayTags().Input_BasicAttack)
 		{
 			NeryASC->ActiveCommonAttackAbility(Tag);
@@ -384,8 +385,12 @@ void ANeryPlayerController::PressedFunc( FGameplayTag Tag)
 			}
 		}
 		else
-		{
-			NeryASC->ActiveAbilityByDynamicTag(Tag);
+		{//技能
+			if (ANeryPlayerState* PS =GetPlayerState<ANeryPlayerState>())
+			{
+				const FGameplayTag AbilityTag = PS->GetAbilitySlotTagByInputTag(Tag);
+				NeryASC->ActiveAbilityByDynamicTag(AbilityTag);
+			}
 		}
 	}
 }

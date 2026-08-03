@@ -51,6 +51,8 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void UpdateAbilityWidgetTag(const FGameplayTag& InInputTag,const FGameplayTag& InTag);
 	
+	const FGameplayTag GetAbilitySlotTagByInputTag(const FGameplayTag& InInputTag);
+
 protected:
 
 	virtual void BeginPlay() override;
@@ -61,6 +63,6 @@ protected:
 	void OnRep_InputTagMap();
 	
 	/*接口*/
-	virtual void UpdateAbilityWidgetSlot_Implementation() override;
+	virtual void UpdateAbilityWidgetSlot_Implementation(const FGameplayTag& InInputTag, const FGameplayTag& InTag) override;
 	
 };

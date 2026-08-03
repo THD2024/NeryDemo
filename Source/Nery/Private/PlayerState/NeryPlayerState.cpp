@@ -5,6 +5,7 @@
 #include"AbilitySystem/NeryAbilitySystemComponent.h"
 #include"AbilitySystem/NeryAttributeSet.h"
 #include "Net/UnrealNetwork.h"
+#include "VisualLogger/VisualLogger.h"
 
 ANeryPlayerState::ANeryPlayerState()
 {
@@ -23,6 +24,8 @@ void ANeryPlayerState::UpdateAbilityWidgetTag(const FGameplayTag& InInputTag, co
 		if (AbilityWidgetSlotInfo.InputTag == InInputTag)
 		{
 			AbilityWidgetSlotInfo.AbilityTag = InTag;
+			OnAbilityWidgetChanged.Broadcast();
+
 		}
 	}
 }
@@ -45,7 +48,19 @@ void ANeryPlayerState::OnRep_InputTagMap()
 	OnAbilityWidgetChanged.Broadcast();
 }
 
-void ANeryPlayerState::UpdateAbilityWidgetSlot_Implementation()
+void ANeryPlayerState::UpdateAbilityWidgetSlot_Implementation(const FGameplayTag& InInputTag, const FGameplayTag& InTag)
 {
-	UpdateAbilityWidgetSlot();
+	UpdateAbilityWidgetTag(InInputTag,InTag);
+}
+
+const FGameplayTag ANeryPlayerState::GetAbilitySlotTagByInputTag(const FGameplayTag& InInputTag)
+{
+	for (auto& AbilityWidgetSlotInfo : AbilityWidgetSlotInfos)
+	{
+		if (AbilityWidgetSlotInfo.InputTag == InInputTag )
+		{
+			return AbilityWidgetSlotInfo.AbilityTag;
+		}
+	}
+	return FGameplayTag();
 }

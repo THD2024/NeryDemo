@@ -50,11 +50,12 @@ UWidgetController* ANeryHUD::GetOverlayWidgetController(const FWidgetControllerP
 }
 
 UAbilityWidgetController* ANeryHUD::GetAbilityWidgetController(const FWidgetControllerParams& Params)
-{
+{//这个在这里的意义是便于通过蓝图函数库调用这个来直接为该控制器赋值
 	if (!AbilityWidgetController)
 	{
 		AbilityWidgetController = NewObject<UAbilityWidgetController>(this, AbilityWidgetControllerClass);
 		AbilityWidgetController->InitWidgetController(Params);
+		AbilityWidgetController->BindCallBacks();
 	}
 	return AbilityWidgetController;
 }
