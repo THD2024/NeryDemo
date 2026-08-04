@@ -14,7 +14,10 @@
 #include"Interface/CombatInterface.h"
 #include"Data/WidgetSlotTagInfo.h"
 #include"AbilitySystem/NeryAttributeSet.h"
+#include "Character/EnemyCharacter.h"
+#include "Character/NeryCharacter.h"
 #include"UI/Controller/AbilityWidgetController.h"
+#include"UI/Widget/NeryUserWidget.h"
 
 TSubclassOf<UGameplayEffect> UNeryBlueprintFunctionLibrary::GetCharacterAttackEffect(const UObject* WorldContextObject)
 {
@@ -126,6 +129,18 @@ void UNeryBlueprintFunctionLibrary::ApplyEffectToActor(AActor* InActor,
 	InASC->ApplyGameplayEffectSpecToSelf(*SpecHandle.Data.Get());
 }
 
+void UNeryBlueprintFunctionLibrary::ApplyEffectToTarget(AActor* Instigator, AActor* TargetActor,
+	TSubclassOf<UGameplayEffect> InGameplayEffectClass, const FHitResult& HitResult)
+{
+	UAbilitySystemComponent* InstigatorASC = GetAbilitySystemComponentByActor(Instigator);
+	UAbilitySystemComponent* TargetASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(TargetActor);
+	if (!Instigator || !TargetASC)return;
+	FGameplayEffectContextHandle ContextHandle = InstigatorASC->MakeEffectContext();
+	ContextHandle.AddHitResult(HitResult);
+	FGameplayEffectSpecHandle SpecHandle = InstigatorASC->MakeOutgoingSpec(InGameplayEffectClass,GetLevel(InstigatorASC), ContextHandle);
+	InstigatorASC->ApplyGameplayEffectSpecToTarget(*SpecHandle.Data.Get(),TargetASC);
+}
+
 UAttributeWidgetController* UNeryBlueprintFunctionLibrary::GetAttributeWigetController(const UObject* WorldContextObject, APlayerController* PlayerController)
 {//这个扔到蓝图中去
 	if (APlayerController* PC = Cast<APlayerController>(PlayerController)) 
@@ -160,6 +175,10 @@ UAbilityWidgetController* UNeryBlueprintFunctionLibrary::GetAbilityWidgetControl
 			{
 				FWidgetControllerParams Params(PS,PC,ASC,AS);
 				UAbilityWidgetController* AbilityWidgetController = NeryHUD->GetAbilityWidgetController(Params);
+				if (NeryHUD->GetOverlayWidget()->Implements<UCombatInterface>())
+				{
+					ICombatInterface::Execute_OnAbilityWidgetControllerSet(NeryHUD->GetOverlayWidget(),AbilityWidgetController);
+				}
 				AbilityWidgetController->BroadInitValue();
 				return AbilityWidgetController;
 			}
@@ -318,6 +337,20 @@ UNeryAbilityDataAsset* UNeryBlueprintFunctionLibrary::GetAbilityDataAsset(const 
 	if (NeryGameState->AbilityDataAsset)
 	{
 		return NeryGameState->AbilityDataAsset;
+	}
+	return nullptr;
+}
+
+UAbilitySystemComponent* UNeryBlueprintFunctionLibrary::GetAbilitySystemComponentByActor(AActor* InActor)
+{
+	if (!InActor)return nullptr;
+	if (ANeryCharacter* NeryCH = Cast<ANeryCharacter>(InActor))
+	{
+		return NeryCH->AbilitySystemComponent;
+	}
+	if (AEnemyCharacter* EmCH = Cast<AEnemyCharacter>(InActor))
+	{
+		return EmCH->AbilitySystemComponent;
 	}
 	return nullptr;
 }

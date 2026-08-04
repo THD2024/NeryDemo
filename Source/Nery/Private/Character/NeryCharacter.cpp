@@ -231,6 +231,7 @@ void ANeryCharacter::GiveOwningAbilities()
 	
 }
 
+
 void ANeryCharacter::OnRep_PlayerState()
 {
 	Super::OnRep_PlayerState();
@@ -240,6 +241,12 @@ void ANeryCharacter::OnRep_PlayerState()
 		InitHUD();//Hud属于表现层，在这里调用初始化Hud的函数，来确保在玩家状态复制到客户端后，客户端的Hud能够正确显示玩家状态的信息。
 		//同时这里保证只会初始Hud到当前玩家的屏幕上
 	}
+	//在这里初始化技能菜单控制器
+	if (ANeryPlayerState* PS = Cast<ANeryPlayerState>(GetPlayerState()))
+	{
+		OnRepPlayerStateSetted.Broadcast(PS);
+	}
+	// InitAbilityController();
 }
 
 void ANeryCharacter::InitASCandAttribute()
@@ -291,18 +298,6 @@ void ANeryCharacter::Server_SetLockTarget_Implementation(AActor* NewTarget)
 void ANeryCharacter::Server_SetLockStatus_Implementation(bool bIsLockOn)
 {
 	bIsLockOn_NetWorked = bIsLockOn;//锁定状态更新后就调用这个onrep_lockon
-}
-
-void ANeryCharacter::Multicast_PlayAttackMontage_Implementation(const int32 Index)
-{
-	if (!IsLocallyControlled())
-	{
-		if (CharacterDataAsset->AttackMontages.IsValidIndex(Index))
-		{
-			PlayAnimMontage(CharacterDataAsset->AttackMontages[Index]);
-			
-		}
-	}
 }
 
 void ANeryCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const

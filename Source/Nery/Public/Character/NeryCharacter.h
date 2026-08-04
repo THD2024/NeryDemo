@@ -9,6 +9,7 @@
 class ANeryPlayerState;
 class UActorComponent;
 
+DECLARE_MULTICAST_DELEGATE_OneParam(FOnRepPlayerState,ANeryPlayerState*);
 
 USTRUCT(BlueprintType)
 struct FBuffNumberBagInfo
@@ -76,6 +77,8 @@ public:
 	UPROPERTY(EditAnywhere,BlueprintReadOnly,Replicated)
 	TArray<FGameplayTag> OwningAbilities;	//需要给Ui传递信息的情况就只有当玩家打开装备栏时，将这些技能信息传递到ui。
 
+	FOnRepPlayerState OnRepPlayerStateSetted;
+	
 protected:
 	virtual void BeginPlay() override;
 
@@ -125,9 +128,6 @@ protected:
 
 	UFUNCTION(Server, Reliable)
 	void Server_SetLockStatus(bool bIsLockOn);//将锁定状态通知到服务器，然后服务器分发到客户端
-
-	UFUNCTION(NetMulticast, Reliable)
-	void Multicast_PlayAttackMontage(const int32 Index);
 
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 	

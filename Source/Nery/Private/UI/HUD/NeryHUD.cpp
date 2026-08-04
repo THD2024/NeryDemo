@@ -3,10 +3,15 @@
 
 #include "UI/HUD/NeryHUD.h"
 
+#include "Character/NeryCharacter.h"
+#include "PlayerController/NeryPlayerController.h"
+#include "PlayerState/NeryPlayerState.h"
 #include "UI/Controller/AbilityWidgetController.h"
 #include"UI/Widget/NeryUserWidget.h"
 #include"UI/Controller/OverlayWidgetController.h"
 #include"UI/Controller/AttributeWidgetController.h"
+
+
 
 
 void ANeryHUD::InitWidgetAndController(const FWidgetControllerParams& Params)
@@ -25,7 +30,10 @@ void ANeryHUD::InitWidgetAndController(const FWidgetControllerParams& Params)
 void ANeryHUD::BeginPlay()
 {
 	Super::BeginPlay();
-
+	if (ANeryCharacter* NeryCH = Cast<ANeryCharacter>(GetOwningPlayerController()->GetPawn()))
+	{
+		NeryCH->OnRepPlayerStateSetted.AddUObject(this, &ANeryHUD::InitAbilityWidgetController);
+	}
 }
 
 void ANeryHUD::InitWidget()
@@ -34,6 +42,27 @@ void ANeryHUD::InitWidget()
 	{
 		check(OverlayWidgetClass);
 		OverlayWidget = CreateWidget<UNeryUserWidget>(GetOwningPlayerController(), OverlayWidgetClass);
+	}
+}
+
+void ANeryHUD::InitAbilityWidgetController(ANeryPlayerState* PS)
+{
+	if (ANeryPlayerController* PC = Cast<ANeryPlayerController>(GetOwningPlayerController()))
+	{
+		// UNeryBlueprintFunctionLibrary::GetAbilityWidgetController(this,PlayerController);
+		if (PS)
+		{
+			UAbilitySystemComponent* ASC = PS->AbilitySystemComponent;
+			UAttributeSet* AS = PS->AttributeSet;
+			FWidgetControllerParams Params(PS,PC,ASC,AS);
+			 AbilityWidgetController = GetAbilityWidgetController(Params);
+			if (GetOverlayWidget()->Implements<UCombatInterface>())
+			{
+				ICombatInterface::Execute_OnAbilityWidgetControllerSet(GetOverlayWidget(),AbilityWidgetController);
+			}
+			AbilityWidgetController->BroadInitValue();
+			
+		}
 	}
 }
 

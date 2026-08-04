@@ -2,6 +2,9 @@
 
 
 #include "EffectActor/NeryProjectileActor.h"
+
+#include "AbilitySystemBlueprintLibrary.h"
+#include "AbilitySystemComponent.h"
 #include"NeryBlueprintFunction/NeryBlueprintFunctionLibrary.h"
 
 // Sets default values
@@ -9,23 +12,27 @@ ANeryProjectileActor::ANeryProjectileActor()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-	Sphere = CreateDefaultSubobject<USphereComponent>(FName("Sphere"));
-	SetRootComponent(Sphere);
+	bReplicates = true;
+	SetReplicateMovement(true);
+	
+	Box = CreateDefaultSubobject<UBoxComponent>(FName("Box"));
+	RootComponent = Box;
 	ProjectileMovementComponent = CreateDefaultSubobject<UProjectileMovementComponent>(FName("ProjectileMovementComponent"));
 	Effect = CreateDefaultSubobject<UNiagaraComponent>(FName("Effect"));
 	Effect->SetupAttachment(RootComponent);
 	ProjectileMovementComponent->SetUpdatedComponent(RootComponent);
 	ProjectileMovementComponent->InitialSpeed = 1000.f;//投掷物速度
 	ProjectileMovementComponent->MaxSpeed = 1000.f;
-	ProjectileMovementComponent->ProjectileGravityScale = 0.f;//直线飞行，没有速度
+	ProjectileMovementComponent->ProjectileGravityScale = 0.f;//直线飞行，没有重量
 	ProjectileMovementComponent->bRotationFollowsVelocity = true;
+	ProjectileMovementComponent->bInitialVelocityInLocalSpace = true;
+	
 }
 
 // Called when the game starts or when spawned
 void ANeryProjectileActor::BeginPlay()
 {
 	Super::BeginPlay();
-	Sphere->OnComponentBeginOverlap.AddDynamic(this,&ANeryProjectileActor::OnBoxOverlap);
 	SetLifeSpan(LifeSpan);
 	
 }
@@ -37,14 +44,36 @@ void ANeryProjectileActor::Tick(float DeltaTime)
 
 }
 
-void ANeryProjectileActor::OnBoxOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
-	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+void ANeryProjectileActor::Destroyed()
 {
-	//这里用来写伤害逻辑
-	if (OtherActor->Tags.Contains(FName("Enemy")))
+	ActorsToIgnore.Empty();
+	Super::Destroyed();
+}
+
+
+void ANeryProjectileActor::BoxTrace(const ECollisionChannel& CollisionChannel)
+{
+	if (!HasAuthority())return;//伤害只允许服务器来判定
+	ActorsToIgnore.Add(GetOwner());//在能力激活的时候设置owner
+	FCollisionShape CollisionShape = FCollisionShape::MakeBox(BoxSize);
+	FCollisionQueryParams QueryParams;
+	QueryParams.AddIgnoredActors(ActorsToIgnore);
+	TArray<FHitResult> HitResults;
+	CurrentLocation = GetActorLocation();
+	
+	if (GetWorld())
 	{
-		//这里会自动触发gameplaycue实现集中效果
-		UNeryBlueprintFunctionLibrary::ApplyEffectToActor(OtherActor,PAGameplayEffect,SweepResult);
+		bool bHit = GetWorld()->SweepMultiByChannel(HitResults,PreviousLocation,CurrentLocation,
+			FQuat::Identity,CollisionChannel,CollisionShape,QueryParams);
+		if (bHit)
+		{
+			for (auto& HitResult : HitResults)
+			{
+				UNeryBlueprintFunctionLibrary::ApplyEffectToTarget(GetOwner(),HitResult.GetActor(),PAGameplayEffect,HitResult);
+				ActorsToIgnore.Add(HitResult.GetActor());
+			}
+		}
+		PreviousLocation = CurrentLocation;
 	}
 	
 }

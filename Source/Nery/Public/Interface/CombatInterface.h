@@ -8,6 +8,7 @@
 #include "CombatInterface.generated.h"
 
 class UItemBagDataAsset;
+class UAbilityWidgetController;
 // This class does not need to be modified.
 
 UINTERFACE(MinimalAPI)
@@ -69,4 +70,7 @@ public:
 	
 	UFUNCTION(BlueprintNativeEvent,BlueprintCallable)
 	void UpdateAbilityWidgetSlot(const FGameplayTag& InInputTag, const FGameplayTag& InTag);
+
+	UFUNCTION(BlueprintNativeEvent)
+	void OnAbilityWidgetControllerSet(UAbilityWidgetController* AbilityWidgetController);
 };

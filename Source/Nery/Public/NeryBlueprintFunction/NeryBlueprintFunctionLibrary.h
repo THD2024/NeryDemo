@@ -51,6 +51,8 @@ public:
 	//改函数可以选择填充fhitresult对需要通过游戏效果出发gameplaycue的情况友好
 	static void ApplyEffectToActor(AActor* InActor,TSubclassOf<UGameplayEffect> InGameplayEffectClass,const FHitResult& HitResult = FHitResult());
 	
+	static void ApplyEffectToTarget(AActor* Instigator,AActor* TargetActor,TSubclassOf<UGameplayEffect>InGameplayEffectClass,const FHitResult& HitResult = FHitResult());
+	
 	UFUNCTION(BlueprintPure,BlueprintCallable)
 	static UAttributeWidgetController* GetAttributeWigetController(const UObject* WorldContextObject, APlayerController* PlayerController);
 
@@ -98,4 +100,6 @@ public:
 	static UWidgetSlotTagInfo* GetWidgeetSlotTagInfo(const UObject* WorldContextObject);
 	
 	static UNeryAbilityDataAsset* GetAbilityDataAsset(const UObject* WorldContextObject);
+	
+	static UAbilitySystemComponent* GetAbilitySystemComponentByActor(AActor* InActor);
 };

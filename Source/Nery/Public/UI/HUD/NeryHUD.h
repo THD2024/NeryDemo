@@ -6,6 +6,7 @@
 #include "GameFramework/HUD.h"
 #include "NeryHUD.generated.h"
 
+class ANeryPlayerState;
 /**
  * 
  */
@@ -32,6 +33,8 @@ protected:
 
 	void InitWidget();
 
+	void InitAbilityWidgetController(ANeryPlayerState* PS);
+	
 	UWidgetController* GetOverlayWidgetController(const FWidgetControllerParams& Params);
 	
 	UPROPERTY(EditDefaultsOnly, Category = "Controller")

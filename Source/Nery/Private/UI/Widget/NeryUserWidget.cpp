@@ -27,4 +27,9 @@ void UNeryUserWidget::UpdateAbiltyMenu_Implementation(bool InCanOpenAbilityMenu)
 	OnOpenAbilityMenuChanged();
 }
 
+void UNeryUserWidget::OnAbilityWidgetControllerSet_Implementation(UAbilityWidgetController* AbilityWidgetController)
+{
+	CanInitAbilityController(AbilityWidgetController);
+}
+
 

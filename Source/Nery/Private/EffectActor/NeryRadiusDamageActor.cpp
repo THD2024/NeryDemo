@@ -11,6 +11,7 @@ ANeryRadiusDamageActor::ANeryRadiusDamageActor()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
+	bReplicates = true;
 	CollisionSphere = CreateDefaultSubobject<USphereComponent>(FName("CollisionSphere"));
 	SetRootComponent(CollisionSphere);
 	NiagaraComponent = CreateDefaultSubobject<UNiagaraComponent>(FName("NiagaraComponent"));
@@ -42,6 +43,7 @@ void ANeryRadiusDamageActor::FireCharacter(ACharacter* OverlapCH,float Strength)
 
 void ANeryRadiusDamageActor::SphereTrace(const ECollisionChannel& CollisionChannel)
 {
+	if (!HasAuthority())return;//服务器来判定伤害
 	//该函数触发条件在蓝图中写，这里是这种半径伤害的父类，只写最基本的逻辑
 	//这里面分为内环和外环，更具不同的环来决定不同的gameplayeffect。
 	TArray<AActor*> OverlappedActors;
@@ -65,14 +67,14 @@ void ANeryRadiusDamageActor::SphereTrace(const ECollisionChannel& CollisionChann
 			{
 				if (InnerGameplayEffect)
 				{
-					UNeryBlueprintFunctionLibrary::ApplyEffectToActor(OverlapResult.GetActor(),InnerGameplayEffect,HitResult);
+					UNeryBlueprintFunctionLibrary::ApplyEffectToTarget(GetOwner(),OverlapResult.GetActor(),InnerGameplayEffect,HitResult);
 				}
 			}
 			else
 			{//这里不需要判断是不是在外圈外面，因为这里的检测结果并没有保留，每次都是新的检测结果，所以能检测到就证明至少在外圈内
 				if (OuterGameplayEffect)
 				{
-					UNeryBlueprintFunctionLibrary::ApplyEffectToActor(OverlapResult.GetActor(),OuterGameplayEffect,HitResult);
+					UNeryBlueprintFunctionLibrary::ApplyEffectToTarget(GetOwner(),OverlapResult.GetActor(),InnerGameplayEffect,HitResult);
 				}
 				//这里还要写击退效果,通过launcher character来实现击退
 				if (ACharacter* OverlapCH = Cast<ACharacter>(OverlapResult.GetActor()))

@@ -9,6 +9,7 @@
 
 
 class UWidgetController;
+class UAbilityWidgetController;
 
 /**
  * 
@@ -33,10 +34,14 @@ public:
 	
 	UFUNCTION(BlueprintImplementableEvent)
 	void OnOpenAbilityMenuChanged();
+	
+	UFUNCTION(BlueprintImplementableEvent)
+	void CanInitAbilityController(UAbilityWidgetController* AbilityWidgetController);
 
 	//接口
 	virtual void UpdateAttributeMenu_Implementation(bool CanOpen) override;
 	virtual void UpdateAbiltyMenu_Implementation(bool InCanOpenAbilityMenu) override;
+	virtual void OnAbilityWidgetControllerSet_Implementation(UAbilityWidgetController* AbilityWidgetController) override;
 	//接口
 	
 protected:
