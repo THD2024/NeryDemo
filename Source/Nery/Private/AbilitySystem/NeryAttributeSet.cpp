@@ -108,6 +108,17 @@ void UNeryAttributeSet::OnRep_NextLevelXp(const FGameplayAttributeData& OldNextL
 	GAMEPLAYATTRIBUTE_REPNOTIFY(UNeryAttributeSet, NextLevelXp, OldNextLevelXp);
 }
 
+void UNeryAttributeSet::OnRep_Poise(const FGameplayAttributeData& OldPoise)
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UNeryAttributeSet,Poise,OldPoise);
+
+}
+
+void UNeryAttributeSet::OnRep_MaxPoise(const FGameplayAttributeData& OldMaxPoise)
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UNeryAttributeSet,MaxPoise,OldMaxPoise);
+}
+
 void UNeryAttributeSet::OnRep_MaxMana(const FGameplayAttributeData& OldMaxMana)
 {
 	GAMEPLAYATTRIBUTE_REPNOTIFY(UNeryAttributeSet, MaxMana, OldMaxMana);
@@ -145,6 +156,10 @@ void UNeryAttributeSet::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>&Out
 	DOREPLIFETIME_CONDITION_NOTIFY(UNeryAttributeSet, Level, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UNeryAttributeSet, MaxLevel, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UNeryAttributeSet, NextLevelXp, COND_None, REPNOTIFY_Always);
+	
+	/*Enemy Attribute*/
+	DOREPLIFETIME_CONDITION_NOTIFY(UNeryAttributeSet,Poise,COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UNeryAttributeSet,MaxPoise,COND_None, REPNOTIFY_Always);
 }
 
 void UNeryAttributeSet::PreAttributeChange(const FGameplayAttribute& Attribute, float& NewValue)
@@ -173,6 +188,10 @@ void UNeryAttributeSet::PreAttributeChange(const FGameplayAttribute& Attribute, 
 	if (Attribute == GetCriticalHitEffectAttribute())
 	{
 		NewValue = FMath::Clamp(NewValue, 0.f, 100.f);
+	}
+	if (Attribute == GetPoiseAttribute())
+	{
+		NewValue = FMath::Clamp(NewValue, 0.f, GetMaxPoise());
 	}
 }
 

@@ -35,6 +35,10 @@ public:
 	/*AttributePoint*/
 	FGameplayTag Attribute_Level_AttributePoint;
 
+	/*Enemy Attribute*/
+	FGameplayTag Attribute_Enemy_Poise;
+	FGameplayTag Attribute_Enemy_MaxPoise;
+	
 	/*GameplayCue*/
 	FGameplayTag GameplayCue_Damage_Critical;
 	FGameplayTag GameplayCue_Damage_Normal;
@@ -81,6 +85,10 @@ public:
 	FGameplayTag Input_1;
 	FGameplayTag Input_2;
 	FGameplayTag Input_3;
+	
+	/*Status*/
+	FGameplayTag Status_Poise;
+	
 	
 private:
 	static  FNeryGameplayTags NeryGameplayTags;

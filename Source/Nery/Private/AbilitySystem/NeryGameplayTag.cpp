@@ -27,6 +27,9 @@ void FNeryGameplayTags::InitializeTags()
 
 	NeryGameplayTags.Attribute_Level_AttributePoint = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Attribute.Level.AttributePoint"), FString(TEXT("AttributePoint")));
 
+	NeryGameplayTags.Attribute_Enemy_Poise = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Attribute.Enemy.Poise"),FString(TEXT("Enemy's Poise")));
+	NeryGameplayTags.Attribute_Enemy_MaxPoise = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Attribute.Enemy.MaxPoise"),FString(TEXT("Enemy's MaxPoise")));
+	
 	NeryGameplayTags.GameplayCue_Damage_Normal = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("GameplayCue.Damage.Normal"), FString(TEXT("Normal Damage")));
 	NeryGameplayTags.GameplayCue_Damage_Critical = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("GameplayCue.Damage.Critical"), FString(TEXT("Critical Damage")));
 	NeryGameplayTags.GameplayCue_Damage_Environmental = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("GameplayCue.Damage.Environmental"), FString(TEXT("Environmental Damage")));
@@ -64,4 +67,6 @@ void FNeryGameplayTags::InitializeTags()
 	NeryGameplayTags.Input_1 = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Input.1"),FString(TEXT("KeyBoard1")));
 	NeryGameplayTags.Input_2 = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Input.2"),FString(TEXT("KeyBoard2")));
 	NeryGameplayTags.Input_3 = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Input.3"),FString(TEXT("KeyBoard3")));
+
+	NeryGameplayTags.Status_Poise = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Status.Poise"),FString(TEXT("Status Poise")));
 }

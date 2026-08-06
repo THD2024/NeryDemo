@@ -69,7 +69,6 @@ FTransform ANeryBaseCharacter::GetWeaponLocation_Implementation()
 void ANeryBaseCharacter::InitAttribute()
 {
 	if (bInitialized == true)return;
-	
 	UNeryBlueprintFunctionLibrary::InitDefaultAttribute(this, this);
 	UNeryBlueprintFunctionLibrary::InitSecondaryAttribute(this, this);
 	UNeryBlueprintFunctionLibrary::InitVitalAttribute(this, this);

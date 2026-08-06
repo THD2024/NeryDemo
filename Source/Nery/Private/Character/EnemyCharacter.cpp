@@ -2,6 +2,8 @@
 
 
 #include "Character/EnemyCharacter.h"
+
+#include "NiagaraGPUInstanceCountManager.h"
 #include"AbilitySystem/NeryAbilitySystemComponent.h"
 #include"UI/Controller/OverlayWidgetController.h"
 #include"UI/Widget/NeryUserWidget.h"
@@ -33,13 +35,13 @@ void AEnemyCharacter::BindCallbacks()
 		{
 			ASC->GetGameplayAttributeValueChangeDelegate(AS->GetHealthAttribute()).AddUObject(this, &AEnemyCharacter::OnHealthChanged);
 			ASC->GetGameplayAttributeValueChangeDelegate(AS->GetMaxHealthAttribute()).AddUObject(this, &AEnemyCharacter::OnMaxHealthDelegate);
+			ASC->GetGameplayAttributeValueChangeDelegate(AS->GetPoiseAttribute()).AddUObject(this,&AEnemyCharacter::OnPoiseChanged);
+			ASC->GetGameplayAttributeValueChangeDelegate(AS->GetMaxPoiseAttribute()).AddUObject(this,&AEnemyCharacter::OnMaxPoiseChanged);
 			OnEnemyHealthChanged.Broadcast(AS->GetHealth());//广播初始值
 			MaxHealthDelegate.Broadcast(AS->GetMaxHealth());
 		}
 	}
 }
-
-
 void AEnemyCharacter::BeginPlay()
 {
 	Super::BeginPlay();
@@ -63,6 +65,22 @@ void AEnemyCharacter::PossessedBy(AController* NewController)
 	{
 		AbilitySystemComponent->InitAbilityActorInfo(this, this);
 		InitAttribute();
+		GiveEnemyAbilities();//赋予能力
+	}
+	
+}
+
+void AEnemyCharacter::GiveEnemyAbilities()
+{
+	if (UNeryAbilitySystemComponent* ASC = Cast<UNeryAbilitySystemComponent>(AbilitySystemComponent))
+	{
+		for (auto Ability : EnemyAbilities)
+		{
+			if (Ability.IsValid())
+			{
+				ASC->GiveCharacterOwningAbility(Ability);
+			}
+		}
 	}
 }
 
@@ -87,6 +105,16 @@ void AEnemyCharacter::UnLockTargetFeedBack_Implementation()
 	LockTargetFeedbackWidget->SetVisibility(false);
 	GEngine->AddOnScreenDebugMessage(1, 2.f, FColor::Blue, TEXT("UNLOCK TARGET"));
 
+}
+
+void AEnemyCharacter::OnMaxPoiseChanged(const FOnAttributeChangeData& Data)
+{
+	MaxPoiseDelegate.Broadcast(Data.NewValue);
+}
+
+void AEnemyCharacter::OnPoiseChanged(const FOnAttributeChangeData& Data)
+{
+	PoiseDelegate.Broadcast(Data.NewValue);
 }
 
 

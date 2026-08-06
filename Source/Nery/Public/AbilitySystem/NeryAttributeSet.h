@@ -65,6 +65,10 @@ public:
 	ATTRIBUTE_ACCESSORS(UNeryAttributeSet, NextLevelXp);
 	/*Character Attributes*/
 
+	/*Enemy Attribute*/
+	ATTRIBUTE_ACCESSORS(UNeryAttributeSet, Poise);
+	ATTRIBUTE_ACCESSORS(UNeryAttributeSet, MaxPoise);
+	
 
 	/*Basic Attribute*/
 	UPROPERTY(ReplicatedUsing = OnRep_Resilience)
@@ -136,6 +140,13 @@ public:
 	FGameplayAttributeData NextLevelXp;
 	/*Character Attributes*/
 
+	/*Enemy*/
+	UPROPERTY(ReplicatedUsing = OnRep_Poise)
+	FGameplayAttributeData Poise;//霸体
+	
+	UPROPERTY(ReplicatedUsing = OnRep_MaxPoise)
+	FGameplayAttributeData MaxPoise;//最大霸体
+	/*Enemy*/
 
 protected:
 	/*Delegate Call back Function*/
@@ -203,6 +214,14 @@ protected:
 	void OnRep_NextLevelXp(const FGameplayAttributeData& OldNextLevelXp);
 	/*Character Attributes*/
 
+	/*Enemy Attribute*/
+	UFUNCTION()
+	void OnRep_Poise(const FGameplayAttributeData& OldPoise);
+	
+	UFUNCTION()
+	void OnRep_MaxPoise(const FGameplayAttributeData& OldMaxPoise);
+	/*Enemy Attribute*/
+	
 
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 
