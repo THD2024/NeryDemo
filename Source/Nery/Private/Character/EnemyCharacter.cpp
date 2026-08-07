@@ -25,6 +25,7 @@ AEnemyCharacter::AEnemyCharacter(const FObjectInitializer& ObjectInitializer)
 	LockTargetFeedbackWidget->SetupAttachment(GetMesh(),FName("LockTargetFeedbackSocket"));
 	LockTargetFeedbackWidget->SetVisibility(false);
 	Tags.Add(TEXT("Enemy"));
+	TeamId = FGenericTeamId(0);//0表示敌人阵营
 }
 
 void AEnemyCharacter::BindCallbacks()

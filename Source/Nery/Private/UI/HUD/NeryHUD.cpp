@@ -23,6 +23,7 @@ void ANeryHUD::InitWidgetAndController(const FWidgetControllerParams& Params)
 		OverlayWidget->AddToViewport();
 		OverlayWidgetController->BindCallBacks();
 		OverlayWidgetController->BroadInitValue();
+		InitAbilityWidgetController(Params);
 	}
 }
 
@@ -30,10 +31,6 @@ void ANeryHUD::InitWidgetAndController(const FWidgetControllerParams& Params)
 void ANeryHUD::BeginPlay()
 {
 	Super::BeginPlay();
-	if (ANeryCharacter* NeryCH = Cast<ANeryCharacter>(GetOwningPlayerController()->GetPawn()))
-	{
-		NeryCH->OnRepPlayerStateSetted.AddUObject(this, &ANeryHUD::InitAbilityWidgetController);
-	}
 }
 
 void ANeryHUD::InitWidget()
@@ -45,27 +42,16 @@ void ANeryHUD::InitWidget()
 	}
 }
 
-void ANeryHUD::InitAbilityWidgetController(ANeryPlayerState* PS)
-{
-	if (ANeryPlayerController* PC = Cast<ANeryPlayerController>(GetOwningPlayerController()))
-	{
-		// UNeryBlueprintFunctionLibrary::GetAbilityWidgetController(this,PlayerController);
-		if (PS)
-		{
-			UAbilitySystemComponent* ASC = PS->AbilitySystemComponent;
-			UAttributeSet* AS = PS->AttributeSet;
-			FWidgetControllerParams Params(PS,PC,ASC,AS);
-			 AbilityWidgetController = GetAbilityWidgetController(Params);
-			if (GetOverlayWidget()->Implements<UCombatInterface>())
-			{
-				ICombatInterface::Execute_OnAbilityWidgetControllerSet(GetOverlayWidget(),AbilityWidgetController);
-			}
-			AbilityWidgetController->BroadInitValue();
-			
-		}
-	}
-}
 
+void ANeryHUD::InitAbilityWidgetController(const FWidgetControllerParams& Params)
+{
+	AbilityWidgetController = GetAbilityWidgetController(Params);
+	if (GetOverlayWidget()->Implements<UCombatInterface>())
+	{
+		ICombatInterface::Execute_OnAbilityWidgetControllerSet(GetOverlayWidget(),AbilityWidgetController);
+	}
+	AbilityWidgetController->BroadInitValue();
+}
 
 
 UWidgetController* ANeryHUD::GetOverlayWidgetController(const FWidgetControllerParams& Params) 

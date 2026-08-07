@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Character/NeryBaseCharacter.h"
+#include "Perception/AIPerceptionStimuliSourceComponent.h"
 #include "NeryCharacter.generated.h"
 
 class ANeryPlayerState;
@@ -77,6 +78,9 @@ public:
 	UPROPERTY(EditAnywhere,BlueprintReadOnly,Replicated)
 	TArray<FGameplayTag> OwningAbilities;	//需要给Ui传递信息的情况就只有当玩家打开装备栏时，将这些技能信息传递到ui。
 
+	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly,Category = "AI")
+	TObjectPtr<UAIPerceptionStimuliSourceComponent> PerceptionStimuliSourceComponent;
+	
 	FOnRepPlayerState OnRepPlayerStateSetted;
 	
 protected:
@@ -113,6 +117,9 @@ protected:
 	virtual TArray<FGameplayTag>  GetCharacterActivateAbilities_Implementation() override;
 	
 	virtual FTransform GetWeaponLocation_Implementation() override;
+	
+
+	
 	/*接口*/
 
 
@@ -156,8 +163,7 @@ protected:
 
 	void ApplyBuffEffect(const FGameplayTag& InTag);
 	void TryToBroadBuffNumberInfo();
-
-
+	
 	float RotateSpeed = 10.f;//角色旋转的速度
 
 	int32 ClickTime = 0;//表示当前的攻击次数

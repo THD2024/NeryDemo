@@ -65,6 +65,11 @@ FTransform ANeryBaseCharacter::GetWeaponLocation_Implementation()
 	return FTransform();
 }
 
+FGenericTeamId ANeryBaseCharacter::GetGenericTeamId() const
+{
+	return TeamId;
+}
+
 
 void ANeryBaseCharacter::InitAttribute()
 {

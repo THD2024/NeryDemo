@@ -14,12 +14,17 @@
 #include"UI/HUD/NeryHUD.h"
 #include"AbilitySystem/NeryAttributeSet.h"
 #include"Data/ItemBagDataAsset.h"
-
+#include "Perception/AISense_Sight.h"
 
 
 ANeryCharacter::ANeryCharacter(const FObjectInitializer& ObjectInitializer):Super(ObjectInitializer)
 {
 	//防止角色跟随控制器旋转	
+	PerceptionStimuliSourceComponent = CreateDefaultSubobject<UAIPerceptionStimuliSourceComponent>(TEXT("PerceptionStimuliSourceComponent"));
+	PerceptionStimuliSourceComponent->bAutoRegister = true;
+	PerceptionStimuliSourceComponent->RegisterForSense(UAISense_Sight::StaticClass());
+	TeamId = FGenericTeamId(1);//1表示角色阵营
+	
 	bReplicates = true;
 	SetReplicateMovement(true);
 	bUseControllerRotationPitch = false;
@@ -115,16 +120,10 @@ void ANeryCharacter::BeginPlay()
 	if (ANeryPlayerController* PC = Cast<ANeryPlayerController>(GetController()))
 	{
 		PC->OnLinkAnimTiminig.AddLambda([this](bool IsLockOn) {
-			//LinkAnimTiming(IsLockOn);//判断当前的锁定状态，来通知character来Linkanim，来实现不同的动画表现
 			SetLockMode(IsLockOn);//根据当前的锁定状态来设置锁定模式
 			});
 		
 	}
-	// if (ANeryPlayerController* PC = Cast<ANeryPlayerController>(GetController()))
-	// {
-	// 	//接收到攻击按键输入事件
-	// 	// PC->OnAttackInput.AddUObject(this, &ANeryCharacter::ReceiveAttackInput);
-	// }
 	if (HasAuthority())
 	{
 		SpawnWeapon();
@@ -240,13 +239,9 @@ void ANeryCharacter::OnRep_PlayerState()
 	{
 		InitHUD();//Hud属于表现层，在这里调用初始化Hud的函数，来确保在玩家状态复制到客户端后，客户端的Hud能够正确显示玩家状态的信息。
 		//同时这里保证只会初始Hud到当前玩家的屏幕上
+		//初始化技能菜单放到了inithud中
 	}
-	//在这里初始化技能菜单控制器
-	if (ANeryPlayerState* PS = Cast<ANeryPlayerState>(GetPlayerState()))
-	{
-		OnRepPlayerStateSetted.Broadcast(PS);
-	}
-	// InitAbilityController();
+	
 }
 
 void ANeryCharacter::InitASCandAttribute()
@@ -397,6 +392,7 @@ FTransform ANeryCharacter::GetWeaponLocation_Implementation()
 	}
 	return Transform;
 }
+
 
 void ANeryCharacter::Server_UpdateRotation_Implementation(float DeltaTime)
 {

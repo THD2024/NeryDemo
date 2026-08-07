@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include"AbilitySystemInterface.h"
+#include "GenericTeamAgentInterface.h"
 #include"NeryType.h"
 #include "Net/UnrealNetwork.h"
 #include"Interface/CombatInterface.h"
@@ -18,7 +19,7 @@ class AWeapon;
 
 
 UCLASS()
-class NERY_API ANeryBaseCharacter : public ACharacter, public IAbilitySystemInterface,public ICombatInterface
+class NERY_API ANeryBaseCharacter : public ACharacter, public IAbilitySystemInterface,public ICombatInterface,public IGenericTeamAgentInterface
 {
 	GENERATED_BODY()
 
@@ -49,6 +50,10 @@ protected:
 	virtual void CloseAttack_Implementation() override;
 	virtual void BegintoTrace_Implementation() override;
 	virtual FTransform GetWeaponLocation_Implementation() override;
+	virtual FGenericTeamId GetGenericTeamId() const override;
+	
+	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly,Category = "AI")
+	FGenericTeamId TeamId = FGenericTeamId::NoTeam;//默认值，子类自己单独设置
 	
 	void InitAttribute();
 

@@ -32,8 +32,8 @@ protected:
 	void BeginPlay() override;
 
 	void InitWidget();
-
-	void InitAbilityWidgetController(ANeryPlayerState* PS);
+	
+	void InitAbilityWidgetController(const FWidgetControllerParams& Params);
 	
 	UWidgetController* GetOverlayWidgetController(const FWidgetControllerParams& Params);
 	
