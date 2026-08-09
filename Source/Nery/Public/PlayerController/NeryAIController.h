@@ -22,6 +22,8 @@ public:
 protected:
 	virtual void BeginPlay() override;
 	
+	virtual void OnPossess(APawn* InPawn) override;
+	
 	UFUNCTION()//绑定感知事件的回调函数
 	void OnTargetPerceptionUpdated(AActor* Actor, FAIStimulus Stimulus);
 	

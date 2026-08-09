@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "BehaviorTree/BehaviorTree.h"
 #include "Character/NeryBaseCharacter.h"
 #include "Interface/CombatInterface.h"
 #include "EnemyCharacter.generated.h"
@@ -29,6 +30,11 @@ public:
 	UFUNCTION(BlueprintImplementableEvent)
 	void InitWidget();
 
+	/*行为树*/
+	UPROPERTY(EditDefaultsOnly,Category = "AI")
+	TObjectPtr<UBehaviorTree> BehaviorTree;
+	/*行为树*/
+	
 protected:
 
 	void BeginPlay() override;

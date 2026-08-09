@@ -3,7 +3,9 @@
 
 #include "PlayerController/NeryAIController.h"
 
+#include "BehaviorTree/BlackboardComponent.h"
 #include "Perception/AIPerceptionComponent.h"
+#include"Character/EnemyCharacter.h"
 
 ANeryAIController::ANeryAIController()
 {
@@ -33,12 +35,24 @@ void ANeryAIController::BeginPlay()
 	PerceptionComponent->OnTargetPerceptionUpdated.AddDynamic(this, &ANeryAIController::OnTargetPerceptionUpdated);
 }
 
+void ANeryAIController::OnPossess(APawn* InPawn)
+{
+	Super::OnPossess(InPawn);//在控制器附身成功时，激活行为树.
+	if (AEnemyCharacter* EnemyCharacter = Cast<AEnemyCharacter>(InPawn))
+	{
+		if (EnemyCharacter->BehaviorTree)
+		{
+			RunBehaviorTree(EnemyCharacter->BehaviorTree);
+		}
+	}
+}
+
 void ANeryAIController::OnTargetPerceptionUpdated(AActor* Actor, FAIStimulus Stimulus)
 {
 	GEngine->AddOnScreenDebugMessage(1,1.f,FColor::Blue,TEXT("OnTargetPerception"));
 	//这里暂时先手动编码，保证是刚看到，就直接走向actor，后面通过这里为入口来实现行为树。
 	if (Stimulus.WasSuccessfullySensed() == true)//表示当前是否是刚好看到
 	{
-		MoveToActor(Actor);
+		Blackboard->SetValueAsObject(FName("Player"),Actor);
 	}
 }
