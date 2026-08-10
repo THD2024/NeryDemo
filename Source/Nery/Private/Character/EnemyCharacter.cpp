@@ -43,6 +43,18 @@ void AEnemyCharacter::BindCallbacks()
 		}
 	}
 }
+
+void AEnemyCharacter::ActivateEnemyAbilityByTag(const FGameplayTag& Tag)
+{//用在行为树task中用来激活敌人技能
+	if (UNeryAbilitySystemComponent* ASC = Cast<UNeryAbilitySystemComponent>(AbilitySystemComponent))
+	{
+		if (Tag.IsValid())
+		{
+			ASC->ActiveAbilityByDynamicTag(Tag);
+		}
+	}
+}
+
 void AEnemyCharacter::BeginPlay()
 {
 	Super::BeginPlay();

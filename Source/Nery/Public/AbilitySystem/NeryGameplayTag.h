@@ -52,6 +52,7 @@ public:
 	FGameplayTag GameplayCue_AbilitySamsara_OuterHit;
 	FGameplayTag GameplayCue_AbilitySamsara_InnerHit;
 	FGameplayTag GameplayCue_AbilityMagic_ScorchHit;
+	FGameplayTag GameplayCue_AbilityGolden_Hit;
 	
 	
 	/*BuffActor*/
@@ -69,17 +70,20 @@ public:
 	/*EventTag*/
 	FGameplayTag Event_AttackInput;
 	FGameplayTag Event_AbilityBegin;
-	
+	FGameplayTag Event_MontageSectionBegin;
 	
 	/*Ability*/
 	FGameplayTag Ability_MoonCrescent;//月光斩
 	FGameplayTag Ability_Samsara;//冥紫色轮 
 	FGameplayTag Ability_Magic_Scorch;//坠击火焰阵
+	FGameplayTag Ability_EnemyBasicAttack;//敌人普攻
+	FGameplayTag Ability_GoldenVortex;//金色旋涡
 
 	/*CoolDown*/
 	FGameplayTag Ability_CoolDown_Crescent;
 	FGameplayTag Ability_CoolDown_Samsara;
 	FGameplayTag Ability_CoolDown_Scorch;
+	FGameplayTag Ability_CoolDown_GoldenVortex;
 	
 	/*InputTag*/
 	FGameplayTag Input_1;
