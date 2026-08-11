@@ -53,6 +53,9 @@ public:
 	FGameplayTag GameplayCue_AbilitySamsara_InnerHit;
 	FGameplayTag GameplayCue_AbilityMagic_ScorchHit;
 	FGameplayTag GameplayCue_AbilityGolden_Hit;
+	FGameplayTag GameplayCue_AbilityCrescentSalvo_Hit;
+	FGameplayTag GameplayCue_AbilityThornMarch_Hit;
+	FGameplayTag GameplayCue_AbilityQuakeFang_Hit;
 	
 	
 	/*BuffActor*/
@@ -71,6 +74,8 @@ public:
 	FGameplayTag Event_AttackInput;
 	FGameplayTag Event_AbilityBegin;
 	FGameplayTag Event_MontageSectionBegin;
+	FGameplayTag Event_TargetInfo;
+	
 	
 	/*Ability*/
 	FGameplayTag Ability_MoonCrescent;//月光斩
@@ -78,6 +83,9 @@ public:
 	FGameplayTag Ability_Magic_Scorch;//坠击火焰阵
 	FGameplayTag Ability_EnemyBasicAttack;//敌人普攻
 	FGameplayTag Ability_GoldenVortex;//金色旋涡
+	FGameplayTag Ability_CrescentSalvo;//月光连射
+	FGameplayTag Ability_ThornMarch;//地刺行军
+	FGameplayTag Ability_QuakeFang;//地突刺
 
 	/*CoolDown*/
 	FGameplayTag Ability_CoolDown_Crescent;

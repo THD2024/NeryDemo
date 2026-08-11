@@ -43,6 +43,9 @@ void FNeryGameplayTags::InitializeTags()
 	NeryGameplayTags.GameplayCue_AbilitySamsara_InnerHit = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("GameplayCue.AbilitySamsara.InnerHit"),FString(TEXT("InnerHit")));
 	NeryGameplayTags.GameplayCue_AbilityMagic_ScorchHit = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("GameplayCue.AbilityMagic.ScorchHit"),FString(TEXT("when Scorch Hits")));
 	NeryGameplayTags.GameplayCue_AbilityGolden_Hit = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("GameplayCue.AbilityGolden.Hit"),FString(TEXT("Hit")));
+	NeryGameplayTags.GameplayCue_AbilityCrescentSalvo_Hit = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("GameplayTagCue.AbilityCrescentSalvo.Hit"),FString(TEXT("Hit")));
+	NeryGameplayTags.GameplayCue_AbilityThornMarch_Hit = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("GameplayCue.AbilityThornMarch.Hit"),FString(TEXT("Hit")));
+	NeryGameplayTags.GameplayCue_AbilityQuakeFang_Hit = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("GameplayCue.AbilityQuakeFang.Hit"),FString(TEXT("Hit")));
 	
 	
 	NeryGameplayTags.Buff_Good_ArmorPenetration = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Buff.Good.ArmorPenetration"), FString(TEXT("Strengthen ArmorPenetration")));
@@ -56,14 +59,19 @@ void FNeryGameplayTags::InitializeTags()
 	NeryGameplayTags.Event_AttackInput = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Event.AttackInput"), FString(TEXT("AttackInputEvent")));
 	NeryGameplayTags.Event_AbilityBegin = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Event.AbilityBegin"),FString(TEXT("First Moment to Spawn Niagara")));
 	NeryGameplayTags.Event_MontageSectionBegin = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Event.MontageSectionBegin"),FString(TEXT("MontageSectionBegin")));
+	NeryGameplayTags.Event_TargetInfo = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Event.TargetInfo"),FString(TEXT("TargetInfo")));
+	
 	
 	NeryGameplayTags.Ability_MoonCrescent = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Ability.MoonCrescent"),FString(TEXT("First Ability")));
 	NeryGameplayTags.Ability_Samsara = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Ability.Samsara"),FString(TEXT("Second Ability")));
 	NeryGameplayTags.Ability_Magic_Scorch = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Ability.Magic.Scorch"),FString(TEXT("Magic Ability")));
 	NeryGameplayTags.Ability_GoldenVortex = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Ability.GoldenVortex"),FString(TEXT("GoldenVortex")));
 	NeryGameplayTags.Ability_EnemyBasicAttack = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Ability.EnemyBasicAttack"),FString(TEXT("EnemyBasicAttack")));
+	NeryGameplayTags.Ability_CrescentSalvo = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Ability.CrescentSalvo"),FString(TEXT("CrescentSalvo")));
+	NeryGameplayTags.Ability_ThornMarch = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Ability.ThornMarch"),FString(TEXT("ThornMarch")));
+	NeryGameplayTags.Ability_QuakeFang = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Ability.QuakeFang"),FString(TEXT("QuakeFang")));
 	
-
+	
 	NeryGameplayTags.Ability_CoolDown_Crescent = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Ability.CoolDown.Crescent"),FString(TEXT("CoolDown to Crescent")));
 	NeryGameplayTags.Ability_CoolDown_Samsara = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Ability.CoolDown.Samsara"),FString(TEXT("CoolDown to Samsara")));
 	NeryGameplayTags.Ability_CoolDown_Scorch = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Ability.CoolDown.Scorch"),FString(TEXT("CoolDown to Scorch")));
