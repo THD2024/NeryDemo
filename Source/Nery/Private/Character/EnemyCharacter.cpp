@@ -10,12 +10,15 @@
 #include"Components/WidgetComponent.h"
 #include"NeryBlueprintFunction/NeryBlueprintFunctionLibrary.h"
 #include"AbilitySystem/NeryAttributeSet.h"
+#include "EffectActor/Weapon.h"
+#include "Kismet/KismetMathLibrary.h"
 
 AEnemyCharacter::AEnemyCharacter(const FObjectInitializer& ObjectInitializer)
 {
 	AbilitySystemComponent = CreateDefaultSubobject<UNeryAbilitySystemComponent>(TEXT("AbilitySystemComponent"));
 	AttributeSet = CreateDefaultSubobject<UNeryAttributeSet>(TEXT("AttributeSet"));
 	bReplicates = true;
+	SetReplicateMovement(true);
 	AbilitySystemComponent->SetIsReplicated(true);
 	AbilitySystemComponent->SetReplicationMode(EGameplayEffectReplicationMode::Minimal);
 	NetUpdateFrequency = 100.f;//通用
@@ -64,6 +67,7 @@ void AEnemyCharacter::BeginPlay()
 		if (HasAuthority())
 		{
 			InitAttribute();
+			SpawnWeapon();
 		}
 		
 		InitWidget();
@@ -110,14 +114,24 @@ void AEnemyCharacter::OnMaxHealthDelegate(const FOnAttributeChangeData& Data)
 void AEnemyCharacter::LockTargetFeedBack_Implementation()
 {
 	LockTargetFeedbackWidget->SetVisibility(true);
-	GEngine->AddOnScreenDebugMessage(1, 2.f, FColor::Blue, TEXT("LOCK TARGET"));
 }
 
 void AEnemyCharacter::UnLockTargetFeedBack_Implementation()
 {
 	LockTargetFeedbackWidget->SetVisibility(false);
-	GEngine->AddOnScreenDebugMessage(1, 2.f, FColor::Blue, TEXT("UNLOCK TARGET"));
+}
 
+FTransform AEnemyCharacter::GetWeaponLocation_Implementation()
+{
+	FTransform Transform = FTransform();
+	if (Weapon && Weapon->ScenePoint)
+	{
+		Transform.SetLocation(Weapon->GetActorLocation());
+		FRotator Rotation = Weapon->GetActorRotation();
+		Rotation.Pitch = 0.0f;
+		Transform.SetRotation(Rotation.Quaternion());
+	}
+	return Transform;
 }
 
 void AEnemyCharacter::OnMaxPoiseChanged(const FOnAttributeChangeData& Data)

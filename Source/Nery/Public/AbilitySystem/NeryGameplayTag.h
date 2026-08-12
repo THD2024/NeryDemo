@@ -75,6 +75,7 @@ public:
 	FGameplayTag Event_AbilityBegin;
 	FGameplayTag Event_MontageSectionBegin;
 	FGameplayTag Event_TargetInfo;
+	FGameplayTag Event_MontageSectionChanged;
 	
 	
 	/*Ability*/

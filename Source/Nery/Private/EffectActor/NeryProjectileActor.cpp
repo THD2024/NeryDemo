@@ -24,8 +24,8 @@ ANeryProjectileActor::ANeryProjectileActor()
 	ProjectileMovementComponent->InitialSpeed = 1000.f;//投掷物速度
 	ProjectileMovementComponent->MaxSpeed = 1000.f;
 	ProjectileMovementComponent->ProjectileGravityScale = 0.f;//直线飞行，没有重量
-	ProjectileMovementComponent->bRotationFollowsVelocity = true;
-	ProjectileMovementComponent->bInitialVelocityInLocalSpace = true;
+	ProjectileMovementComponent->bRotationFollowsVelocity = false;//不跟随速度旋转
+	// ProjectileMovementComponent->bInitialVelocityInLocalSpace = true;
 	
 }
 
@@ -34,7 +34,10 @@ void ANeryProjectileActor::BeginPlay()
 {
 	Super::BeginPlay();
 	SetLifeSpan(LifeSpan);
-	
+	if (GetInstigator())
+	{
+		ProjectileMovementComponent->Velocity = GetInstigator()->GetActorForwardVector()*ProjectileMovementComponent->InitialSpeed;
+	}
 }
 
 // Called every frame

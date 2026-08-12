@@ -122,7 +122,6 @@ void ANeryCharacter::BeginPlay()
 		PC->OnLinkAnimTiminig.AddLambda([this](bool IsLockOn) {
 			SetLockMode(IsLockOn);//根据当前的锁定状态来设置锁定模式
 			});
-		
 	}
 	if (HasAuthority())
 	{

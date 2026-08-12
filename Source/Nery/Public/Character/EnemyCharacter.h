@@ -53,10 +53,15 @@ protected:
 	void OnMaxPoiseChanged(const FOnAttributeChangeData& Data);
 	
 	void OnPoiseChanged(const FOnAttributeChangeData& Data);
-
+	
+	
+	/*接口*/
 	virtual void LockTargetFeedBack_Implementation() override;
 	virtual void UnLockTargetFeedBack_Implementation()override;
-
+	virtual FTransform GetWeaponLocation_Implementation() override;
+	/*接口*/
+	
+	
 	UPROPERTY(BlueprintAssignable)
 	FOnEnemyHealthChanged OnEnemyHealthChanged;
 
