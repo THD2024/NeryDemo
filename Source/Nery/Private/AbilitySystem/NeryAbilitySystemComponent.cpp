@@ -65,6 +65,21 @@ void UNeryAbilitySystemComponent::GiveCharacterOwningAbility(const FGameplayTag&
 	}
 }
 
+bool UNeryAbilitySystemComponent::ActiveEnemyAbilityByDynamicTag(const FGameplayTag& InTag)
+{
+	if (GetActivatableAbilities().Num() > 0)
+	{
+		for (auto& AbilitySpec : GetActivatableAbilities())
+		{
+			if (AbilitySpec.DynamicAbilityTags.HasTagExact(InTag))
+			{
+				return TryActivateAbility(AbilitySpec.Handle);
+			}
+		}
+	}
+	return false;
+}
+
 void UNeryAbilitySystemComponent::Server_SentEvent_Implementation(const FGameplayTag& InTag)
 {
 	FGameplayEventData Payload;

@@ -77,7 +77,11 @@ void FNeryGameplayTags::InitializeTags()
 	NeryGameplayTags.Ability_CoolDown_Samsara = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Ability.CoolDown.Samsara"),FString(TEXT("CoolDown to Samsara")));
 	NeryGameplayTags.Ability_CoolDown_Scorch = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Ability.CoolDown.Scorch"),FString(TEXT("CoolDown to Scorch")));
 	NeryGameplayTags.Ability_CoolDown_GoldenVortex = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Ability.CoolDown.GoldenVortex"),FString(TEXT("CoolDown to GoldenVortex")));
-
+	NeryGameplayTags.Ability_CoolDown_CrescentSalvo = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Ability.CoolDown.CrescentSalvo"),FString(TEXT("CoolDown to CrescentSalvo")));
+	NeryGameplayTags.Ability_CoolDown_EnemyBasicAttack = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Ability.CoolDown.EnemyBasicAttack"),FString(TEXT("CoolDown to EnemyBasicAttack")));
+	NeryGameplayTags.Ability_CoolDown_QuakeFang = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Ability.CoolDown.QuakeFang"),FString(TEXT("QuakeFang")));
+	NeryGameplayTags.Ability_CoolDown_ThornMarch = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Ability.CoolDown.ThornMarch"),FString(TEXT("ThornMarch")));
+	
 	
 	NeryGameplayTags.Input_1 = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Input.1"),FString(TEXT("KeyBoard1")));
 	NeryGameplayTags.Input_2 = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Input.2"),FString(TEXT("KeyBoard2")));

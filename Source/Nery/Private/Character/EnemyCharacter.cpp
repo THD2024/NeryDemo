@@ -47,15 +47,16 @@ void AEnemyCharacter::BindCallbacks()
 	}
 }
 
-void AEnemyCharacter::ActivateEnemyAbilityByTag(const FGameplayTag& Tag)
+bool AEnemyCharacter::ActivateEnemyAbilityByTag(const FGameplayTag& Tag)
 {//用在行为树task中用来激活敌人技能
 	if (UNeryAbilitySystemComponent* ASC = Cast<UNeryAbilitySystemComponent>(AbilitySystemComponent))
 	{
 		if (Tag.IsValid())
 		{
-			ASC->ActiveAbilityByDynamicTag(Tag);
+			return ASC->ActiveEnemyAbilityByDynamicTag(Tag);
 		}
 	}
+	return false;
 }
 
 void AEnemyCharacter::BeginPlay()
@@ -127,8 +128,9 @@ FTransform AEnemyCharacter::GetWeaponLocation_Implementation()
 	if (Weapon && Weapon->ScenePoint)
 	{
 		Transform.SetLocation(Weapon->GetActorLocation());
-		FRotator Rotation = Weapon->GetActorRotation();
-		Rotation.Pitch = 0.0f;
+		FVector ForWard = GetActorForwardVector();
+		FVector SocketRightVector = Weapon->ScenePoint->GetRightVector();
+		FRotator Rotation = UKismetMathLibrary::MakeRotFromXY(ForWard,SocketRightVector);
 		Transform.SetRotation(Rotation.Quaternion());
 	}
 	return Transform;

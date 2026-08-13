@@ -31,7 +31,7 @@ public:
 	void InitWidget();
 	
 	UFUNCTION(BlueprintCallable)
-	void ActivateEnemyAbilityByTag(const FGameplayTag& Tag);
+	bool ActivateEnemyAbilityByTag(const FGameplayTag& Tag);
 	
 	/*行为树*/
 	UPROPERTY(EditDefaultsOnly,Category = "AI")

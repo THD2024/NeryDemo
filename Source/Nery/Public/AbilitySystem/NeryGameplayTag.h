@@ -93,6 +93,10 @@ public:
 	FGameplayTag Ability_CoolDown_Samsara;
 	FGameplayTag Ability_CoolDown_Scorch;
 	FGameplayTag Ability_CoolDown_GoldenVortex;
+	FGameplayTag Ability_CoolDown_EnemyBasicAttack;
+	FGameplayTag Ability_CoolDown_ThornMarch;
+	FGameplayTag Ability_CoolDown_QuakeFang;
+	FGameplayTag Ability_CoolDown_CrescentSalvo;
 	
 	/*InputTag*/
 	FGameplayTag Input_1;

@@ -26,6 +26,8 @@ public:
 	
 	void GiveCharacterOwningAbility(const FGameplayTag& InTag);
 
+	bool ActiveEnemyAbilityByDynamicTag(const FGameplayTag& InTag);
+	
 	UFUNCTION(Server,Reliable)
 	void Server_SentEvent(const FGameplayTag& InTag);
 	
