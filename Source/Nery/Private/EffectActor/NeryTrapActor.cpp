@@ -13,7 +13,6 @@ void ANeryTrapActor::BeginPlay()
 
 void ANeryTrapActor::SphereBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("碰撞开始"));
 	if (!HasAuthority())return;
 	//应用游戏效果到重叠的角色上
 	if (GameplayEffectClass == nullptr)

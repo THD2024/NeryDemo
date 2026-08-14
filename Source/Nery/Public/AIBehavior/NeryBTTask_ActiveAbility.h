@@ -19,6 +19,9 @@ public:
 	UPROPERTY(EditAnywhere,Category = "AI")
 	FGameplayTag AbilityTag;
 	
+	UPROPERTY(EditAnywhere,Category = "AI")
+	FBlackboardKeySelector TargetActor;
+	
 protected:
 	virtual EBTNodeResult::Type ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory) override;
 	
