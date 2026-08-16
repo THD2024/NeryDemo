@@ -104,8 +104,9 @@ public:
 	FGameplayTag Input_3;
 	
 	/*Status*/
-	FGameplayTag Status_Poise;
-	
+	FGameplayTag Status_Enemy_Poise;
+	FGameplayTag Status_Enemy_Locked;
+	FGameplayTag Status_Enemy_UnLocked;
 	
 private:
 	static  FNeryGameplayTags NeryGameplayTags;
