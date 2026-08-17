@@ -6,6 +6,8 @@
 #include "AbilitySystem/NeryGameplayTag.h"
 #include"AIController.h"
 #include "BehaviorTree/BlackboardComponent.h"
+#include "Character/EnemyCharacter.h"
+#include "GameFramework/CharacterMovementComponent.h"
 #include "Kismet/KismetMathLibrary.h"
 
 UNeryBTService_LockTarget::UNeryBTService_LockTarget()
@@ -19,16 +21,31 @@ void UNeryBTService_LockTarget::TickNode(UBehaviorTreeComponent& OwnerComp, uint
 {
 	Super::TickNode(OwnerComp, NodeMemory, DeltaSeconds);
 	if (!OwnerComp.GetAIOwner() || !OwnerComp.GetAIOwner()->GetPawn())return;
+	AAIController* AIController = OwnerComp.GetAIOwner();
+	ACharacter* OwnerActor =Cast<ACharacter>(AIController->GetPawn());
+	UCharacterMovementComponent* CMC = OwnerActor->GetCharacterMovement();
+	if (!CMC)return;
+	
 	if (LockTag.MatchesTagExact(FNeryGameplayTags::GetNeryGameplayTags().Status_Enemy_UnLocked))
 	{
-		OwnerComp.GetAIOwner()->GetPawn()->bUseControllerRotationYaw = false;	
+		OwnerActor->bUseControllerRotationYaw = false;	
+		CMC->bOrientRotationToMovement = true;
+		if (AEnemyCharacter* EnemyCharacter = Cast<AEnemyCharacter>(OwnerActor))
+		{
+			EnemyCharacter->SetIsLocked(false);
+		}
 	}
 	if (LockTag.MatchesTagExact(FNeryGameplayTags::GetNeryGameplayTags().Status_Enemy_Locked))
 	{
 		if (AActor* TargetActor = Cast<AActor>(OwnerComp.GetBlackboardComponent()->GetValueAsObject(TargetKeySelector.SelectedKeyName)))
 		{
-			OwnerComp.GetAIOwner()->GetPawn()->bUseControllerRotationYaw = true;	
-			UpdateRotation(OwnerComp.GetAIOwner()->GetPawn(),TargetActor,OwnerComp.GetAIOwner(),DeltaSeconds);
+			OwnerActor->bUseControllerRotationYaw = true;
+			CMC->bOrientRotationToMovement = false;
+			if (AEnemyCharacter* EnemyCharacter = Cast<AEnemyCharacter>(OwnerActor))
+			{
+				EnemyCharacter->SetIsLocked(true);
+			}
+			UpdateRotation(OwnerActor,TargetActor,AIController,DeltaSeconds);
 		}
 	}
 	
@@ -47,7 +64,7 @@ void UNeryBTService_LockTarget::UpdateRotation(AActor* OwnerActor,AActor* Target
 	TargetRotation.Pitch -= 15.0f;
 	
 	//通过cha值转向
-	FRotator CurrentRotation = AIController->GetControlRotation();
+	FRotator CurrentRotation = OwnerActor->GetActorRotation();
 	FRotator NewRotation = FMath::RInterpTo(CurrentRotation,TargetRotation,DeltaSeconds,InterpSpeed);
 	AIController->SetControlRotation(NewRotation);
 }

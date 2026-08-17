@@ -73,4 +73,7 @@ public:
 
 	UFUNCTION(BlueprintNativeEvent)
 	void OnAbilityWidgetControllerSet(UAbilityWidgetController* AbilityWidgetController);
+	
+	UFUNCTION(BlueprintNativeEvent)
+	void UpdateWarpTarget(FName TargetName, FVector TargetLocation, FRotator TargetRotation);
 };

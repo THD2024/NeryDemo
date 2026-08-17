@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "MotionWarpingComponent.h"
 #include "BehaviorTree/BehaviorTree.h"
 #include "Character/NeryBaseCharacter.h"
 #include "Interface/CombatInterface.h"
@@ -38,6 +39,10 @@ public:
 	TObjectPtr<UBehaviorTree> BehaviorTree;
 	/*行为树*/
 	
+	void SetIsLocked(bool InbLocked){ IsLockedOn = InbLocked; };
+	
+	bool GetIsLocked(){ return IsLockedOn; };
+	
 protected:
 
 	void BeginPlay() override;
@@ -59,8 +64,12 @@ protected:
 	virtual void LockTargetFeedBack_Implementation() override;
 	virtual void UnLockTargetFeedBack_Implementation()override;
 	virtual FTransform GetWeaponLocation_Implementation() override;
+	
+	virtual void UpdateWarpTarget_Implementation(FName TargetName, FVector TargetLocation, FRotator TargetRotation) override;
 	/*接口*/
 	
+	UPROPERTY(EditDefaultsOnly,Category = "WarpTarget")
+	TObjectPtr<UMotionWarpingComponent> WarpingComponent;
 	
 	UPROPERTY(BlueprintAssignable)
 	FOnEnemyHealthChanged OnEnemyHealthChanged;
@@ -79,4 +88,6 @@ protected:
 	
 	UPROPERTY(EditAnywhere,Category = "Ability")
 	TArray<FGameplayTag> EnemyAbilities;//敌人拥有的能力
+	
+	bool IsLockedOn = false;
 };

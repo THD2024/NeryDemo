@@ -17,6 +17,7 @@ AEnemyCharacter::AEnemyCharacter(const FObjectInitializer& ObjectInitializer)
 {
 	AbilitySystemComponent = CreateDefaultSubobject<UNeryAbilitySystemComponent>(TEXT("AbilitySystemComponent"));
 	AttributeSet = CreateDefaultSubobject<UNeryAttributeSet>(TEXT("AttributeSet"));
+	WarpingComponent = CreateDefaultSubobject<UMotionWarpingComponent>(TEXT("WarpingComponent"));
 	bReplicates = true;
 	SetReplicateMovement(true);
 	AbilitySystemComponent->SetIsReplicated(true);
@@ -134,6 +135,12 @@ FTransform AEnemyCharacter::GetWeaponLocation_Implementation()
 		Transform.SetRotation(Rotation.Quaternion());
 	}
 	return Transform;
+}
+
+void AEnemyCharacter::UpdateWarpTarget_Implementation(FName TargetName, FVector TargetLocation, FRotator TargetRotation)
+{
+	// 核心 ：向组件注册或更新一个“标记点”
+	WarpingComponent->AddOrUpdateWarpTargetFromLocationAndRotation(TargetName, TargetLocation, TargetRotation);
 }
 
 void AEnemyCharacter::OnMaxPoiseChanged(const FOnAttributeChangeData& Data)

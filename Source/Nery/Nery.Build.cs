@@ -8,7 +8,7 @@ public class Nery : ModuleRules
 	{
 		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
 	
-		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "EnhancedInput", "GameplayAbilities", "GameplayTags", "GameplayTasks", "Niagara", "UMG", "AnimGraphRuntime","AIModule","NavigationSystem" });
+		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "EnhancedInput", "GameplayAbilities", "GameplayTags", "GameplayTasks", "Niagara", "UMG", "AnimGraphRuntime","AIModule","NavigationSystem","MotionWarping" });
 
 		PrivateDependencyModuleNames.AddRange(new string[] {  });
 

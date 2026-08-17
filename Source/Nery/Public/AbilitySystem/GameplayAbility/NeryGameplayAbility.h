@@ -18,4 +18,7 @@ class NERY_API UNeryGameplayAbility : public UGameplayAbility
 public:
 	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly)
 	FGameplayTag DynamicTag;
+	
+	UFUNCTION(BlueprintCallable,Category = "WarpTarget")
+	void MotionWarping(AActor* SelfActor, AActor* TargetActor,FName NotifyName);
 };
