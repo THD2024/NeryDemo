@@ -87,6 +87,8 @@ public:
 	FGameplayTag Ability_CrescentSalvo;//月光连射
 	FGameplayTag Ability_ThornMarch;//地刺行军
 	FGameplayTag Ability_QuakeFang;//地突刺
+	FGameplayTag Ability_EnemyHitted;//敌人受击
+	FGameplayTag Ability_PlayerHitted;//玩家受击
 
 	/*CoolDown*/
 	FGameplayTag Ability_CoolDown_Crescent;

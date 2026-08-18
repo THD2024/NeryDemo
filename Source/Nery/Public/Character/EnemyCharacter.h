@@ -46,6 +46,8 @@ public:
 protected:
 
 	void BeginPlay() override;
+	
+	void Tick(float DeltaSeconds) override;
 
 	void PossessedBy(AController* NewController) override;
 	
@@ -58,7 +60,7 @@ protected:
 	void OnMaxPoiseChanged(const FOnAttributeChangeData& Data);
 	
 	void OnPoiseChanged(const FOnAttributeChangeData& Data);
-	
+
 	
 	/*接口*/
 	virtual void LockTargetFeedBack_Implementation() override;

@@ -44,6 +44,8 @@ void AEnemyCharacter::BindCallbacks()
 			ASC->GetGameplayAttributeValueChangeDelegate(AS->GetMaxPoiseAttribute()).AddUObject(this,&AEnemyCharacter::OnMaxPoiseChanged);
 			OnEnemyHealthChanged.Broadcast(AS->GetHealth());//广播初始值
 			MaxHealthDelegate.Broadcast(AS->GetMaxHealth());
+			MaxPoiseDelegate.Broadcast(AS->GetMaxPoise());
+			PoiseDelegate.Broadcast(AS->GetPoise());
 		}
 	}
 }
@@ -75,6 +77,11 @@ void AEnemyCharacter::BeginPlay()
 		InitWidget();
 		BindCallbacks();
 	}
+}
+
+void AEnemyCharacter::Tick(float DeltaSeconds)
+{
+	Super::Tick(DeltaSeconds);
 }
 
 void AEnemyCharacter::PossessedBy(AController* NewController)
@@ -152,6 +159,8 @@ void AEnemyCharacter::OnPoiseChanged(const FOnAttributeChangeData& Data)
 {
 	PoiseDelegate.Broadcast(Data.NewValue);
 }
+
+
 
 
 

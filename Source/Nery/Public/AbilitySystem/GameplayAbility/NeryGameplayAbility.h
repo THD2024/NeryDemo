@@ -21,4 +21,5 @@ public:
 	
 	UFUNCTION(BlueprintCallable,Category = "WarpTarget")
 	void MotionWarping(AActor* SelfActor, AActor* TargetActor,FName NotifyName);
+	
 };

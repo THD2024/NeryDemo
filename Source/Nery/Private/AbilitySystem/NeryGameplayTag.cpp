@@ -71,6 +71,8 @@ void FNeryGameplayTags::InitializeTags()
 	NeryGameplayTags.Ability_CrescentSalvo = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Ability.CrescentSalvo"),FString(TEXT("CrescentSalvo")));
 	NeryGameplayTags.Ability_ThornMarch = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Ability.ThornMarch"),FString(TEXT("ThornMarch")));
 	NeryGameplayTags.Ability_QuakeFang = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Ability.QuakeFang"),FString(TEXT("QuakeFang")));
+	NeryGameplayTags.Ability_EnemyHitted = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Ability.EnemyHitted"),FString(TEXT("Enemy is hitted")));
+	NeryGameplayTags.Ability_PlayerHitted = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Ability.PlayerHitted"),FString(TEXT("Player is hitted")));
 	
 	
 	NeryGameplayTags.Ability_CoolDown_Crescent = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Ability.CoolDown.Crescent"),FString(TEXT("CoolDown to Crescent")));

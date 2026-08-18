@@ -24,7 +24,8 @@ void UNeryBTService_LockTarget::TickNode(UBehaviorTreeComponent& OwnerComp, uint
 	AAIController* AIController = OwnerComp.GetAIOwner();
 	ACharacter* OwnerActor =Cast<ACharacter>(AIController->GetPawn());
 	UCharacterMovementComponent* CMC = OwnerActor->GetCharacterMovement();
-	if (!CMC)return;
+	AActor* TargetActor = Cast<AActor>(OwnerComp.GetBlackboardComponent()->GetValueAsObject(TargetKeySelector.SelectedKeyName));
+	if (!CMC || !TargetActor)return;
 	
 	if (LockTag.MatchesTagExact(FNeryGameplayTags::GetNeryGameplayTags().Status_Enemy_UnLocked))
 	{
@@ -34,19 +35,18 @@ void UNeryBTService_LockTarget::TickNode(UBehaviorTreeComponent& OwnerComp, uint
 		{
 			EnemyCharacter->SetIsLocked(false);
 		}
+		AIController->ClearFocus(EAIFocusPriority::Gameplay);
 	}
 	if (LockTag.MatchesTagExact(FNeryGameplayTags::GetNeryGameplayTags().Status_Enemy_Locked))
 	{
-		if (AActor* TargetActor = Cast<AActor>(OwnerComp.GetBlackboardComponent()->GetValueAsObject(TargetKeySelector.SelectedKeyName)))
+		OwnerActor->bUseControllerRotationYaw = true;
+		CMC->bOrientRotationToMovement = false;
+		if (AEnemyCharacter* EnemyCharacter = Cast<AEnemyCharacter>(OwnerActor))
 		{
-			OwnerActor->bUseControllerRotationYaw = true;
-			CMC->bOrientRotationToMovement = false;
-			if (AEnemyCharacter* EnemyCharacter = Cast<AEnemyCharacter>(OwnerActor))
-			{
-				EnemyCharacter->SetIsLocked(true);
-			}
-			UpdateRotation(OwnerActor,TargetActor,AIController,DeltaSeconds);
+			EnemyCharacter->SetIsLocked(true);
 		}
+		// UpdateRotation(OwnerActor,TargetActor,AIController,DeltaSeconds);
+		AIController->SetFocus(TargetActor);
 	}
 	
 }
@@ -67,4 +67,5 @@ void UNeryBTService_LockTarget::UpdateRotation(AActor* OwnerActor,AActor* Target
 	FRotator CurrentRotation = OwnerActor->GetActorRotation();
 	FRotator NewRotation = FMath::RInterpTo(CurrentRotation,TargetRotation,DeltaSeconds,InterpSpeed);
 	AIController->SetControlRotation(NewRotation);
+	
 }

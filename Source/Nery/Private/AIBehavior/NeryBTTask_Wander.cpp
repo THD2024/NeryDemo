@@ -20,7 +20,7 @@ EBTNodeResult::Type UNeryBTTask_Wander::ExecuteTask(UBehaviorTreeComponent& Owne
 	FVector SelfLocation = SelfActor->GetActorLocation();
 	FVector SelfRightLocation = SelfActor->GetActorRightVector();//右边单位向量
 	float Direction = FMath::RandBool() ? 1.0f : -1.0f;//随机决定左右
-	float Distance = FMath::RandRange(200.f,300.f);
+	float Distance = FMath::RandRange(300.f,500.f);
 	
 	FVector TargetLocation = SelfLocation + (SelfRightLocation * Direction * Distance);
 	UNavigationSystemV1* NavSys = FNavigationSystem::GetCurrent<UNavigationSystemV1>(GetWorld());

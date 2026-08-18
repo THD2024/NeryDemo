@@ -31,18 +31,17 @@ EBTNodeResult::Type UNeryBTTask_ActiveAbility::ExecuteTask(UBehaviorTreeComponen
 		ASC->OnAbilityEnded.Remove(Handle);
 		return EBTNodeResult::Failed;//没有成功激活就直接返回失败
 	}
-	if (AbilityTag.MatchesTagExact(FNeryGameplayTags::GetNeryGameplayTags().Ability_QuakeFang))
-	{
-		UBlackboardComponent* Blackboard = AIController->GetBlackboardComponent();
-		if (Blackboard)
-		{
-			FGameplayEventData Payload;
-			AActor* Actor = Cast<AActor>(Blackboard->GetValueAsObject(TargetActor.SelectedKeyName));
-			Payload.Instigator = Actor;
-			UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(EnemyCharacter,FNeryGameplayTags::GetNeryGameplayTags().Event_TargetInfo,Payload);
-		}
-		
+	
+	UBlackboardComponent* Blackboard = AIController->GetBlackboardComponent();
+	if (Blackboard)
+	{//作为一个通用的事件发送到需要接收的地方
+		FGameplayEventData Payload;
+		AActor* Actor = Cast<AActor>(Blackboard->GetValueAsObject(TargetActor.SelectedKeyName));
+		Payload.Instigator = Actor;
+		UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(EnemyCharacter,FNeryGameplayTags::GetNeryGameplayTags().Event_TargetInfo,Payload);
 	}
+		
+	
 	return EBTNodeResult::InProgress;//反之就是成功了，正在释放技能中
 }
 
