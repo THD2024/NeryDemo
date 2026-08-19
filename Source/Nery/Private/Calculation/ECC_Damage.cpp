@@ -26,7 +26,7 @@ struct NeryDamageStatics
 
 };
 
-static const NeryDamageStatics GetDamageStatics()
+static const NeryDamageStatics& GetDamageStatics()
 {//定义全局函数，用于直接获取到静态变量
 	static NeryDamageStatics DamageStatics;
 	return DamageStatics;
@@ -38,6 +38,7 @@ UECC_Damage::UECC_Damage()
 	RelevantAttributesToCapture.Add(GetDamageStatics().ArmorPenetrationDef);
 	RelevantAttributesToCapture.Add(GetDamageStatics().CriticalHitChanceDef);
 	RelevantAttributesToCapture.Add(GetDamageStatics().CriticalHitEffectDef);
+
 }
 
 void UECC_Damage::Execute_Implementation(const FGameplayEffectCustomExecutionParameters & ExecutionParams, FGameplayEffectCustomExecutionOutput & OutExecutionOutput) const
@@ -47,10 +48,13 @@ void UECC_Damage::Execute_Implementation(const FGameplayEffectCustomExecutionPar
 	 UAbilitySystemComponent* TargetASC = ExecutionParams.GetTargetAbilitySystemComponent();
 
 	FAggregatorEvaluateParameters EvaluateParameters = FAggregatorEvaluateParameters();
-	//这里的damage需要通过引进等级来使实现,暂时通过硬编码设置为100
-	const FGameplayEffectSpec CurrentSpec = ExecutionParams.GetOwningSpec();
-	float Damage = CurrentSpec.GetSetByCallerMagnitude(FGameplayTag::RequestGameplayTag("Damage.Normal"));
-
+	FGameplayEffectSpec CurrentSpec = ExecutionParams.GetOwningSpec();
+	float Damage = CurrentSpec.GetSetByCallerMagnitude(FGameplayTag::RequestGameplayTag("Damage.Normal"),false,-1);
+	if (Damage <= 0.f)
+	{//如果不是普攻就直接获取到incomingdamage的值，用来进行下面伤害的计算
+		Damage = CurrentSpec.GetModifierMagnitude(0,false);
+	}
+	
 	float Armor = 0.f;
 	ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(GetDamageStatics().ArmorDef, EvaluateParameters, Armor);
 	Armor = FMath::Max(0.f, Armor);
@@ -73,7 +77,8 @@ void UECC_Damage::Execute_Implementation(const FGameplayEffectCustomExecutionPar
 
 	bool bCriticalHit = false;
 	bCriticalHit = CriticalHitChance > FMath::RandRange(0.f, 1.f) ? true : false;
-	 Damage = bCriticalHit ? Damage * (1 + CriticalHitEffect*2 / 100) : Damage;
+	Damage = bCriticalHit ? Damage * (1 + CriticalHitEffect*2 / 100) : Damage;
+
 
 	 const FGameplayModifierEvaluatedData EvaluatedData = FGameplayModifierEvaluatedData(UNeryAttributeSet::GetInComingDamageAttribute(), EGameplayModOp::Override, Damage);
 	 OutExecutionOutput.AddOutputModifier(EvaluatedData);

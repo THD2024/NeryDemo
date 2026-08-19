@@ -62,6 +62,7 @@ void AWeapon::ApplyAttackEffect(AActor* TargetActor,const FHitResult& HitResult)
 			FGameplayEffectSpecHandle SpecHandle = OwnerASC->MakeOutgoingSpec(UNeryBlueprintFunctionLibrary::GetCharacterAttackEffect(Owner), CurrentLevel, ContextHandle);
 			float DamageValue = UNeryBlueprintFunctionLibrary::GetNormalDamageByLevel(GetWorld(), CurrentLevel);
 			FGameplayTag DamageTag = FGameplayTag::RequestGameplayTag("Damage.Normal");
+			
 			SpecHandle.Data->SetSetByCallerMagnitude(DamageTag, DamageValue);
 			OwnerASC->ApplyGameplayEffectSpecToTarget(*SpecHandle.Data.Get(), TargetASC);
 		}

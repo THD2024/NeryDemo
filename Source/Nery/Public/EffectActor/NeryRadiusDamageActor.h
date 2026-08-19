@@ -43,7 +43,7 @@ protected:
 	
 	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly)
 	TSubclassOf<UGameplayEffect> OuterGameplayEffect;//外环
-	
+
 	
 	
 public:	

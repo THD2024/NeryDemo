@@ -191,7 +191,7 @@ void UNeryAttributeSet::PreAttributeChange(const FGameplayAttribute& Attribute, 
 	}
 	if (Attribute == GetPoiseAttribute())
 	{
-		NewValue = FMath::Clamp(NewValue, 0.f, GetMaxPoise());
+		NewValue = FMath::Clamp(NewValue, 0.f, 100.f);
 	}
 }
 
@@ -204,6 +204,7 @@ void UNeryAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallba
 		SetInComingDamage(0.f);
 		NewHealth = FMath::Clamp(NewHealth,0.f, GetMaxHealth());
 		SetHealth(NewHealth);
+		
 	}
 
 	if (Data.EvaluatedData.Attribute == GetInComingXpAttribute())
