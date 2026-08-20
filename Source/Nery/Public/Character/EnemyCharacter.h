@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "GameplayEffect.h"
 #include "MotionWarpingComponent.h"
 #include "BehaviorTree/BehaviorTree.h"
 #include "Character/NeryBaseCharacter.h"
@@ -17,6 +18,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnEnemyHealthChanged, float, NewHea
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnEnemyMaxHealth, float, MaxHealth);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnEnemyMaxPoiseDelegate, float, MaxPoise);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnEnemyPoiseDelegate, float, Poise);
+DECLARE_DELEGATE_OneParam(FOnEnemyPoiseStatusDelegate,bool);
 
 UCLASS()
 class NERY_API AEnemyCharacter : public ANeryBaseCharacter
@@ -60,14 +62,15 @@ protected:
 	void OnMaxPoiseChanged(const FOnAttributeChangeData& Data);
 	
 	void OnPoiseChanged(const FOnAttributeChangeData& Data);
-
+	
+	void UpdatePoiseStatus(bool InbPoiseStatus);
 	
 	/*接口*/
 	virtual void LockTargetFeedBack_Implementation() override;
 	virtual void UnLockTargetFeedBack_Implementation()override;
 	virtual FTransform GetWeaponLocation_Implementation() override;
-	
 	virtual void UpdateWarpTarget_Implementation(FName TargetName, FVector TargetLocation, FRotator TargetRotation) override;
+	virtual bool GetEnemyPoiseStatus_Implementation() override;
 	/*接口*/
 	
 	UPROPERTY(EditDefaultsOnly,Category = "WarpTarget")
@@ -91,5 +94,14 @@ protected:
 	UPROPERTY(EditAnywhere,Category = "Ability")
 	TArray<FGameplayTag> EnemyAbilities;//敌人拥有的能力
 	
+	UPROPERTY(EditDefaultsOnly)
+	TSubclassOf<UGameplayEffect> PoiseRecoverEffect;
+	
+	FOnEnemyPoiseStatusDelegate PoiseStatusDelegate;
+	
 	bool IsLockedOn = false;
+	
+	bool bPoiseStatus = true;
+	
+	bool IsRecovering = false;
 };

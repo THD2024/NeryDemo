@@ -2,8 +2,6 @@
 
 
 #include "Character/EnemyCharacter.h"
-
-#include "NiagaraGPUInstanceCountManager.h"
 #include"AbilitySystem/NeryAbilitySystemComponent.h"
 #include"UI/Controller/OverlayWidgetController.h"
 #include"UI/Widget/NeryUserWidget.h"
@@ -12,6 +10,7 @@
 #include"AbilitySystem/NeryAttributeSet.h"
 #include "EffectActor/Weapon.h"
 #include "Kismet/KismetMathLibrary.h"
+
 
 AEnemyCharacter::AEnemyCharacter(const FObjectInitializer& ObjectInitializer)
 {
@@ -36,6 +35,7 @@ void AEnemyCharacter::BindCallbacks()
 {
 	if (UNeryAbilitySystemComponent* ASC = Cast<UNeryAbilitySystemComponent>(AbilitySystemComponent))
 	{
+		PoiseStatusDelegate.BindUObject(this,&AEnemyCharacter::UpdatePoiseStatus);
 		if(UNeryAttributeSet* AS = Cast<UNeryAttributeSet>(AttributeSet))
 		{
 			ASC->GetGameplayAttributeValueChangeDelegate(AS->GetHealthAttribute()).AddUObject(this, &AEnemyCharacter::OnHealthChanged);
@@ -76,6 +76,7 @@ void AEnemyCharacter::BeginPlay()
 		
 		InitWidget();
 		BindCallbacks();
+		
 	}
 }
 
@@ -144,10 +145,16 @@ FTransform AEnemyCharacter::GetWeaponLocation_Implementation()
 	return Transform;
 }
 
+
 void AEnemyCharacter::UpdateWarpTarget_Implementation(FName TargetName, FVector TargetLocation, FRotator TargetRotation)
 {
 	// 核心 ：向组件注册或更新一个“标记点”
 	WarpingComponent->AddOrUpdateWarpTargetFromLocationAndRotation(TargetName, TargetLocation, TargetRotation);
+}
+
+bool AEnemyCharacter::GetEnemyPoiseStatus_Implementation()
+{
+	return IsRecovering;
 }
 
 void AEnemyCharacter::OnMaxPoiseChanged(const FOnAttributeChangeData& Data)
@@ -158,6 +165,32 @@ void AEnemyCharacter::OnMaxPoiseChanged(const FOnAttributeChangeData& Data)
 void AEnemyCharacter::OnPoiseChanged(const FOnAttributeChangeData& Data)
 {
 	PoiseDelegate.Broadcast(Data.NewValue);
+	if (Data.NewValue <= 0)
+	{
+		bPoiseStatus = false;
+		PoiseStatusDelegate.Execute(bPoiseStatus);
+	}
+	else 
+	{//只要霸体不为0，就是霸体状态
+		bPoiseStatus = true;
+		if (FMath::IsNearlyEqual(Data.NewValue, 100.f))
+		{
+			IsRecovering = false;
+		}
+	}
+	
+	
+}
+
+void AEnemyCharacter::UpdatePoiseStatus(bool InbPoiseStatus)
+{
+	if (!bPoiseStatus && !IsRecovering)
+	{
+		//这里执行恢复效果，同时添加破防标签,在属性中进行拦截，防止攻击会减少霸体恢复
+		IsRecovering = true;
+		
+		UNeryBlueprintFunctionLibrary::ApplyBasicEffectToSelf(this,PoiseRecoverEffect);
+	}
 }
 
 

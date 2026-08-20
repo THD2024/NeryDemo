@@ -76,4 +76,7 @@ public:
 	
 	UFUNCTION(BlueprintNativeEvent)
 	void UpdateWarpTarget(FName TargetName, FVector TargetLocation, FRotator TargetRotation);
+	
+	UFUNCTION(BlueprintNativeEvent)
+	bool GetEnemyPoiseStatus();
 };

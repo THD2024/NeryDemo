@@ -61,6 +61,7 @@ protected:
 
 	bool bInitialized = false;
 
+	
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;

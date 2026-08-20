@@ -6,7 +6,10 @@
 #include"NeryBlueprintFunction/NeryBlueprintFunctionLibrary.h"
 #include"GameplayEffect.h"
 #include"GameplayEffectTypes.h"
+#include "Chaos/Deformable/Utilities.h"
+#include "Interface/CombatInterface.h"
 #include"Net/UnrealNetwork.h"//注册到网络复制属性的必要头文件
+
 
 UNeryAttributeSet::UNeryAttributeSet()
 {
@@ -191,8 +194,16 @@ void UNeryAttributeSet::PreAttributeChange(const FGameplayAttribute& Attribute, 
 	}
 	if (Attribute == GetPoiseAttribute())
 	{
-		NewValue = FMath::Clamp(NewValue, 0.f, 100.f);
+		if (GetOwningAbilitySystemComponent() && GetOwningAbilitySystemComponent()->HasMatchingGameplayTag(FNeryGameplayTags::GetNeryGameplayTags().Status_Enemy_NoPoise))
+		{
+			if (NewValue <= GetPoise())
+			{
+				NewValue = GetPoise();
+			}
+		}
+		NewValue = FMath::Clamp(NewValue, 0.f, GetMaxPoise());
 	}
+	
 }
 
 void UNeryAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallbackData & Data)
@@ -220,6 +231,22 @@ void UNeryAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallba
 		{
 			if (GetLevel() >= GetMaxLevel())return;
 			AutoHandleLevelUp(Instigator);
+		}
+	}
+	if (Data.EvaluatedData.Attribute == GetInComingPoiseAttribute())
+	{
+		if (GetOwningActor() && GetOwningActor()->Implements<UCombatInterface>())
+		{
+			//该变量表示当前是否在poise恢复阶段
+			bool bEnemyPoise = ICombatInterface::Execute_GetEnemyPoiseStatus(GetOwningActor());
+			if (!bEnemyPoise)//只有当当前不是在恢复状态情况下才能对Poise进行操作
+			{
+				float NewPoise = Poise.GetBaseValue() + GetInComingPoise();
+				SetInComingPoise(0.f);
+				NewPoise = FMath::Clamp(NewPoise, 0.f, GetMaxPoise());
+				SetPoise(NewPoise);
+			}
+			SetInComingPoise(0.f);//保证了元数据的干净
 		}
 	}
 }

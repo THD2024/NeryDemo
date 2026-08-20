@@ -89,7 +89,7 @@ void FNeryGameplayTags::InitializeTags()
 	NeryGameplayTags.Input_2 = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Input.2"),FString(TEXT("KeyBoard2")));
 	NeryGameplayTags.Input_3 = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Input.3"),FString(TEXT("KeyBoard3")));
 
-	NeryGameplayTags.Status_Enemy_Poise = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Status.Enemy.Poise"),FString(TEXT("Status Poise")));
+	NeryGameplayTags.Status_Enemy_NoPoise = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Status.Enemy.NoPoise"),FString(TEXT("Status NoPoise")));
 	NeryGameplayTags.Status_Enemy_Locked = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Status.Enemy.Locked"),FString(TEXT("Status Locked")));
 	NeryGameplayTags.Status_Enemy_UnLocked = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Status.Enemy.UnLocked"),FString(TEXT("Status UnLocked")));
 }

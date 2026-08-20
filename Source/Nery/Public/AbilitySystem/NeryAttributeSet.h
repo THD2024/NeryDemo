@@ -55,6 +55,7 @@ public:
 	/*MetaAttribute*/
 	ATTRIBUTE_ACCESSORS(UNeryAttributeSet, InComingDamage);
 	ATTRIBUTE_ACCESSORS(UNeryAttributeSet, InComingXp);
+	ATTRIBUTE_ACCESSORS(UNeryAttributeSet, InComingPoise);
 	/*MetaAttribute*/
 	
 	/*Character Attributes*/
@@ -119,6 +120,9 @@ public:
 
 	UPROPERTY(BlueprintReadOnly, Category = "MetaAttribute")
 	FGameplayAttributeData InComingXp;
+
+	UPROPERTY(BlueprintReadOnly, Category = "MetaAttribute")
+	FGameplayAttributeData InComingPoise;
 
 	/*MetaAttribute*/
 
