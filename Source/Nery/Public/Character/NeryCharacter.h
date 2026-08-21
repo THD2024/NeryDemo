@@ -118,8 +118,9 @@ protected:
 	
 	virtual FTransform GetWeaponLocation_Implementation() override;
 	
+	virtual void ActiveHitReaction_Implementation() override;
 
-	
+	virtual void SendEventtoHitReaction_Implementation(const FGameplayTag& InTag, const FGameplayEventData& EventData) override;	
 	/*接口*/
 
 

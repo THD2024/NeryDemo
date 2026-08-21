@@ -71,6 +71,7 @@ FGenericTeamId ANeryBaseCharacter::GetGenericTeamId() const
 }
 
 
+
 void ANeryBaseCharacter::InitAttribute()
 {
 	if (bInitialized == true)return;

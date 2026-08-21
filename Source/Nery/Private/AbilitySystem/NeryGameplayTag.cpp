@@ -61,6 +61,7 @@ void FNeryGameplayTags::InitializeTags()
 	NeryGameplayTags.Event_MontageSectionBegin = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Event.MontageSectionBegin"),FString(TEXT("MontageSectionBegin")));
 	NeryGameplayTags.Event_TargetInfo = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Event.TargetInfo"),FString(TEXT("TargetInfo")));
 	NeryGameplayTags.Event_MontageSectionChanged = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Event.MontageSectionChanged"),FString(TEXT("MontageSectionChanged")));
+	NeryGameplayTags.Event_EventData = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Event.EventData"),FString(TEXT("EventData")));
 	
 	
 	NeryGameplayTags.Ability_MoonCrescent = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Ability.MoonCrescent"),FString(TEXT("First Ability")));

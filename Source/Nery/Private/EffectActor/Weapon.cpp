@@ -6,7 +6,6 @@
 #include"Components/SceneComponent.h"
 #include"Interface/CombatInterface.h"
 #include"Kismet/KismetSystemLibrary.h"
-#include"NeryType.h"
 #include"GameplayEffect.h"
 #include "GameplayEffectTypes.h"
 #include"GameplayTagContainer.h"
@@ -53,19 +52,21 @@ void AWeapon::ApplyAttackEffect(AActor* TargetActor,const FHitResult& HitResult)
 	
 	if (UAbilitySystemComponent* OwnerASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(Owner))
 	{
-		if (UAbilitySystemComponent* TargetASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(TargetActor))
-		{
-			FGameplayEffectContextHandle ContextHandle = OwnerASC->MakeEffectContext();
-			ContextHandle.AddHitResult(HitResult);
-			ContextHandle.AddInstigator(Owner, this);
-			int32 CurrentLevel = UNeryBlueprintFunctionLibrary::GetLevel(OwnerASC);
-			FGameplayEffectSpecHandle SpecHandle = OwnerASC->MakeOutgoingSpec(UNeryBlueprintFunctionLibrary::GetCharacterAttackEffect(Owner), CurrentLevel, ContextHandle);
-			float DamageValue = UNeryBlueprintFunctionLibrary::GetNormalDamageByLevel(GetWorld(), CurrentLevel);
+		// if (UAbilitySystemComponent* TargetASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(TargetActor))
+		// {
+		// 	FGameplayEffectContextHandle ContextHandle = OwnerASC->MakeEffectContext();
+		// 	ContextHandle.AddHitResult(HitResult);
+		// 	ContextHandle.AddInstigator(Owner, this);
+		// 	int32 CurrentLevel = UNeryBlueprintFunctionLibrary::GetLevel(OwnerASC);
+		// 	FGameplayEffectSpecHandle SpecHandle = OwnerASC->MakeOutgoingSpec(UNeryBlueprintFunctionLibrary::GetCharacterAttackEffect(Owner), CurrentLevel, ContextHandle);
+		// 	float DamageValue = UNeryBlueprintFunctionLibrary::GetNormalDamageByLevel(GetWorld(), CurrentLevel);
 			FGameplayTag DamageTag = FGameplayTag::RequestGameplayTag("Damage.Normal");
-			
-			SpecHandle.Data->SetSetByCallerMagnitude(DamageTag, DamageValue);
-			OwnerASC->ApplyGameplayEffectSpecToTarget(*SpecHandle.Data.Get(), TargetASC);
-		}
+		// 	
+		// 	SpecHandle.Data->SetSetByCallerMagnitude(DamageTag, DamageValue);
+		// 	OwnerASC->ApplyGameplayEffectSpecToTarget(*SpecHandle.Data.Get(), TargetASC);
+		// 	
+		// }
+		UNeryBlueprintFunctionLibrary::ApplyEffectToActor(TargetActor,UNeryBlueprintFunctionLibrary::GetCharacterAttackEffect(TargetActor),HitResult,DamageTag,true);
 	}
 }
 

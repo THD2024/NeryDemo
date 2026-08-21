@@ -157,6 +157,24 @@ bool AEnemyCharacter::GetEnemyPoiseStatus_Implementation()
 	return IsRecovering;
 }
 
+void AEnemyCharacter::SendEventtoHitReaction_Implementation(const FGameplayTag& InTag,
+	const FGameplayEventData& EventData)
+{
+	UNeryBlueprintFunctionLibrary::HandleGameplayEvent(GetAbilitySystemComponent(),EventData,InTag);
+}
+
+void AEnemyCharacter::ActiveHitReaction_Implementation()
+{
+	if (IsRecovering)
+	{
+		if (UNeryAbilitySystemComponent* ASC = Cast<UNeryAbilitySystemComponent>(AbilitySystemComponent))
+		{
+			ASC->ActiveAbilityByDynamicTag(FNeryGameplayTags::GetNeryGameplayTags().Ability_EnemyHitted);
+		}
+	}
+}
+
+
 void AEnemyCharacter::OnMaxPoiseChanged(const FOnAttributeChangeData& Data)
 {
 	MaxPoiseDelegate.Broadcast(Data.NewValue);

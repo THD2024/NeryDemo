@@ -72,7 +72,7 @@ void ANeryProjectileActor::BoxTrace(const ECollisionChannel& CollisionChannel)
 		{
 			for (auto& HitResult : HitResults)
 			{
-				UNeryBlueprintFunctionLibrary::ApplyEffectToTarget(GetOwner(),HitResult.GetActor(),PAGameplayEffect,HitResult);
+				UNeryBlueprintFunctionLibrary::ApplyEffectToTarget(GetOwner(),HitResult.GetActor(),PAGameplayEffect,HitResult,true);
 				ActorsToIgnore.Add(HitResult.GetActor());
 			}
 		}

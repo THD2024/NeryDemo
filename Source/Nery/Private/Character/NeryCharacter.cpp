@@ -392,6 +392,20 @@ FTransform ANeryCharacter::GetWeaponLocation_Implementation()
 	return Transform;
 }
 
+void ANeryCharacter::ActiveHitReaction_Implementation()
+{
+	if (UNeryAbilitySystemComponent* ASC = Cast<UNeryAbilitySystemComponent>(AbilitySystemComponent))
+	{
+		ASC->ActiveAbilityByDynamicTag(FNeryGameplayTags::GetNeryGameplayTags().Ability_PlayerHitted);
+	}
+}
+
+void ANeryCharacter::SendEventtoHitReaction_Implementation(const FGameplayTag& InTag,
+	const FGameplayEventData& EventData)
+{
+	UNeryBlueprintFunctionLibrary::HandleGameplayEvent(GetAbilitySystemComponent(),EventData,InTag);
+}
+
 
 void ANeryCharacter::Server_UpdateRotation_Implementation(float DeltaTime)
 {

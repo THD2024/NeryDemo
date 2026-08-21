@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "AbilitySystemComponent.h"
 #include "UObject/Interface.h"
 #include"GameplayTagContainer.h"
 #include "CombatInterface.generated.h"
@@ -79,4 +80,10 @@ public:
 	
 	UFUNCTION(BlueprintNativeEvent)
 	bool GetEnemyPoiseStatus();
+	
+	UFUNCTION(BlueprintNativeEvent)
+	void ActiveHitReaction();//敌人和玩家都继承这个，只需要在这里面调用技能激活函数，不过需要的是首先将受击技能都添加到敌人和玩家拥有的技能池中.
+
+	UFUNCTION(BlueprintNativeEvent)
+	void SendEventtoHitReaction(const FGameplayTag& InTag,const FGameplayEventData& EventData);
 };

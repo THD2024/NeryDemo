@@ -127,10 +127,11 @@ void UNeryBlueprintFunctionLibrary::ApplyEffectToActor(AActor* InActor,
 	ContextHandle.AddHitResult(HitResult);
 	FGameplayEffectSpecHandle SpecHandle = InASC->MakeOutgoingSpec(InGameplayEffectClass, GetLevel(InASC), ContextHandle);
 	InASC->ApplyGameplayEffectSpecToSelf(*SpecHandle.Data.Get());
+	
 }
 
 void UNeryBlueprintFunctionLibrary::ApplyEffectToTarget(AActor* Instigator, AActor* TargetActor,
-	TSubclassOf<UGameplayEffect> InGameplayEffectClass, const FHitResult& HitResult)
+	TSubclassOf<UGameplayEffect> InGameplayEffectClass, const FHitResult& HitResult,bool CanSendEvent)
 {
 	UAbilitySystemComponent* InstigatorASC = GetAbilitySystemComponentByActor(Instigator);
 	UAbilitySystemComponent* TargetASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(TargetActor);
@@ -139,6 +140,14 @@ void UNeryBlueprintFunctionLibrary::ApplyEffectToTarget(AActor* Instigator, AAct
 	ContextHandle.AddHitResult(HitResult);
 	FGameplayEffectSpecHandle SpecHandle = InstigatorASC->MakeOutgoingSpec(InGameplayEffectClass,GetLevel(InstigatorASC), ContextHandle);
 	InstigatorASC->ApplyGameplayEffectSpecToTarget(*SpecHandle.Data.Get(),TargetASC);
+	
+	// if (CanSendEvent)
+	// {
+	// 	FGameplayEventData EventData;
+	// 	EventData.ContextHandle = ContextHandle;
+	// 	FGameplayTag EventTag = FNeryGameplayTags::GetNeryGameplayTags().Event_EventData;
+	// 	HandleGameplayEvent(InstigatorASC,EventData,EventTag);
+	// }
 }
 
 UAttributeWidgetController* UNeryBlueprintFunctionLibrary::GetAttributeWigetController(const UObject* WorldContextObject, APlayerController* PlayerController)
@@ -354,5 +363,51 @@ UAbilitySystemComponent* UNeryBlueprintFunctionLibrary::GetAbilitySystemComponen
 	}
 	return nullptr;
 }
+
+void UNeryBlueprintFunctionLibrary::ApplyEffectToActor(AActor* InActor, TSubclassOf<UGameplayEffect>InGameplayEffectClass,
+	const FHitResult& HitResult, const FGameplayTag& SetByCallerTag,bool CanSendEvent)
+{
+	UAbilitySystemComponent* InASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(InActor);
+	if (!InASC)return;
+	FGameplayEffectContextHandle ContextHandle = InASC->MakeEffectContext();
+	ContextHandle.AddHitResult(HitResult);
+	float DamageValue = UNeryBlueprintFunctionLibrary::GetNormalDamageByLevel(InActor,GetLevel(InASC));
+	FGameplayEffectSpecHandle SpecHandle = InASC->MakeOutgoingSpec(InGameplayEffectClass, 1, ContextHandle);
+	SpecHandle.Data->SetSetByCallerMagnitude(SetByCallerTag, DamageValue);
+	InASC->ApplyGameplayEffectSpecToSelf(*SpecHandle.Data.Get());
+	// if (CanSendEvent)
+	// {
+	// 	FGameplayEventData EventData;
+	// 	EventData.ContextHandle = ContextHandle;
+	// 	FGameplayTag EventTag = FNeryGameplayTags::GetNeryGameplayTags().Event_EventData;
+	// 	HandleGameplayEvent(InASC,EventData,EventTag);
+	// }
+	
+}
+
+void UNeryBlueprintFunctionLibrary::HandleGameplayEvent(UAbilitySystemComponent* InASC,
+	const FGameplayEventData& InPayLoad,const FGameplayTag& EventTag)
+{
+	if (!InASC)return;
+	InASC->HandleGameplayEvent(EventTag,&InPayLoad);
+}
+
+bool UNeryBlueprintFunctionLibrary::IsHitFromFront(const FHitResult& HitResult, AActor* InActor)
+{
+	if (InActor)
+	{
+		FVector ActorLocation = InActor->GetActorLocation();
+		FVector ActorForwardVector = InActor->GetActorForwardVector();
+		FVector HitLocation = HitResult.ImpactPoint;
+		FVector DirectiontoHit = (HitLocation - ActorLocation).GetSafeNormal();
+		float DotProduct = FVector::DotProduct(DirectiontoHit,DirectiontoHit);
+		if (DotProduct > 0.0f)
+		{
+			return true;
+		}
+	}
+	return false;
+}
+
 
 

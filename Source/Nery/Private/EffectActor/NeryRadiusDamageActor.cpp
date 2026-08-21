@@ -67,14 +67,14 @@ void ANeryRadiusDamageActor::SphereTrace(const ECollisionChannel& CollisionChann
 			{
 				if (InnerGameplayEffect)
 				{
-					UNeryBlueprintFunctionLibrary::ApplyEffectToTarget(GetOwner(),OverlapResult.GetActor(),InnerGameplayEffect,HitResult);
+					UNeryBlueprintFunctionLibrary::ApplyEffectToTarget(GetOwner(),OverlapResult.GetActor(),InnerGameplayEffect,HitResult,true);
 				}
 			}
 			else
 			{//这里不需要判断是不是在外圈外面，因为这里的检测结果并没有保留，每次都是新的检测结果，所以能检测到就证明至少在外圈内
 				if (OuterGameplayEffect)
 				{
-					UNeryBlueprintFunctionLibrary::ApplyEffectToTarget(GetOwner(),OverlapResult.GetActor(),InnerGameplayEffect,HitResult);
+					UNeryBlueprintFunctionLibrary::ApplyEffectToTarget(GetOwner(),OverlapResult.GetActor(),InnerGameplayEffect,HitResult,true);
 				}
 				//这里还要写击退效果,通过launcher character来实现击退
 				if (ACharacter* OverlapCH = Cast<ACharacter>(OverlapResult.GetActor()))

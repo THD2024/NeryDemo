@@ -51,7 +51,7 @@ public:
 	//改函数可以选择填充fhitresult对需要通过游戏效果出发gameplaycue的情况友好
 	static void ApplyEffectToActor(AActor* InActor,TSubclassOf<UGameplayEffect> InGameplayEffectClass,const FHitResult& HitResult = FHitResult());
 	
-	static void ApplyEffectToTarget(AActor* Instigator,AActor* TargetActor,TSubclassOf<UGameplayEffect>InGameplayEffectClass,const FHitResult& HitResult = FHitResult());
+	static void ApplyEffectToTarget(AActor* Instigator,AActor* TargetActor,TSubclassOf<UGameplayEffect>InGameplayEffectClass,const FHitResult& HitResult = FHitResult(),bool CanSendEvent = false);
 	
 	UFUNCTION(BlueprintPure,BlueprintCallable)
 	static UAttributeWidgetController* GetAttributeWigetController(const UObject* WorldContextObject, APlayerController* PlayerController);
@@ -102,4 +102,11 @@ public:
 	static UNeryAbilityDataAsset* GetAbilityDataAsset(const UObject* WorldContextObject);
 	
 	static UAbilitySystemComponent* GetAbilitySystemComponentByActor(AActor* InActor);
+	
+	static void ApplyEffectToActor(AActor* InActor,TSubclassOf<UGameplayEffect>InGameplayEffectClass,const FHitResult& HitResult = FHitResult(),const FGameplayTag& SetByCallerTag = FGameplayTag(),bool CanSendEvent = false);
+
+	static void HandleGameplayEvent(UAbilitySystemComponent* InASC,const FGameplayEventData& InPayLoad,const FGameplayTag& EventTag);
+
+	UFUNCTION(BlueprintPure,BlueprintCallable)
+	static bool IsHitFromFront(const FHitResult& HitResult,AActor* InActor);
 };

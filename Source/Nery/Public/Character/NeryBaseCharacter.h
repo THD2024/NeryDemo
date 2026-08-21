@@ -52,6 +52,7 @@ protected:
 	virtual FTransform GetWeaponLocation_Implementation() override;
 	virtual FGenericTeamId GetGenericTeamId() const override;
 	
+	
 	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly,Category = "AI")
 	FGenericTeamId TeamId = FGenericTeamId::NoTeam;//默认值，子类自己单独设置
 	

@@ -215,9 +215,19 @@ void UNeryAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallba
 		SetInComingDamage(0.f);
 		NewHealth = FMath::Clamp(NewHealth,0.f, GetMaxHealth());
 		SetHealth(NewHealth);
-		
+		if (UAbilitySystemComponent* ASC = GetOwningAbilitySystemComponent())
+		{
+			if (ASC->GetAvatarActor() && ASC->GetAvatarActor()->Implements<UCombatInterface>())
+			{
+				ICombatInterface::Execute_ActiveHitReaction(ASC->GetAvatarActor());
+				FGameplayEventData EventData;
+				EventData.ContextHandle = Data.EffectSpec.GetEffectContext();
+				ICombatInterface::Execute_SendEventtoHitReaction(ASC->GetAvatarActor(),FNeryGameplayTags::GetNeryGameplayTags().Event_EventData,EventData);
+			}
+		}
 	}
-
+	
+	
 	if (Data.EvaluatedData.Attribute == GetInComingXpAttribute())
 	{
 		//这里面写经验值的处理逻辑，并且计算等级提升和属性点的增加
