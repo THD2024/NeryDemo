@@ -51,6 +51,9 @@ protected:
 	UPROPERTY()
 	TArray<AActor*> ActorsToIgnore;
 	
+	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly)
+	TObjectPtr<UAudioComponent> ProjectileSoundComponent;
+	
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;

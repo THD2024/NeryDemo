@@ -5,6 +5,7 @@
 
 #include "AbilitySystemBlueprintLibrary.h"
 #include "AbilitySystemComponent.h"
+#include "Components/AudioComponent.h"
 #include"NeryBlueprintFunction/NeryBlueprintFunctionLibrary.h"
 
 // Sets default values
@@ -20,6 +21,8 @@ ANeryProjectileActor::ANeryProjectileActor()
 	ProjectileMovementComponent = CreateDefaultSubobject<UProjectileMovementComponent>(FName("ProjectileMovementComponent"));
 	Effect = CreateDefaultSubobject<UNiagaraComponent>(FName("Effect"));
 	Effect->SetupAttachment(RootComponent);
+	ProjectileSoundComponent = CreateDefaultSubobject<UAudioComponent>(FName("ProjectileSoundComponent"));
+	ProjectileSoundComponent->SetupAttachment(RootComponent);
 	ProjectileMovementComponent->SetUpdatedComponent(RootComponent);
 	ProjectileMovementComponent->InitialSpeed = 1000.f;//投掷物速度
 	ProjectileMovementComponent->MaxSpeed = 1000.f;
