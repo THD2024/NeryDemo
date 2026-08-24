@@ -43,6 +43,9 @@ protected:
 	
 	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly)
 	TSubclassOf<UGameplayEffect> OuterGameplayEffect;//外环
+	
+	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly)
+	TObjectPtr<UAudioComponent> SoundComponent;
 
 	
 	

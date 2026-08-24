@@ -80,6 +80,14 @@ bool UNeryAbilitySystemComponent::ActiveEnemyAbilityByDynamicTag(const FGameplay
 	return false;
 }
 
+void UNeryAbilitySystemComponent::ActiveLevelUpGameplayCue()
+{
+	FGameplayCueParameters Parameters;
+	Parameters.Instigator = GetAvatarActor();
+	FGameplayTag CueTag = FNeryGameplayTags::GetNeryGameplayTags().GameplayCue_LevelUp;
+	ExecuteGameplayCue(CueTag,Parameters);
+}
+
 void UNeryAbilitySystemComponent::Server_SentEvent_Implementation(const FGameplayTag& InTag)
 {
 	FGameplayEventData Payload;

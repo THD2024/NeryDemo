@@ -13,7 +13,9 @@
 #include"NeryBlueprintFunction/NeryBlueprintFunctionLibrary.h"
 #include"UI/HUD/NeryHUD.h"
 #include"AbilitySystem/NeryAttributeSet.h"
+#include "AssetTypeActions/AssetDefinition_SoundBase.h"
 #include"Data/ItemBagDataAsset.h"
+#include "Kismet/GameplayStatics.h"
 #include "Perception/AISense_Sight.h"
 
 
@@ -78,10 +80,18 @@ void ANeryCharacter::Server_AddBuffNumberByTag_Implementation(const FGameplayTag
 	{
 		Interactor->Destroy();
 	}
+	if (CharacterDataAsset && CharacterDataAsset->PickUpSound)
+	{
+		UGameplayStatics::PlaySound2D(this,CharacterDataAsset->PickUpSound);
+	}
 }
 
 void ANeryCharacter::AddBuffNumberByTag(const FGameplayTag& InTag,AActor*Interactor)
 {
+	if (CharacterDataAsset && CharacterDataAsset->PickUpSound)
+	{
+		UGameplayStatics::PlaySound2D(this,CharacterDataAsset->PickUpSound);
+	}
 	Server_AddBuffNumberByTag(InTag,Interactor);
 }
 

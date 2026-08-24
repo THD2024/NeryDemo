@@ -2,6 +2,7 @@
 
 
 #include "EffectActor/NeryRadiusDamageActor.h"
+#include "Components/AudioComponent.h"
 #include"NeryBlueprintFunction/NeryBlueprintFunctionLibrary.h"
 #include"GameFramework/Character.h"
 #include "PhysicsProxy/SingleParticlePhysicsProxy.h"
@@ -16,7 +17,8 @@ ANeryRadiusDamageActor::ANeryRadiusDamageActor()
 	SetRootComponent(CollisionSphere);
 	NiagaraComponent = CreateDefaultSubobject<UNiagaraComponent>(FName("NiagaraComponent"));
 	NiagaraComponent->SetupAttachment(CollisionSphere);
-
+	SoundComponent = CreateDefaultSubobject<UAudioComponent>(FName("SoundComponent"));
+	SoundComponent->SetupAttachment(RootComponent);
 }
 
 // Called when the game starts or when spawned

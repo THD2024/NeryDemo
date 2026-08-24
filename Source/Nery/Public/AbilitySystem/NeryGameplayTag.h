@@ -56,6 +56,9 @@ public:
 	FGameplayTag GameplayCue_AbilityCrescentSalvo_Hit;
 	FGameplayTag GameplayCue_AbilityThornMarch_Hit;
 	FGameplayTag GameplayCue_AbilityQuakeFang_Hit;
+	FGameplayTag GameplayCue_AbilityQuakeFangTrap_Hit;
+	FGameplayTag GameplayCue_LevelUp;
+	FGameplayTag GameplayCue_WeaponAttack;
 	
 	
 	/*BuffActor*/

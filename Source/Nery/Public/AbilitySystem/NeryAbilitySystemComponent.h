@@ -31,4 +31,6 @@ public:
 	UFUNCTION(Server,Reliable)
 	void Server_SentEvent(const FGameplayTag& InTag);
 	
+	void ActiveLevelUpGameplayCue();
+	
 };

@@ -6,6 +6,7 @@
 #include"NeryBlueprintFunction/NeryBlueprintFunctionLibrary.h"
 #include"GameplayEffect.h"
 #include"GameplayEffectTypes.h"
+#include "AbilitySystem/NeryAbilitySystemComponent.h"
 #include "Chaos/Deformable/Utilities.h"
 #include "Interface/CombatInterface.h"
 #include"Net/UnrealNetwork.h"//注册到网络复制属性的必要头文件
@@ -273,7 +274,11 @@ void UNeryAttributeSet::AutoHandleLevelUp(const AActor* Instigator)
 		SetLevel(NextLevel);//等级升级
 		float TempNextLevelXp = UNeryBlueprintFunctionLibrary::GetXpByLevel(Instigator, GetLevel() + 1);
 		SetNextLevelXp(TempNextLevelXp);
-
+		if (UNeryAbilitySystemComponent* ASC = Cast<UNeryAbilitySystemComponent>(GetOwningAbilitySystemComponent()))
+		{
+			ASC->ActiveLevelUpGameplayCue();
+		}
+		
 		//计算升级后增加的属性点数量
 		float AddedAttributePoint = UNeryBlueprintFunctionLibrary::GetAttributePointbyCurrentLevel(Instigator, GetLevel());
 		float NewAttributePoint = GetAttributePoint() + AddedAttributePoint;

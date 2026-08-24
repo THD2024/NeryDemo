@@ -39,4 +39,10 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Data")
 	TArray<TSubclassOf<UGameplayAbility>> BasicAbilitiesClass;
+
+	UPROPERTY(EditAnywhere,BlueprintReadOnly, Category = "Data")
+	TObjectPtr<USoundBase> UpgradeSound;
+	
+	UPROPERTY(EditAnywhere,BlueprintReadOnly, Category = "Data")
+	TObjectPtr<USoundBase> PickUpSound;
 };

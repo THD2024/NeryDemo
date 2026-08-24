@@ -46,6 +46,9 @@ void FNeryGameplayTags::InitializeTags()
 	NeryGameplayTags.GameplayCue_AbilityCrescentSalvo_Hit = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("GameplayTagCue.AbilityCrescentSalvo.Hit"),FString(TEXT("Hit")));
 	NeryGameplayTags.GameplayCue_AbilityThornMarch_Hit = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("GameplayCue.AbilityThornMarch.Hit"),FString(TEXT("Hit")));
 	NeryGameplayTags.GameplayCue_AbilityQuakeFang_Hit = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("GameplayCue.AbilityQuakeFang.Hit"),FString(TEXT("Hit")));
+	NeryGameplayTags.GameplayCue_AbilityQuakeFangTrap_Hit = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("GameplayCue.AbilityQuakeFangTrap.Hit"),FString(TEXT("Hit")));
+	NeryGameplayTags.GameplayCue_LevelUp = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("GameplayCue.LevelUp"),FString(TEXT("LevelUp")));
+	NeryGameplayTags.GameplayCue_WeaponAttack = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("GameplayCue.WeaponAttack"),FString(TEXT("Weapon Attack")));
 	
 	
 	NeryGameplayTags.Buff_Good_ArmorPenetration = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Buff.Good.ArmorPenetration"), FString(TEXT("Strengthen ArmorPenetration")));
