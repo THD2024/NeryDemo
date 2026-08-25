@@ -29,6 +29,9 @@ public:
 	TSubclassOf<UGameplayEffect> AttackEffectClass;//角色的普通伤害
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Data")
+	TSubclassOf<UGameplayEffect> StaminaRecoverEffect;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Data")
 	TSubclassOf<UGameplayEffect> DefaultAttributeEffect;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Data")

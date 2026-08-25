@@ -409,5 +409,33 @@ bool UNeryBlueprintFunctionLibrary::IsHitFromFront(const FHitResult& HitResult, 
 	return false;
 }
 
+int32 UNeryBlueprintFunctionLibrary::GetHitDirection(const FHitResult& HitResult, AActor* InActor)
+{
+	if (InActor)
+	{
+		FVector ActorLocation = InActor->GetActorLocation();
+		FVector HitLocation = HitResult.ImpactPoint;
+		FVector DirectiontoHit = (HitLocation - ActorLocation).GetSafeNormal();
+		FVector LocalHitVector = InActor->GetActorRotation().UnrotateVector(DirectiontoHit);
+		if (LocalHitVector.X > 0.5f)
+		{
+			return 1;
+		}
+		if (LocalHitVector.X < -0.5f)
+		{
+			return 2;
+		}
+		if (LocalHitVector.Y > 0.5f)
+		{
+			return 3;
+		}
+		if (LocalHitVector.Y < -0.5f)
+		{
+			return 4;
+		}
+	}
+	return 0;
+}
+
 
 

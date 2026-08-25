@@ -193,6 +193,16 @@ void UNeryAttributeSet::PreAttributeChange(const FGameplayAttribute& Attribute, 
 	{
 		NewValue = FMath::Clamp(NewValue, 0.f, 100.f);
 	}
+	if (Attribute == GetStaminaAttribute())
+	{
+		if (UAbilitySystemComponent* ASC = GetOwningAbilitySystemComponent())
+		{
+			if (ASC->GetAvatarActor() && ASC->GetAvatarActor()->Implements<UCombatInterface>())
+			{
+				ICombatInterface::Execute_RecoverStamina(ASC->GetAvatarActor());
+			}
+		}
+	}
 	if (Attribute == GetPoiseAttribute())
 	{
 		if (GetOwningAbilitySystemComponent() && GetOwningAbilitySystemComponent()->HasMatchingGameplayTag(FNeryGameplayTags::GetNeryGameplayTags().Status_Enemy_NoPoise))

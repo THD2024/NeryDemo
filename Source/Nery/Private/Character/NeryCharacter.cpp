@@ -416,6 +416,15 @@ void ANeryCharacter::SendEventtoHitReaction_Implementation(const FGameplayTag& I
 	UNeryBlueprintFunctionLibrary::HandleGameplayEvent(GetAbilitySystemComponent(),EventData,InTag);
 }
 
+void ANeryCharacter::RecoverStamina_Implementation()
+{
+	
+	if (CharacterDataAsset && CharacterDataAsset->StaminaRecoverEffect)
+	{
+		UNeryBlueprintFunctionLibrary::ApplyBasicEffectToSelf(this,CharacterDataAsset->StaminaRecoverEffect);
+	}
+}
+
 
 void ANeryCharacter::Server_UpdateRotation_Implementation(float DeltaTime)
 {

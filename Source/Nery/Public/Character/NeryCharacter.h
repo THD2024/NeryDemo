@@ -121,6 +121,8 @@ protected:
 	virtual void ActiveHitReaction_Implementation() override;
 
 	virtual void SendEventtoHitReaction_Implementation(const FGameplayTag& InTag, const FGameplayEventData& EventData) override;	
+	
+	virtual void RecoverStamina_Implementation() override;
 	/*接口*/
 
 

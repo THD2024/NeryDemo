@@ -109,4 +109,7 @@ public:
 
 	UFUNCTION(BlueprintPure,BlueprintCallable)
 	static bool IsHitFromFront(const FHitResult& HitResult,AActor* InActor);
+	
+	UFUNCTION(BlueprintPure,BlueprintCallable)
+	static int32 GetHitDirection(const FHitResult& HitResult,AActor* InActor);//通过返回Int32表示前后左右，1：前，2：后，3：左，4：右
 };

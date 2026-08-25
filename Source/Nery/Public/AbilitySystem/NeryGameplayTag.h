@@ -59,6 +59,7 @@ public:
 	FGameplayTag GameplayCue_AbilityQuakeFangTrap_Hit;
 	FGameplayTag GameplayCue_LevelUp;
 	FGameplayTag GameplayCue_WeaponAttack;
+	FGameplayTag GameplayCue_Dodge;
 	
 	
 	/*BuffActor*/
@@ -93,6 +94,7 @@ public:
 	FGameplayTag Ability_QuakeFang;//地突刺
 	FGameplayTag Ability_EnemyHitted;//敌人受击
 	FGameplayTag Ability_PlayerHitted;//玩家受击
+	FGameplayTag Ability_Dodge;//翻滚
 
 	/*CoolDown*/
 	FGameplayTag Ability_CoolDown_Crescent;
@@ -113,6 +115,8 @@ public:
 	FGameplayTag Status_Enemy_NoPoise;
 	FGameplayTag Status_Enemy_Locked;
 	FGameplayTag Status_Enemy_UnLocked;
+	FGameplayTag Status_Immunity;//无敌
+	FGameplayTag Status_StaminRecovery;
 	// FGameplayTag Status_Player_Poise;
 	
 private:

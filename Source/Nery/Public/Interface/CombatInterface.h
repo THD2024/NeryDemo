@@ -86,4 +86,7 @@ public:
 
 	UFUNCTION(BlueprintNativeEvent)
 	void SendEventtoHitReaction(const FGameplayTag& InTag,const FGameplayEventData& EventData);
+	
+	UFUNCTION(BlueprintNativeEvent)
+	void RecoverStamina();
 };

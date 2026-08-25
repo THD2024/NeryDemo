@@ -114,6 +114,9 @@ protected:
 	UPROPERTY(EditDefaultsOnly,Category = "Input")
 	TObjectPtr<UInputAction> AbilityMenuButtonAction;
 	
+	UPROPERTY(EditDefaultsOnly,Category = "Input")
+	TObjectPtr<UInputAction> DodgeAction;
+	
 	UPROPERTY(EditDefaultsOnly, Category = "Input")
 	TObjectPtr<UInputMappingContext> DefaultMappingContext;
 
@@ -136,6 +139,7 @@ protected:
 	void HeldFunc(FGameplayTag Tag);
 	void ReleasedFunc(FGameplayTag Tag);
 	void AbilityMenuButton();
+	void DodgeFunc();
 	//	void Crouch_Hold();
 	
 	UPROPERTY(EditAnywhere, Category = "InputConfig")

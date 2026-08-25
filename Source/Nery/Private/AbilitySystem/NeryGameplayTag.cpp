@@ -49,6 +49,7 @@ void FNeryGameplayTags::InitializeTags()
 	NeryGameplayTags.GameplayCue_AbilityQuakeFangTrap_Hit = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("GameplayCue.AbilityQuakeFangTrap.Hit"),FString(TEXT("Hit")));
 	NeryGameplayTags.GameplayCue_LevelUp = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("GameplayCue.LevelUp"),FString(TEXT("LevelUp")));
 	NeryGameplayTags.GameplayCue_WeaponAttack = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("GameplayCue.WeaponAttack"),FString(TEXT("Weapon Attack")));
+	NeryGameplayTags.GameplayCue_Dodge = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("GameplayCue.Dodge"),FString(TEXT("Dodge")));
 	
 	
 	NeryGameplayTags.Buff_Good_ArmorPenetration = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Buff.Good.ArmorPenetration"), FString(TEXT("Strengthen ArmorPenetration")));
@@ -77,6 +78,7 @@ void FNeryGameplayTags::InitializeTags()
 	NeryGameplayTags.Ability_QuakeFang = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Ability.QuakeFang"),FString(TEXT("QuakeFang")));
 	NeryGameplayTags.Ability_EnemyHitted = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Ability.EnemyHitted"),FString(TEXT("Enemy is hitted")));
 	NeryGameplayTags.Ability_PlayerHitted = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Ability.PlayerHitted"),FString(TEXT("Player is hitted")));
+	NeryGameplayTags.Ability_Dodge = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Ability.Dodge"),FString(TEXT("Dodge")));
 	
 	
 	NeryGameplayTags.Ability_CoolDown_Crescent = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Ability.CoolDown.Crescent"),FString(TEXT("CoolDown to Crescent")));
@@ -96,4 +98,6 @@ void FNeryGameplayTags::InitializeTags()
 	NeryGameplayTags.Status_Enemy_NoPoise = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Status.Enemy.NoPoise"),FString(TEXT("Status NoPoise")));
 	NeryGameplayTags.Status_Enemy_Locked = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Status.Enemy.Locked"),FString(TEXT("Status Locked")));
 	NeryGameplayTags.Status_Enemy_UnLocked = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Status.Enemy.UnLocked"),FString(TEXT("Status UnLocked")));
+	NeryGameplayTags.Status_Immunity = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Status.Immunity"),FString(TEXT("Status Immunity")));
+	NeryGameplayTags.Status_StaminRecovery = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Statsu.StaminRecovery"),FString(TEXT("Status StaminRecovery")));
 }

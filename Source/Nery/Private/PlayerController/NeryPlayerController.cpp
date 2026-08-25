@@ -216,7 +216,7 @@ void ANeryPlayerController::SetupInputComponent()
 		NeryInputComponent->BindAction(LeftScrollAction, ETriggerEvent::Started, this, &ANeryPlayerController::LeftScroll);
 		NeryInputComponent->BindAction(AbilityMenuButtonAction,ETriggerEvent::Started,this,&ANeryPlayerController::AbilityMenuButton);
 		NeryInputComponent->BindActionAbility(InputTagConfig, this, &ANeryPlayerController::PressedFunc, &ANeryPlayerController::HeldFunc, &ANeryPlayerController::ReleasedFunc);
-		
+		NeryInputComponent->BindAction(DodgeAction,ETriggerEvent::Started, this, &ANeryPlayerController::DodgeFunc);
 	}
 
 }
@@ -421,6 +421,14 @@ void ANeryPlayerController::AbilityMenuButton()
 		{
 			ICombatInterface::Execute_UpdateAbiltyMenu(NeryHUD->GetOverlayWidget(),CanOpenAbilityMenu);
 		}
+	}
+}
+
+void ANeryPlayerController::DodgeFunc()
+{
+	if (UNeryAbilitySystemComponent* NeryASC = Cast<UNeryAbilitySystemComponent>(UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(GetPawn())))
+	{
+		NeryASC->ActiveAbilityByDynamicTag(FNeryGameplayTags::GetNeryGameplayTags().Ability_Dodge);
 	}
 }
 
