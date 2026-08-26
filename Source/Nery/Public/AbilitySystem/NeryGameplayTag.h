@@ -81,6 +81,7 @@ public:
 	FGameplayTag Event_TargetInfo;
 	FGameplayTag Event_MontageSectionChanged;
 	FGameplayTag Event_EventData;
+	FGameplayTag Event_CanInterruptHit;
 	
 	
 	/*Ability*/
@@ -117,6 +118,7 @@ public:
 	FGameplayTag Status_Enemy_UnLocked;
 	FGameplayTag Status_Immunity;//无敌
 	FGameplayTag Status_StaminRecovery;
+	FGameplayTag Status_Rolling;//翻滚状态
 	// FGameplayTag Status_Player_Poise;
 	
 private:

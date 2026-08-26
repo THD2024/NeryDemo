@@ -56,6 +56,9 @@ protected:
 
 	UPROPERTY(BlueprintAssignable, Category = "AttributeDelegate")
 	FOnAttributeChanged NextLevelXpChanged;
+	
+	UPROPERTY(BlueprintAssignable,Category = "AttributeDelegate")
+	FOnAttributeChanged StaminaChanged;
 
 	UPROPERTY(BlueprintAssignable, Category = "AttributeDelegate")
 	FOnBuffInfoChanged BuffInfoChanged;
@@ -71,6 +74,7 @@ protected:
 	void OnLevelChanged(const FOnAttributeChangeData& Data);
 	void OnXpChanged(const FOnAttributeChangeData& Data);
 	void OnNextLevelXpChanged(const FOnAttributeChangeData& Data);
+	void OnStaminaChanged(const FOnAttributeChangeData& Data);
 	void OnBuffInfoChanged();
 	void OnBroadRightScroll();
 	void OnBroadLeftScroll();

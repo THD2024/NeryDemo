@@ -17,6 +17,7 @@ void UOverlayWidgetController::BroadInitValue()
 		LevelChanged.Broadcast(AS->GetLevel());
 		XpChanged.Broadcast(AS->GetXp());
 		NextLevelXpChanged.Broadcast(AS->GetNextLevelXp());
+		StaminaChanged.Broadcast(AS->GetStamina());
 	}
 	BroadBuffInfo();
 }
@@ -32,6 +33,7 @@ void UOverlayWidgetController::BindCallBacks()
 			ASC->GetGameplayAttributeValueChangeDelegate(AS->GetLevelAttribute()).AddUObject(this, &UOverlayWidgetController::OnLevelChanged);
 			ASC->GetGameplayAttributeValueChangeDelegate(AS->GetXpAttribute()).AddUObject(this, &UOverlayWidgetController::OnXpChanged);
 			ASC->GetGameplayAttributeValueChangeDelegate(AS->GetNextLevelXpAttribute()).AddUObject(this, &UOverlayWidgetController::OnNextLevelXpChanged);
+			ASC->GetGameplayAttributeValueChangeDelegate(AS->GetStaminaAttribute()).AddUObject(this, &UOverlayWidgetController::OnStaminaChanged);
 		}
 	}
 	if (ANeryPlayerController* PC = Cast<ANeryPlayerController>(PlayerController))
@@ -66,6 +68,11 @@ void UOverlayWidgetController::OnXpChanged(const FOnAttributeChangeData & Data)
 void UOverlayWidgetController::OnNextLevelXpChanged(const FOnAttributeChangeData& Data)
 {
 	NextLevelXpChanged.Broadcast(Data.NewValue);
+}
+
+void UOverlayWidgetController::OnStaminaChanged(const FOnAttributeChangeData& Data)
+{
+	StaminaChanged.Broadcast(Data.NewValue);
 }
 
 void UOverlayWidgetController::OnBuffInfoChanged()

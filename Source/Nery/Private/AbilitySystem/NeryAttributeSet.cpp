@@ -195,11 +195,15 @@ void UNeryAttributeSet::PreAttributeChange(const FGameplayAttribute& Attribute, 
 	}
 	if (Attribute == GetStaminaAttribute())
 	{
-		if (UAbilitySystemComponent* ASC = GetOwningAbilitySystemComponent())
+		NewValue = FMath::Clamp(NewValue, 0.f, 100.F);
+		if (NewValue <= GetStamina())//小于等于的情况只能是被消耗了或者属性被消耗没了为0.
 		{
-			if (ASC->GetAvatarActor() && ASC->GetAvatarActor()->Implements<UCombatInterface>())
+			if (UAbilitySystemComponent* ASC = GetOwningAbilitySystemComponent())
 			{
-				ICombatInterface::Execute_RecoverStamina(ASC->GetAvatarActor());
+				if (ASC->GetAvatarActor() && ASC->GetAvatarActor()->Implements<UCombatInterface>())
+				{
+					ICombatInterface::Execute_RecoverStamina(ASC->GetAvatarActor());
+				}
 			}
 		}
 	}

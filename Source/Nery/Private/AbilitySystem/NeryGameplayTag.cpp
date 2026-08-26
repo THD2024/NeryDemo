@@ -66,6 +66,7 @@ void FNeryGameplayTags::InitializeTags()
 	NeryGameplayTags.Event_TargetInfo = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Event.TargetInfo"),FString(TEXT("TargetInfo")));
 	NeryGameplayTags.Event_MontageSectionChanged = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Event.MontageSectionChanged"),FString(TEXT("MontageSectionChanged")));
 	NeryGameplayTags.Event_EventData = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Event.EventData"),FString(TEXT("EventData")));
+	NeryGameplayTags.Event_CanInterruptHit = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Event.CanInterruptHit"),FString(TEXT("CanInterruptHit")));
 	
 	
 	NeryGameplayTags.Ability_MoonCrescent = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Ability.MoonCrescent"),FString(TEXT("First Ability")));
@@ -99,5 +100,6 @@ void FNeryGameplayTags::InitializeTags()
 	NeryGameplayTags.Status_Enemy_Locked = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Status.Enemy.Locked"),FString(TEXT("Status Locked")));
 	NeryGameplayTags.Status_Enemy_UnLocked = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Status.Enemy.UnLocked"),FString(TEXT("Status UnLocked")));
 	NeryGameplayTags.Status_Immunity = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Status.Immunity"),FString(TEXT("Status Immunity")));
-	NeryGameplayTags.Status_StaminRecovery = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Statsu.StaminRecovery"),FString(TEXT("Status StaminRecovery")));
+	NeryGameplayTags.Status_StaminRecovery = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Status.StaminRecovery"),FString(TEXT("Status StaminRecovery")));
+	NeryGameplayTags.Status_Rolling = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Status.Rolling"),FString(TEXT("Status Rolling")));
 }

@@ -416,13 +416,27 @@ void ANeryCharacter::SendEventtoHitReaction_Implementation(const FGameplayTag& I
 	UNeryBlueprintFunctionLibrary::HandleGameplayEvent(GetAbilitySystemComponent(),EventData,InTag);
 }
 
-void ANeryCharacter::RecoverStamina_Implementation()
+void ANeryCharacter::StaminaRecover()
 {
-	
+	if (GetAbilitySystemComponent())
+	{
+		GetAbilitySystemComponent()->RemoveLooseGameplayTag(FNeryGameplayTags::GetNeryGameplayTags().Status_Rolling);
+	}
 	if (CharacterDataAsset && CharacterDataAsset->StaminaRecoverEffect)
 	{
-		UNeryBlueprintFunctionLibrary::ApplyBasicEffectToSelf(this,CharacterDataAsset->StaminaRecoverEffect);
+		UNeryBlueprintFunctionLibrary::ApplyBasicEffectToSelf(this, CharacterDataAsset->StaminaRecoverEffect);
 	}
+}
+
+void ANeryCharacter::RecoverStamina_Implementation()
+{
+	if (GetAbilitySystemComponent())
+	{
+		GetAbilitySystemComponent()->AddLooseGameplayTag(FNeryGameplayTags::GetNeryGameplayTags().Status_Rolling);
+	}
+	GetWorldTimerManager().ClearTimer(StaminaTimerHandle);
+	GetWorldTimerManager().SetTimer(StaminaTimerHandle,this, &ANeryCharacter::StaminaRecover, 1.f,false);
+	
 }
 
 

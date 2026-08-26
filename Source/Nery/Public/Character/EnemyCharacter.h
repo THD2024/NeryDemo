@@ -18,7 +18,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnEnemyHealthChanged, float, NewHea
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnEnemyMaxHealth, float, MaxHealth);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnEnemyMaxPoiseDelegate, float, MaxPoise);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnEnemyPoiseDelegate, float, Poise);
-DECLARE_DELEGATE_OneParam(FOnEnemyPoiseStatusDelegate,bool);
+
 
 UCLASS()
 class NERY_API AEnemyCharacter : public ANeryBaseCharacter
@@ -63,7 +63,7 @@ protected:
 	
 	void OnPoiseChanged(const FOnAttributeChangeData& Data);
 	
-	void UpdatePoiseStatus(bool InbPoiseStatus);
+	void UpdatePoiseStatus();
 	
 	/*接口*/
 	virtual void LockTargetFeedBack_Implementation() override;
@@ -98,8 +98,9 @@ protected:
 	
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<UGameplayEffect> PoiseRecoverEffect;
+
 	
-	FOnEnemyPoiseStatusDelegate PoiseStatusDelegate;
+	FTimerHandle TimerHandle;
 	
 	bool IsLockedOn = false;
 	

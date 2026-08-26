@@ -120,8 +120,9 @@ protected:
 	
 	virtual void ActiveHitReaction_Implementation() override;
 
-	virtual void SendEventtoHitReaction_Implementation(const FGameplayTag& InTag, const FGameplayEventData& EventData) override;	
-	
+	virtual void SendEventtoHitReaction_Implementation(const FGameplayTag& InTag, const FGameplayEventData& EventData) override;
+	void StaminaRecover();
+
 	virtual void RecoverStamina_Implementation() override;
 	/*接口*/
 
@@ -171,6 +172,8 @@ protected:
 
 	int32 ClickTime = 0;//表示当前的攻击次数
 
+	FTimerHandle StaminaTimerHandle;
+	
 	bool bAnimNotified = false;
 	bool bInputBuffered = false;//这个变量用来表示当前是否有输入被缓冲了，如果有输入被缓冲了，就说明在当前攻击动画播放的过程中，玩家又按了一次攻击输入，这时就可以在动画蒙太奇的Notify节点中通过判断这个变量来播放下一个攻击动画，实现连续攻击的逻辑
 	bool CanBroadNumberInfo = false;

@@ -114,7 +114,7 @@ void UNeryBlueprintFunctionLibrary::ApplyBasicEffectToSelf(AActor* InActor, TSub
 	UAbilitySystemComponent* InASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(InActor);
 	if (!InASC)return;
 	FGameplayEffectContextHandle ContextHandle = InASC->MakeEffectContext();
-	FGameplayEffectSpecHandle SpecHandle = InASC->MakeOutgoingSpec(InGameplayEffectClass, 1, ContextHandle);
+	FGameplayEffectSpecHandle SpecHandle = InASC->MakeOutgoingSpec(InGameplayEffectClass, GetLevel(InASC), ContextHandle);
 	InASC->ApplyGameplayEffectSpecToSelf(*SpecHandle.Data.Get());
 }
 

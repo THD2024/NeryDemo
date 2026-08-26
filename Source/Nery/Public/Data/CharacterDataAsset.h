@@ -26,6 +26,9 @@ public:
 	TArray<UAnimMontage*> HitMontages;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Data")
+	TObjectPtr<UAnimMontage> DodgeMontage;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Data")
 	TSubclassOf<UGameplayEffect> AttackEffectClass;//角色的普通伤害
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Data")
