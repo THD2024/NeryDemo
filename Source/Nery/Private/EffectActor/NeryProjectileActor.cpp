@@ -78,6 +78,11 @@ void ANeryProjectileActor::BoxTrace(const ECollisionChannel& CollisionChannel)
 				UNeryBlueprintFunctionLibrary::ApplyEffectToTarget(GetOwner(),HitResult.GetActor(),PAGameplayEffect,HitResult,true);
 				ActorsToIgnore.Add(HitResult.GetActor());
 			}
+			if (EnergyEffect)
+			{
+				UNeryBlueprintFunctionLibrary::ApplyBasicEffectToSelf(GetOwner(),EnergyEffect);
+			}
+
 		}
 		PreviousLocation = CurrentLocation;
 	}

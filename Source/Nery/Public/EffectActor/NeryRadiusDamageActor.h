@@ -45,6 +45,9 @@ protected:
 	TSubclassOf<UGameplayEffect> OuterGameplayEffect;//外环
 	
 	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly)
+	TSubclassOf<UGameplayEffect> EnergyEffect;
+	
+	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly)
 	TObjectPtr<UAudioComponent> SoundComponent;
 
 	
@@ -58,4 +61,5 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void SphereTrace(const ECollisionChannel& CollisionChannel );
 	
+
 };

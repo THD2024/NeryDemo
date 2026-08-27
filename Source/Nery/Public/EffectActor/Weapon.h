@@ -46,7 +46,9 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = "WeaponCollision")
 	TObjectPtr<UStaticMeshComponent> WeaponShape;
 
-
+	UPROPERTY(EditDefaultsOnly,Category = "Weapon")
+	TSubclassOf<UGameplayEffect> EnergyEffect;
+	
 	UPROPERTY(EditDefaultsOnly, Category = "AttackSound")
 	TObjectPtr<USoundBase> AttackSound;
 

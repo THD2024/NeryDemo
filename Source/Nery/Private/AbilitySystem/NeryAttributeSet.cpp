@@ -112,6 +112,12 @@ void UNeryAttributeSet::OnRep_NextLevelXp(const FGameplayAttributeData& OldNextL
 	GAMEPLAYATTRIBUTE_REPNOTIFY(UNeryAttributeSet, NextLevelXp, OldNextLevelXp);
 }
 
+void UNeryAttributeSet::OnRep_MagicEnergy(const FGameplayAttributeData& OldMagicEnergy)
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UNeryAttributeSet, MagicEnergy, OldMagicEnergy);
+
+}
+
 void UNeryAttributeSet::OnRep_Poise(const FGameplayAttributeData& OldPoise)
 {
 	GAMEPLAYATTRIBUTE_REPNOTIFY(UNeryAttributeSet,Poise,OldPoise);
@@ -160,6 +166,7 @@ void UNeryAttributeSet::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>&Out
 	DOREPLIFETIME_CONDITION_NOTIFY(UNeryAttributeSet, Level, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UNeryAttributeSet, MaxLevel, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UNeryAttributeSet, NextLevelXp, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UNeryAttributeSet, MagicEnergy, COND_None, REPNOTIFY_Always);
 	
 	/*Enemy Attribute*/
 	DOREPLIFETIME_CONDITION_NOTIFY(UNeryAttributeSet,Poise,COND_None, REPNOTIFY_Always);
@@ -172,6 +179,13 @@ void UNeryAttributeSet::PreAttributeChange(const FGameplayAttribute& Attribute, 
 	if (Attribute == GetHealthAttribute())
 	{
 		NewValue = FMath::Clamp(NewValue, 0.f, GetMaxHealth());
+	}
+	if (Attribute == GetMaxHealthAttribute())
+	{
+		if (NewValue > GetMaxHealth())
+		{
+			SetHealth(NewValue);
+		}
 	}
 	if (Attribute == GetMaxManaAttribute())
 	{
@@ -218,7 +232,24 @@ void UNeryAttributeSet::PreAttributeChange(const FGameplayAttribute& Attribute, 
 		}
 		NewValue = FMath::Clamp(NewValue, 0.f, GetMaxPoise());
 	}
-	
+	if (Attribute == GetMagicEnergyAttribute())
+	{//确保只有角色magicenergy
+		if (UAbilitySystemComponent* ASC = GetOwningAbilitySystemComponent())
+		{
+			if (ASC->GetAvatarActor() && !ASC->GetAvatarActor()->ActorHasTag("Enemy"))
+			{
+				NewValue = FMath::Clamp(NewValue, 0.f, 100.f);
+				if (NewValue == 100.f)
+				{
+					//这里去分配require标签。
+					if ( ASC->GetAvatarActor()->Implements<UCombatInterface>())
+					{
+						ICombatInterface::Execute_GiveMagicRequireTag(ASC->GetAvatarActor());
+					}
+				}
+			}
+		}
+	}
 }
 
 void UNeryAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallbackData & Data)
@@ -234,6 +265,11 @@ void UNeryAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallba
 		{
 			if (ASC->GetAvatarActor() && ASC->GetAvatarActor()->Implements<UCombatInterface>())
 			{
+				if (GetHealth() <= 0.f)
+				{
+					ICombatInterface::Execute_Death(ASC->GetAvatarActor());
+					
+				}
 				ICombatInterface::Execute_ActiveHitReaction(ASC->GetAvatarActor());
 				FGameplayEventData EventData;
 				EventData.ContextHandle = Data.EffectSpec.GetEffectContext();

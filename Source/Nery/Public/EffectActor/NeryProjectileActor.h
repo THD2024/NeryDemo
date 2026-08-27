@@ -42,6 +42,9 @@ protected:
 	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly)
 	TSubclassOf<UGameplayEffect> PAGameplayEffect;
 	
+	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly)
+	TSubclassOf<UGameplayEffect> EnergyEffect;
+	
 	UPROPERTY(EditAnywhere,BlueprintReadWrite)
 	FVector PreviousLocation = GetActorLocation();
 	

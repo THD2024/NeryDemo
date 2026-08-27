@@ -141,13 +141,6 @@ void UNeryBlueprintFunctionLibrary::ApplyEffectToTarget(AActor* Instigator, AAct
 	FGameplayEffectSpecHandle SpecHandle = InstigatorASC->MakeOutgoingSpec(InGameplayEffectClass,GetLevel(InstigatorASC), ContextHandle);
 	InstigatorASC->ApplyGameplayEffectSpecToTarget(*SpecHandle.Data.Get(),TargetASC);
 	
-	// if (CanSendEvent)
-	// {
-	// 	FGameplayEventData EventData;
-	// 	EventData.ContextHandle = ContextHandle;
-	// 	FGameplayTag EventTag = FNeryGameplayTags::GetNeryGameplayTags().Event_EventData;
-	// 	HandleGameplayEvent(InstigatorASC,EventData,EventTag);
-	// }
 }
 
 UAttributeWidgetController* UNeryBlueprintFunctionLibrary::GetAttributeWigetController(const UObject* WorldContextObject, APlayerController* PlayerController)
@@ -235,14 +228,14 @@ void UNeryBlueprintFunctionLibrary::SetCurrentBuffWidgetTag(const UObject* World
 
 int32 UNeryBlueprintFunctionLibrary::GetLevel(const UAbilitySystemComponent* AbilitySystemComponent)
 {
-	if (AbilitySystemComponent)
+	if (AbilitySystemComponent && !AbilitySystemComponent->GetAvatarActor()->ActorHasTag(FName("Enemy")))
 	{
 		if (const UNeryAttributeSet* AttributeSet = Cast<UNeryAttributeSet>(AbilitySystemComponent->GetAttributeSet(UAttributeSet::StaticClass())))
 		{
 			return FMath::FloorToInt(AttributeSet->GetLevel());//向下取整
 		}
 	}
-	return int32();
+	return 1;
 }
 
 float UNeryBlueprintFunctionLibrary::GetXpByLevel(const UObject* WorldContextObject, const float InLevel)

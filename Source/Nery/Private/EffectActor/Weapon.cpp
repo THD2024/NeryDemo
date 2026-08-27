@@ -67,6 +67,10 @@ void AWeapon::ApplyAttackEffect(AActor* TargetActor,const FHitResult& HitResult)
 		// 	
 		// }
 		UNeryBlueprintFunctionLibrary::ApplyEffectToActor(TargetActor,UNeryBlueprintFunctionLibrary::GetCharacterAttackEffect(TargetActor),HitResult,DamageTag,true);
+		if (EnergyEffect)
+		{
+			UNeryBlueprintFunctionLibrary::ApplyBasicEffectToSelf(GetOwner(),EnergyEffect);
+		}
 	}
 }
 

@@ -59,6 +59,10 @@ void ANeryRadiusDamageActor::SphereTrace(const ECollisionChannel& CollisionChann
 	bool bHit = GetWorld()->OverlapMultiByChannel(OverlapResults,GetActorLocation(),FQuat::Identity,CollisionChannel,CollisionShape,QueryParams);
 	if (bHit)
 	{
+		if (EnergyEffect)
+		{
+			UNeryBlueprintFunctionLibrary::ApplyBasicEffectToSelf(GetOwner(),EnergyEffect);
+		}
 		for (FOverlapResult& OverlapResult : OverlapResults)
 		{
 			float DistancetoActor = GetDistanceTo(OverlapResult.GetActor());

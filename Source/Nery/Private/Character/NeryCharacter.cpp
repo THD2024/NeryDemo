@@ -420,7 +420,7 @@ void ANeryCharacter::StaminaRecover()
 {
 	if (GetAbilitySystemComponent())
 	{
-		GetAbilitySystemComponent()->RemoveLooseGameplayTag(FNeryGameplayTags::GetNeryGameplayTags().Status_Rolling);
+		GetAbilitySystemComponent()->RemoveReplicatedLooseGameplayTag(FNeryGameplayTags::GetNeryGameplayTags().Status_Rolling);
 	}
 	if (CharacterDataAsset && CharacterDataAsset->StaminaRecoverEffect)
 	{
@@ -430,13 +430,23 @@ void ANeryCharacter::StaminaRecover()
 
 void ANeryCharacter::RecoverStamina_Implementation()
 {
+	if (!HasAuthority())return;
 	if (GetAbilitySystemComponent())
 	{
-		GetAbilitySystemComponent()->AddLooseGameplayTag(FNeryGameplayTags::GetNeryGameplayTags().Status_Rolling);
+		GetAbilitySystemComponent()->AddReplicatedLooseGameplayTag(FNeryGameplayTags::GetNeryGameplayTags().Status_Rolling);
 	}
 	GetWorldTimerManager().ClearTimer(StaminaTimerHandle);
 	GetWorldTimerManager().SetTimer(StaminaTimerHandle,this, &ANeryCharacter::StaminaRecover, 1.f,false);
 	
+}
+
+void ANeryCharacter::GiveMagicRequireTag_Implementation()
+{
+	if (!HasAuthority())return;
+	if (GetAbilitySystemComponent())
+	{
+		GetAbilitySystemComponent()->AddReplicatedLooseGameplayTag(FNeryGameplayTags::GetNeryGameplayTags().Status_Energy_Full);
+	}
 }
 
 

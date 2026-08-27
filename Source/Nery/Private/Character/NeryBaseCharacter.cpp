@@ -5,6 +5,7 @@
 #include"EffectActor/Weapon.h"
 #include"NeryBlueprintFunction/NeryBlueprintFunctionLibrary.h"
 #include"Character/NeryCharacterMovementComponent.h"
+#include "Components/CapsuleComponent.h"
 
 // Sets default values
 ANeryBaseCharacter::ANeryBaseCharacter(const FObjectInitializer& ObjectInitializer)
@@ -70,6 +71,16 @@ FGenericTeamId ANeryBaseCharacter::GetGenericTeamId() const
 	return TeamId;
 }
 
+void ANeryBaseCharacter::Death_Implementation()
+{
+	if (GetAbilitySystemComponent())
+	{
+		GetAbilitySystemComponent()->CancelAllAbilities();
+		GetAbilitySystemComponent()->RemoveReplicatedLooseGameplayTag(FNeryGameplayTags::GetNeryGameplayTags().Status_Energy_Full);
+		GetAbilitySystemComponent()->RemoveReplicatedLooseGameplayTag(FNeryGameplayTags::GetNeryGameplayTags().Status_Rolling);
+	}
+	Multicast_HandleDeath();
+}
 
 
 void ANeryBaseCharacter::InitAttribute()
@@ -112,5 +123,26 @@ void ANeryBaseCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputC
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
+}
+
+void ANeryBaseCharacter::Multicast_HandleDeath_Implementation()
+{
+	if (GetCharacterMovement())
+	{
+		GetCharacterMovement()->StopMovementImmediately();
+		GetCharacterMovement()->DisableMovement();
+	}
+	if (GetCapsuleComponent())
+	{
+		GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	}
+	//布娃娃表现
+	GetMesh()->SetCollisionProfileName(FName("Ragdoll")); // 使用内置 Ragdoll 配置
+	GetMesh()->SetSimulatePhysics(true);
+	GetMesh()->SetEnableGravity(true);
+	GetMesh()->SetCollisionEnabled(ECollisionEnabled::PhysicsOnly);
+ 
+	GetMesh()->SetCollisionResponseToChannel(ECC_Camera, ECR_Ignore);
+	GetMesh()->SetCollisionResponseToChannel(ECC_Visibility, ECR_Ignore);
 }
 

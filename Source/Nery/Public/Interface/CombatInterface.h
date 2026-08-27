@@ -89,4 +89,10 @@ public:
 	
 	UFUNCTION(BlueprintNativeEvent)
 	void RecoverStamina();
+	
+	UFUNCTION(BlueprintNativeEvent)
+	void GiveMagicRequireTag();
+	
+	UFUNCTION(BlueprintNativeEvent)
+	void Death();
 };

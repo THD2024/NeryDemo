@@ -64,6 +64,7 @@ public:
 	ATTRIBUTE_ACCESSORS(UNeryAttributeSet, Level);
 	ATTRIBUTE_ACCESSORS(UNeryAttributeSet, MaxLevel);
 	ATTRIBUTE_ACCESSORS(UNeryAttributeSet, NextLevelXp);
+	ATTRIBUTE_ACCESSORS(UNeryAttributeSet, MagicEnergy);
 	/*Character Attributes*/
 
 	/*Enemy Attribute*/
@@ -142,6 +143,9 @@ public:
 
 	UPROPERTY(ReplicatedUsing = OnRep_NextLevelXp)
 	FGameplayAttributeData NextLevelXp;
+	
+	UPROPERTY(ReplicatedUsing = OnRep_MagicEnergy)
+	FGameplayAttributeData MagicEnergy;
 	/*Character Attributes*/
 
 	/*Enemy*/
@@ -216,6 +220,9 @@ protected:
 
 	UFUNCTION()
 	void OnRep_NextLevelXp(const FGameplayAttributeData& OldNextLevelXp);
+	
+	UFUNCTION()
+	void OnRep_MagicEnergy(const FGameplayAttributeData& OldMagicEnergy);
 	/*Character Attributes*/
 
 	/*Enemy Attribute*/

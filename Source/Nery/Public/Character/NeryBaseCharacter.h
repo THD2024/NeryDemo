@@ -51,6 +51,7 @@ protected:
 	virtual void BegintoTrace_Implementation() override;
 	virtual FTransform GetWeaponLocation_Implementation() override;
 	virtual FGenericTeamId GetGenericTeamId() const override;
+	virtual void Death_Implementation() override;
 	
 	
 	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly,Category = "AI")
@@ -70,4 +71,6 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+	UFUNCTION(NetMulticast,Unreliable)
+	void Multicast_HandleDeath();
 };

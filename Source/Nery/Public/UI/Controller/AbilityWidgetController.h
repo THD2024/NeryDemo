@@ -20,7 +20,7 @@
 
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnAbilityWidgetDelegate,FNeryAbilityInfo,AbilityInfo);
-
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnMagicEnergyChanged,float, AttributeValue);
 
 UCLASS()
 class NERY_API UAbilityWidgetController : public UWidgetController
@@ -46,9 +46,14 @@ protected:
 	UPROPERTY(BlueprintAssignable,Category = "AbilityChanged")
 	FOnAbilityWidgetDelegate OnAbilityMenuDelegate;
 	
+	UPROPERTY(BlueprintAssignable,Category = "AttributeChanged")
+	FOnMagicEnergyChanged OnMagicEnergyDelegate;
+	
 	UFUNCTION(BlueprintCallable)
 	void BroadWidgetAbilityInfo();
 	
 	UFUNCTION(BlueprintCallable)
 	void BroadAbilityMenuInfo();//手动调用
+	
+	void OnMagicEnergyChanged(const FOnAttributeChangeData& Data);
 };

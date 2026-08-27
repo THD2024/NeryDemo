@@ -119,6 +119,8 @@ public:
 	FGameplayTag Status_Immunity;//无敌
 	FGameplayTag Status_StaminRecovery;
 	FGameplayTag Status_Rolling;//翻滚状态
+	FGameplayTag Status_Energy_Full;//可以激活法术技能
+	
 	// FGameplayTag Status_Player_Poise;
 	
 private:

@@ -102,4 +102,6 @@ void FNeryGameplayTags::InitializeTags()
 	NeryGameplayTags.Status_Immunity = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Status.Immunity"),FString(TEXT("Status Immunity")));
 	NeryGameplayTags.Status_StaminRecovery = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Status.StaminRecovery"),FString(TEXT("Status StaminRecovery")));
 	NeryGameplayTags.Status_Rolling = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Status.Rolling"),FString(TEXT("Status Rolling")));
+	NeryGameplayTags.Status_Energy_Full = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Status.Energy.Full"),FString(TEXT("Status Energy Full")));
+
 }

@@ -2,18 +2,25 @@
 
 
 #include "UI/Controller/AbilityWidgetController.h"
-
-#include "AbilitySystemComponent.h"
 #include "AbilitySystem/NeryGameplayTag.h"
 #include"Interface/CombatInterface.h"
 #include"NeryBlueprintFunction/NeryBlueprintFunctionLibrary.h"
 #include"AbilitySystemBlueprintLibrary.h"
+#include "AbilitySystem/NeryAbilitySystemComponent.h"
+#include "AbilitySystem/NeryAttributeSet.h"
 #include "PlayerState/NeryPlayerState.h"
 
+
+class UNeryAbilitySystemComponent;
+class UNeryAttributeSet;
 
 void UAbilityWidgetController::BroadInitValue()
 {
 	BroadWidgetAbilityInfo();
+	if (UNeryAttributeSet* AS = Cast<UNeryAttributeSet>(AttributeSet))
+	{
+		OnMagicEnergyDelegate.Broadcast(AS->GetMagicEnergy());
+	}
 }
 
 void UAbilityWidgetController::BindCallBacks()
@@ -22,7 +29,14 @@ void UAbilityWidgetController::BindCallBacks()
 	{
 		PS->OnAbilityWidgetChanged.AddUObject(this,&UAbilityWidgetController::BroadWidgetAbilityInfo);
 	}
-	
+	if (UNeryAttributeSet* AS = Cast<UNeryAttributeSet>(AttributeSet))
+	{
+		if (UNeryAbilitySystemComponent* ASC = Cast<UNeryAbilitySystemComponent>(AbilitySystemComponent))
+		{
+			ASC->GetGameplayAttributeValueChangeDelegate(AS->GetMagicEnergyAttribute()).AddUObject(this, &UAbilityWidgetController::OnMagicEnergyChanged);
+			
+		}
+	}
 }
 
 void UAbilityWidgetController::BroadInfoByDelegateType(FOnAbilityWidgetDelegate DelegateType)
@@ -56,4 +70,9 @@ void UAbilityWidgetController::BroadAbilityMenuInfo()//第一次技能菜单创�
 {
 	//将技能菜单和装备技能分开，这样当在技能菜单中分配技能菜单不会直接影响到装备技能，当装备后，因为技能插槽中标签变了，这样刚好就会重新广播装备技能信息
 	BroadInfoByDelegateType(OnAbilityMenuDelegate);
+}
+
+void UAbilityWidgetController::OnMagicEnergyChanged(const FOnAttributeChangeData& Data)
+{
+	OnMagicEnergyDelegate.Broadcast(Data.NewValue);
 }
