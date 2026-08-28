@@ -209,8 +209,7 @@ void UNeryAttributeSet::PreAttributeChange(const FGameplayAttribute& Attribute, 
 	}
 	if (Attribute == GetStaminaAttribute())
 	{
-		NewValue = FMath::Clamp(NewValue, 0.f, 100.F);
-		if (NewValue <= GetStamina())//小于等于的情况只能是被消耗了或者属性被消耗没了为0.
+		if (NewValue <= 30)//小于等于的情况只能是被消耗了或者属性被消耗没了为0.
 		{
 			if (UAbilitySystemComponent* ASC = GetOwningAbilitySystemComponent())
 			{
@@ -220,6 +219,7 @@ void UNeryAttributeSet::PreAttributeChange(const FGameplayAttribute& Attribute, 
 				}
 			}
 		}
+		NewValue = FMath::Clamp(NewValue, 0.f, 100.f);
 	}
 	if (Attribute == GetPoiseAttribute())
 	{
@@ -310,6 +310,7 @@ void UNeryAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallba
 			SetInComingPoise(0.f);//保证了元数据的干净
 		}
 	}
+	
 }
 
 void UNeryAttributeSet::AutoHandleLevelUp(const AActor* Instigator)

@@ -73,6 +73,7 @@ protected:
 	virtual bool GetEnemyPoiseStatus_Implementation() override;
 	virtual void SendEventtoHitReaction_Implementation(const FGameplayTag& InTag, const FGameplayEventData& EventData) override;
 	virtual void ActiveHitReaction_Implementation() override;
+	virtual void Death_Implementation() override;
 	/*接口*/
 	
 	UPROPERTY(EditDefaultsOnly,Category = "WarpTarget")
@@ -107,4 +108,6 @@ protected:
 	bool bPoiseStatus = true;
 	
 	bool IsRecovering = false;
+	
+
 };

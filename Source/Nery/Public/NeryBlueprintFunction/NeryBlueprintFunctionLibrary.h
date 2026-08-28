@@ -103,7 +103,7 @@ public:
 	
 	static UAbilitySystemComponent* GetAbilitySystemComponentByActor(AActor* InActor);
 	
-	static void ApplyEffectToActor(AActor* InActor,TSubclassOf<UGameplayEffect>InGameplayEffectClass,const FHitResult& HitResult = FHitResult(),const FGameplayTag& SetByCallerTag = FGameplayTag(),bool CanSendEvent = false);
+	static void ApplyEffectToActor(AActor* SelfActor,AActor* InActor,TSubclassOf<UGameplayEffect>InGameplayEffectClass,const FHitResult& HitResult = FHitResult(),const FGameplayTag& SetByCallerTag = FGameplayTag(),bool CanSendEvent = false);
 
 	static void HandleGameplayEvent(UAbilitySystemComponent* InASC,const FGameplayEventData& InPayLoad,const FGameplayTag& EventTag);
 

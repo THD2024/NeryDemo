@@ -357,17 +357,18 @@ UAbilitySystemComponent* UNeryBlueprintFunctionLibrary::GetAbilitySystemComponen
 	return nullptr;
 }
 
-void UNeryBlueprintFunctionLibrary::ApplyEffectToActor(AActor* InActor, TSubclassOf<UGameplayEffect>InGameplayEffectClass,
+void UNeryBlueprintFunctionLibrary::ApplyEffectToActor(AActor* SelfActor,AActor* InActor, TSubclassOf<UGameplayEffect>InGameplayEffectClass,
 	const FHitResult& HitResult, const FGameplayTag& SetByCallerTag,bool CanSendEvent)
 {
 	UAbilitySystemComponent* InASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(InActor);
-	if (!InASC)return;
-	FGameplayEffectContextHandle ContextHandle = InASC->MakeEffectContext();
+	UAbilitySystemComponent* SelfASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(SelfActor);
+	if (!InASC || !SelfASC)return;
+	FGameplayEffectContextHandle ContextHandle = SelfASC->MakeEffectContext();
 	ContextHandle.AddHitResult(HitResult);
-	float DamageValue = UNeryBlueprintFunctionLibrary::GetNormalDamageByLevel(InActor,GetLevel(InASC));
+	float DamageValue = UNeryBlueprintFunctionLibrary::GetNormalDamageByLevel(SelfActor,GetLevel(SelfASC));
 	FGameplayEffectSpecHandle SpecHandle = InASC->MakeOutgoingSpec(InGameplayEffectClass, 1, ContextHandle);
 	SpecHandle.Data->SetSetByCallerMagnitude(SetByCallerTag, DamageValue);
-	InASC->ApplyGameplayEffectSpecToSelf(*SpecHandle.Data.Get());
+	InASC->ApplyGameplayEffectSpecToTarget(*SpecHandle.Data.Get(),InASC);
 	// if (CanSendEvent)
 	// {
 	// 	FGameplayEventData EventData;

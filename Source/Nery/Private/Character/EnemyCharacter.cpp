@@ -2,6 +2,8 @@
 
 
 #include "Character/EnemyCharacter.h"
+
+#include "AIController.h"
 #include"AbilitySystem/NeryAbilitySystemComponent.h"
 #include"UI/Controller/OverlayWidgetController.h"
 #include"UI/Widget/NeryUserWidget.h"
@@ -171,6 +173,15 @@ void AEnemyCharacter::ActiveHitReaction_Implementation()
 			ASC->ActiveAbilityByDynamicTag(FNeryGameplayTags::GetNeryGameplayTags().Ability_EnemyHitted);
 		}
 	}
+}
+
+void AEnemyCharacter::Death_Implementation()
+{
+	if (AAIController* AIController = Cast<AAIController>(GetController()))
+	{
+		AIController->UnPossess();
+	}
+	Super::Death_Implementation();
 }
 
 

@@ -66,7 +66,7 @@ void AWeapon::ApplyAttackEffect(AActor* TargetActor,const FHitResult& HitResult)
 		// 	OwnerASC->ApplyGameplayEffectSpecToTarget(*SpecHandle.Data.Get(), TargetASC);
 		// 	
 		// }
-		UNeryBlueprintFunctionLibrary::ApplyEffectToActor(TargetActor,UNeryBlueprintFunctionLibrary::GetCharacterAttackEffect(TargetActor),HitResult,DamageTag,true);
+		UNeryBlueprintFunctionLibrary::ApplyEffectToActor(GetOwner(),TargetActor,UNeryBlueprintFunctionLibrary::GetCharacterAttackEffect(TargetActor),HitResult,DamageTag,true);
 		if (EnergyEffect)
 		{
 			UNeryBlueprintFunctionLibrary::ApplyBasicEffectToSelf(GetOwner(),EnergyEffect);

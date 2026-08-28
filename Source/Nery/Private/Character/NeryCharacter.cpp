@@ -434,9 +434,10 @@ void ANeryCharacter::RecoverStamina_Implementation()
 	if (GetAbilitySystemComponent())
 	{
 		GetAbilitySystemComponent()->AddReplicatedLooseGameplayTag(FNeryGameplayTags::GetNeryGameplayTags().Status_Rolling);
+		GetAbilitySystemComponent()->RemoveActiveGameplayEffectBySourceEffect(CharacterDataAsset->StaminaRecoverEffect,GetAbilitySystemComponent());
 	}
 	GetWorldTimerManager().ClearTimer(StaminaTimerHandle);
-	GetWorldTimerManager().SetTimer(StaminaTimerHandle,this, &ANeryCharacter::StaminaRecover, 1.f,false);
+	GetWorldTimerManager().SetTimer(StaminaTimerHandle,this, &ANeryCharacter::StaminaRecover, 1.5f,false);
 	
 }
 
